@@ -1,9 +1,11 @@
 package.path = package.path .. ';src/?.lua'
 package.path = package.path .. ';lib/?.lua'
 
-AdaptaterImage = require 'LoveImage'
+AdapterImage = require 'LoveImage'
+AdapterGraphics = require 'LoveGraphics'
 EasyLD = require 'EasyLD'
-EasyLD.load.adaptaterImage(AdaptaterImage)
+EasyLD.load.adapterImage(AdapterImage)
+EasyLD.load.adapterGraphics(AdapterGraphics)
 --LOCAL VARIABLE
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -25,6 +27,7 @@ end
 
 function love.draw()
 	map:draw(0, 0, 5, 5, 0, 0)
+	EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 

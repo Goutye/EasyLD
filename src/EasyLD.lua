@@ -6,17 +6,21 @@ EasyLD.map = require 'Map'
 EasyLD.vector = require 'Vector'
 EasyLD.collide = require 'Collide'
 EasyLD.box = require 'Box'
+EasyLD.circle = require 'Circle'
 EasyLD.point = require 'Point'
 
-function loadAdaptaterImage(base)
+
+
+function loadAdapterImage(base)
 	EasyLD.image = base
 end
 
-function loadAdaptaterGraphics(base)
+function loadAdapterGraphics(base)
 	EasyLD.graphics = base
 end
 
 EasyLD.load = {}
-EasyLD.load.adaptaterImage = loadAdaptaterImage
+EasyLD.load.adapterImage = loadAdapterImage
+EasyLD.load.adapterGraphics = loadAdapterGraphics
 
 return EasyLD
