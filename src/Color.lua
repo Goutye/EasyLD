@@ -7,6 +7,10 @@ function Color:initialize(r, g, b, a)
 	self.g = g
 	self.b = b
 	self.a = a
+
+	if self.a == nil then
+		self.a = 255
+	end
 end
 
 return Color

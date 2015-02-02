@@ -18,8 +18,8 @@ function Circle:move(dx, dy)
 	self.y = self.y + dy
 end
 
-function Circle:draw(mode)
-	EasyLD.graphics.circle(mode, self, self.c)
+function Circle:draw(mode, nbSeg)
+	EasyLD.graphics:circle(mode, self, nbSeg, self.c)
 end
 
 return Circle

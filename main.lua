@@ -16,18 +16,23 @@ love.graphics.setBackgroundColor(0,0,0)
 
 tl = nil
 map = nil
+box = nil
 
 function love.load()
-	tl = EasyLD.tileset:new("assets/tilesets/tileset.png", 32)
-	map = EasyLD.map:new("assets/maps/map2.map", tl)
-	map:load()
+	--tl = EasyLD.tileset:new("assets/tilesets/tileset.png", 32)
+	--map = EasyLD.map:new("assets/maps/map2.map", tl)
+	--map:load()
+	box = EasyLD.circle:new(10,70,60,EasyLD.color:new(255,25,25,125))
 end
 function love.update(dt)
 end
 
 function love.draw()
-	map:draw(0, 0, 5, 5, 0, 0)
+	--map:draw(0, 0, 5, 5, 0, 0)
 	EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
+	box:draw("fill", 50)
+	box.a = 255
+	box:draw("line", 10)
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 

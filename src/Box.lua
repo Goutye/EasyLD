@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 local Box = class('Box')
 
-function Box:initialize(x, y, w , h, c)
+function Box:initialize(x, y, w, h, c)
 	self.x = x
 	self.y = y
 	self.w = w

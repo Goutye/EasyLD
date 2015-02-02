@@ -8,6 +8,7 @@ EasyLD.collide = require 'Collide'
 EasyLD.box = require 'Box'
 EasyLD.circle = require 'Circle'
 EasyLD.point = require 'Point'
+EasyLD.color = require 'Color'
 
 
 
