@@ -1,6 +1,6 @@
 local LoveGraphics = {}
 
-function LoveGraphics:rectangle(mode, box, colorR, colorG, colorB, colorA)
+function LoveGraphics:rectangle(mode, box, color)
 	local r, g, b, a = love.graphics.getColor()
 
 	if colorR ~= nil and colorG ~= nil and colorB ~= nil then
@@ -14,7 +14,7 @@ function LoveGraphics:rectangle(mode, box, colorR, colorG, colorB, colorA)
 	love.graphics.setColor(r, g, b, a)
 end
 
-function LoveGraphics:circle(mode, circle, nbSeg, colorR, colorG, colorB, colorA)
+function LoveGraphics:circle(mode, circle, nbSeg, color)
 	local r, g, b, a = love.graphics.getColor()
 
 	if colorR ~= nil and colorG ~= nil and colorB ~= nil then
