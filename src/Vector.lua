@@ -3,12 +3,56 @@ local class = require 'middleclass'
 local Vector = class('Vector')
 
 function Vector.static:of(pos1, pos2)
-	return EasyLD.vector:new(pos2.x - pos1.x, pos2.y - pos1.y)
+	return Vector:new(pos2.x - pos1.x, pos2.y - pos1.y)
 end
 
 function Vector:initialize(x, y)
 	self.x = x
 	self.y = y
+end
+
+function Vector.__add(v1, v2)
+	return Vector:new(v1.x + v2.x, v1.y + v2.y)
+end
+
+function Vector.__sub(v1, v2)
+	return Vector:new(v1.x - v2.x, v1.y - v2.y)
+end
+
+function Vector.__mul(v1, v2)
+	if type(v1) == "number" then
+		return Vector:new(v1 * v2.x, v1 * v2.y)
+	elseif type(v2) == "number" then
+		return Vector:new(v2 * v1.x, v2 * v1.y)
+	else
+		return Vector:new(v1.x * v2.x, v1.y * v2.y)
+	end
+end
+
+function Vector.__div(v1, v2)
+	if type(v1) == "number" then
+		return Vector:new(v1 / v2.x, v1 / v2.y)
+	elseif type(v2) == "number" then
+		return Vector:new(v2 / v1.x, v2 / v1.y)
+	else
+		return Vector:new(v1.x / v2.x, v1.y / v2.y)
+	end
+end
+
+function Vector.__unm(v1)
+	return Vector:new(-v1.x, -v1.y)
+end
+
+function Vector.__eq(v1, v2)
+	return v1.x == v2.x and v1.y == v2.y
+end
+
+function Vector.__lt(v1, v2)
+	return v1.x < v2.x and v1.y < v2.y
+end
+
+function Vector.__le(v1, v2)
+	return v1.x <= v2.x and v1.y <= v2.y
 end
 
 function Vector:normalize()
@@ -27,7 +71,7 @@ function Vector:rotate(angle)
 end
 
 function Vector:copy()
-	return EasyLD.vector:new(self.x, self.y)
+	return Vector:new(self.x, self.y)
 end
 
 function Vector:getAngle()

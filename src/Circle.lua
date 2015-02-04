@@ -13,6 +13,23 @@ function Circle:initialize(x, y, r, c)
 	end
 end
 
+function Circle.__add(c, v)
+	if type(c) == "table" and c.r ~= nil and type(v) == "table" then
+		print(c.c)
+		return Circle:new(c.x + v.x, c.y + v.y, c.r, c.c)
+	else
+		return c
+	end
+end
+
+function Circle.__sub(c, v)
+	if type(c) == "table" and c.r ~= nil and type(v) == "table" then
+		return Circle:new(c.x - v.x, c.y - v.y, c.r, c.c)
+	else
+		return c
+	end
+end
+
 function Circle:move(dx, dy)
 	self.x = self.x + dx
 	self.y = self.y + dy

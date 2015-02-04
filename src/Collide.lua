@@ -16,7 +16,7 @@ function Collide:AABB_circle(box, circle, boolReturnPos)
 		pos.y = box.y
 	end
 
-	local collision = EasyLD.collide:Circle_point(circle, pos)
+	local collision = Collide:Circle_point(circle, pos)
 
 	if boolReturnPos then
 		return collision, pos
@@ -36,7 +36,7 @@ function Collide:AABB_inCircle(box, circle, boolReturnPos)
 	pos[3] = {x = box.x + box.w, y = box.y + box.h}
 
 	for i = 0, 3 do
-		collision = collision and EasyLD.collide:Circle_point(circle, pos[i])
+		collision = collision and Collide:Circle_point(circle, pos[i])
 	end
 
 	if boolReturnPos then

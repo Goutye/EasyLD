@@ -14,6 +14,22 @@ function Box:initialize(x, y, w, h, c)
 	end
 end
 
+function Box.__add(b, v)
+	if type(b) == "table" and b.w ~= nil and type(v) == "table" then
+		return Box:new(b.x + v.x, b.y + v.y, b.w, b.h, b.c)
+	else
+		return b
+	end
+end
+
+function Box.__sub(b, v)
+	if type(b) == "table" and b.w ~= nil and type(v) == "table" then
+		return Box:new(b.x - v.x, b.y - v.y, b.w, b.h, b.c)
+	else
+		return b
+	end
+end
+
 function Box:move(dx, dy)
 	self.x = self.x + dx
 	self.y = self.y + dy

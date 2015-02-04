@@ -22,7 +22,20 @@ function love.load()
 	--tl = EasyLD.tileset:new("assets/tilesets/tileset.png", 32)
 	--map = EasyLD.map:new("assets/maps/map2.map", tl)
 	--map:load()
-	box = EasyLD.circle:new(10,70,60,EasyLD.color:new(255,25,25,125))
+	box = EasyLD.circle:new(10,70, 54,EasyLD.color:new(255,25,25,125))
+	v1 = EasyLD.point:new(1,-1)
+	box = box - v1
+	print(box.x, box.y)
+	v2 = 2 * v1
+	v1 = v1 - v1
+	print(v2.x, v2.y)
+	print(v1.x, v1.y)
+	v1 = v1 / v2
+	print(v1.x, v1.y)
+	v1 = -v1
+	print(v1.x, v1.y)
+	print(v2.x, v2.y)
+	print(v1 < v2, v1 <= v1, v1 > v1)
 end
 function love.update(dt)
 end
