@@ -17,25 +17,18 @@ love.graphics.setBackgroundColor(0,0,0)
 tl = nil
 map = nil
 box = nil
+area = nil
 
 function love.load()
 	--tl = EasyLD.tileset:new("assets/tilesets/tileset.png", 32)
 	--map = EasyLD.map:new("assets/maps/map2.map", tl)
 	--map:load()
-	box = EasyLD.circle:new(10,70, 54,EasyLD.color:new(255,25,25,125))
-	v1 = EasyLD.point:new(1,-1)
-	box = box - v1
-	print(box.x, box.y)
-	v2 = 2 * v1
-	v1 = v1 - v1
-	print(v2.x, v2.y)
-	print(v1.x, v1.y)
-	v1 = v1 / v2
-	print(v1.x, v1.y)
-	v1 = -v1
-	print(v1.x, v1.y)
-	print(v2.x, v2.y)
-	print(v1 < v2, v1 <= v1, v1 > v1)
+	box = EasyLD.box:new(10,70, 54, 45,EasyLD.color:new(255,25,25,125), "fill")
+	box1 = EasyLD.box:new(60,80, 100, 45,EasyLD.color:new(25,25,25,125), "fill")
+	box2 = EasyLD.box:new(80,89, 54, 45,EasyLD.color:new(255,255,25,125), "fill")
+	area = EasyLD.area:new(box)
+	area:attach(box1)
+	area:attach(box2)
 end
 function love.update(dt)
 end
@@ -43,9 +36,7 @@ end
 function love.draw()
 	--map:draw(0, 0, 5, 5, 0, 0)
 	EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
-	box:draw("fill", 50)
-	box.a = 255
-	box:draw("line", 10)
+	area:draw()
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 

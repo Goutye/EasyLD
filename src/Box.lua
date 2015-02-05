@@ -2,12 +2,13 @@ local class = require 'middleclass'
 
 local Box = class('Box')
 
-function Box:initialize(x, y, w, h, c)
+function Box:initialize(x, y, w, h, c, mode)
 	self.x = x
 	self.y = y
 	self.w = w
 	self.h = h
 	self.c = c
+	self.mode = mode
 
 	if c == nil then
 		self.c = EasyLD.color:new(255,255,255)
@@ -36,6 +37,10 @@ function Box:move(dx, dy)
 end
 
 function Box:draw(mode)
+	if mode == nil then
+		mode = self.mode
+	end
+
 	EasyLD.graphics:rectangle(mode, self, self.c)
 end
 

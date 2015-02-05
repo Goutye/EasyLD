@@ -9,6 +9,7 @@ EasyLD.box = require 'Box'
 EasyLD.circle = require 'Circle'
 EasyLD.point = require 'Point'
 EasyLD.color = require 'Color'
+EasyLD.area = require 'Area'
 
 
 

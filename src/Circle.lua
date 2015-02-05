@@ -2,11 +2,12 @@ local class = require 'middleclass'
 
 local Circle = class('Circle')
 
-function Circle:initialize(x, y, r, c)
+function Circle:initialize(x, y, r, c, mode)
 	self.x = x
 	self.y = y
 	self.r = r
 	self.c = c
+	self.mode = mode
 
 	if c == nil then
 		self.c = EasyLD.color:new(255,255,255)
@@ -36,6 +37,9 @@ function Circle:move(dx, dy)
 end
 
 function Circle:draw(mode, nbSeg)
+	if mode == nil then
+		mode = self.mode
+	end
 	EasyLD.graphics:circle(mode, self, nbSeg, self.c)
 end
 
