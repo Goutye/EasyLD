@@ -30,8 +30,11 @@ function love.load()
 	area:attach(box1)
 	area:attach(box2)
 	boxR = box:copy()
+	boxL = box:copy()
 	ox = box.x
 	boxR:rotate(math.pi/4, ox, box.y)
+	boxL:rotate(math.pi/3, ox, box.y)
+	boxL:move(100,100)
 	boxR.c = EasyLD.color:new(0,255,0,125)
 	--boxR:rotate(math.pi/4, ox, box.y)
 
@@ -45,6 +48,12 @@ function love.load()
 	print(EasyLD.collide:OBB_circle(boxR, box1))
 end
 function love.update(dt)
+	boxL:moveTo(love.mouse.getPosition())
+	if EasyLD.collide:OBB_OBB(boxR, boxL) or EasyLD.collide:OBB_circle(boxL, box1) then
+		boxL.c = EasyLD.color:new(0,255,0,125)
+	else
+		boxL.c = EasyLD.color:new(255,0,0,125)
+	end
 end
 
 function love.draw()
@@ -53,6 +62,7 @@ function love.draw()
 	box:draw()
 	box1:draw()
 	boxR:draw()
+	boxL:draw()
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 

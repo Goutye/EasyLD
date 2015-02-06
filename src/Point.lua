@@ -55,4 +55,8 @@ function Point:copy()
 	return Point:new(self.x, self.y)
 end
 
+function Point:dot(v)
+	return self.x * v.x + self.y * v.y
+end
+
 return Point

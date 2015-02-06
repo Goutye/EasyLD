@@ -60,6 +60,12 @@ function Box:move(dx, dy)
 	end
 end
 
+function Box:moveTo(x, y)
+	local dx, dy = x - self.x, y - self.y
+	
+	self:move(dx, dy)
+end
+
 function Box:draw(mode)
 	if mode == nil then
 		mode = self.mode

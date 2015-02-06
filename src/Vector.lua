@@ -33,7 +33,7 @@ function Vector.__div(v1, v2)
 	if type(v1) == "number" then
 		return Vector:new(v1 / v2.x, v1 / v2.y)
 	elseif type(v2) == "number" then
-		return Vector:new(v2 / v1.x, v2 / v1.y)
+		return Vector:new(v1.x / v2, v1.y / v2)
 	else
 		return Vector:new(v1.x / v2.x, v1.y / v2.y)
 	end
@@ -62,7 +62,17 @@ function Vector:normalize()
 end
 
 function Vector:length()
-	return math.sqrt(self.x * self.x + self.y * self.y)
+	return math.sqrt(self:squaredLength())
+end
+
+function Vector:squaredLength()
+	return self.x * self.x + self.y * self.y
+end
+
+function Vector:dot(v)
+	if v:isInstanceOf(Vector) then
+		return self.x * v.x + self.y * v.y
+	end
 end
 
 function Vector:rotate(angle)

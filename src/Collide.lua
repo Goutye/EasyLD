@@ -6,6 +6,49 @@ local Point = require 'Point'
 local Box = require 'Box'
 local Circle = require 'Circle'
 
+local _overlaps1Way = function(b, bAxis, bOrigin)
+	for a = 1, 2 do
+		local t = b.p[1]:dot(bAxis[a])
+		local tMin, tMax = t, t
+
+		for i = 2, 4 do
+			t = b.p[i]:dot(bAxis[a])
+
+			if t < tMin then
+				tMin = t
+			elseif t > tMax then
+				tMax = t
+			end
+		end
+
+		if (tMin > 1 + bOrigin[a]) or (tMax < bOrigin[a]) then
+			return false
+		end
+	end
+
+	return true
+end
+
+function Collide:OBB_OBB(b1, b2)
+	b1Axis = {}
+	b2Axis = {}
+	b1Origin = {}
+	b2Origin = {}
+
+	table.insert(b1Axis, Vector:of(b1.p[1], b1.p[2]))
+	table.insert(b1Axis, Vector:of(b1.p[1], b1.p[4]))
+	table.insert(b2Axis, Vector:of(b2.p[1], b2.p[2]))
+	table.insert(b2Axis, Vector:of(b2.p[1], b2.p[4]))
+
+	for i = 1, 2 do
+		b1Axis[i] = b1Axis[i] / b1Axis[i]:squaredLength()
+		b2Axis[i] = b2Axis[i] / b2Axis[i]:squaredLength()
+		b1Origin[i] = b1.p[1]:dot(b1Axis[i])
+		b2Origin[i] = b2.p[1]:dot(b2Axis[i])
+	end
+
+	return _overlaps1Way(b1, b2Axis, b2Origin) and _overlaps1Way(b2, b1Axis, b1Origin)
+end
 
 function Collide:OBB_circle(box, circle)
 	local v1 = Vector:of(box.p[1], box.p[2])
@@ -27,7 +70,7 @@ function Collide:OBB_circle(box, circle)
 	return Collide:AABB_circle(boxR, circleR, false)
 end
 
-function Collide:OBB_OBB()
+function Collide:OBB_point(box, point)
 
 end
 
