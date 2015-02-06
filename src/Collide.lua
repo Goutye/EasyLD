@@ -71,7 +71,27 @@ function Collide:OBB_circle(box, circle)
 end
 
 function Collide:OBB_point(box, point)
+	b1Axis = {}
+	b1Origin = {}
 
+	table.insert(b1Axis, Vector:of(box.p[1], box.p[2]))
+	table.insert(b1Axis, Vector:of(box.p[1], box.p[4]))
+
+	for i = 1, 2 do
+		b1Axis[i] = b1Axis[i] / b1Axis[i]:squaredLength()
+		b1Origin[i] = box.p[1]:dot(b1Axis[i])
+	end
+
+	for a = 1, 2 do
+		local t = point:dot(b1Axis[a])
+		local tMin, tMax = t, t
+
+		if (tMin > 1 + b1Origin[a]) or (tMax < b1Origin[a]) then
+			return false
+		end
+	end
+
+	return true
 end
 
 function Collide:AABB_circle(box, circle, boolReturnPos)

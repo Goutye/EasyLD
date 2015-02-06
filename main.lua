@@ -44,8 +44,6 @@ function love.load()
 			m.d[i][j] = math.random(-3, 4)
 		end
 	end
-
-	print(EasyLD.collide:OBB_circle(boxR, box1))
 end
 function love.update(dt)
 	boxL:moveTo(love.mouse.getPosition())
@@ -53,6 +51,12 @@ function love.update(dt)
 		boxL.c = EasyLD.color:new(0,255,0,125)
 	else
 		boxL.c = EasyLD.color:new(255,0,0,125)
+	end
+
+	if EasyLD.collide:OBB_point(boxR, EasyLD.point:new(love.mouse.getPosition())) then
+		box1.c = EasyLD.color:new(0,0,255,125)
+	else
+		box1.c = EasyLD.color:new(25,25,25,125)
 	end
 end
 
