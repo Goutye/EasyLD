@@ -3,6 +3,7 @@ local class = require 'middleclass'
 local EasyLD = {}
 EasyLD.tileset = require 'Tileset'
 EasyLD.map = require 'Map'
+EasyLD.matrix = require 'Matrix'
 EasyLD.vector = require 'Vector'
 EasyLD.collide = require 'Collide'
 EasyLD.box = require 'Box'

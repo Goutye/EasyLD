@@ -51,4 +51,8 @@ function Point.__le(v1, v2)
 	return v1.x <= v2.x and v1.y <= v2.y
 end
 
+function Point:copy()
+	return Point:new(self.x, self.y)
+end
+
 return Point

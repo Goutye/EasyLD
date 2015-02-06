@@ -1,9 +1,40 @@
 local Collide = {}
 
+local Vector = require 'Vector'
+local Matrix = require 'Matrix'
+local Point = require 'Point'
+local Box = require 'Box'
+local Circle = require 'Circle'
+
+
+function Collide:OBB_circle(box, circle)
+	local v1 = Vector:of(box.p[1], box.p[2])
+	local v2 = Vector:of(box.p[1], box.p[4])
+	v1:normalize()
+	v2:normalize()
+
+	local m = Matrix:newBase(v1, v2):invert()
+
+	local circleP = Point:new(circle.x, circle.y)
+	circleP = m * circleP
+
+	local boxP = box.p[1]:copy()
+	boxP = m * boxP
+
+	local boxR = Box:new(boxP.x, boxP.y, box.w, box.h)
+	local circleR = Circle:new(circleP.x, circleP.y, circle.r)
+
+	return Collide:AABB_circle(boxR, circleR, false)
+end
+
+function Collide:OBB_OBB()
+
+end
+
 function Collide:AABB_circle(box, circle, boolReturnPos)
 	local pos = {}
-	pos.x = circle.pos.x
-	pos.y = circle.pos.y
+	pos.x = circle.x
+	pos.y = circle.y
 
 	if pos.x > box.x + box.w - 1 then
 		pos.x = box.x + box.w - 1
@@ -59,12 +90,12 @@ function Collide:AABB_AABB(box1, box2)
 end
 
 function Collide:Circle_point(circle, point)
-	local v = EasyLD.vector:of(circle.pos, point)
-	return EasyLD.vector:length(v) <= circle.r
+	local v = Vector:of(circle, point)
+	return v:length() <= circle.r
 end
 
 function Collide:Circle_circle(circle, circle2)
-	return EasyLD.vector:length(EasyLD.vector:of(circle.pos, circle2.pos)) < circle.r + circle2.r
+	return EasyLD.vector:length(EasyLD.vector:of(circle, circle2.pos)) < circle.r + circle2.r
 end
 
 

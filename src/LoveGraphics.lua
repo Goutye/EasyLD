@@ -18,15 +18,19 @@ function LoveGraphics:circle(mode, circle, nbSeg, color)
 	love.graphics.setColor(r, g, b, a)
 end
 
-function LoveGraphics:polygon(mode, ...)
+function LoveGraphics:polygon(mode, color, ...)
 	local p = {}
-	
+	local r, g, b, a = love.graphics.getColor()
+
+	love.graphics.setColor(color.r, color.g, color.b, color.a)
+
 	for i,v in ipairs({...}) do
 		table.insert(p, v.x)
 		table.insert(p, v.y)
 	end
 
 	love.graphics.polygon(mode, unpack(p))
+	love.graphics.setColor(r, g, b, a)
 end
 
 return LoveGraphics
