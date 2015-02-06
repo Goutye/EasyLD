@@ -95,7 +95,7 @@ function Collide:Circle_point(circle, point)
 end
 
 function Collide:Circle_circle(circle, circle2)
-	return EasyLD.vector:length(EasyLD.vector:of(circle, circle2.pos)) < circle.r + circle2.r
+	return Vector:of(circle, circle2):length() < circle.r + circle2.r
 end
 
 
