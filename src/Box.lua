@@ -47,7 +47,16 @@ function Box.__sub(b, v)
 end
 
 function Box:copy()
-	return Box:new(self.x, self.y, self.w, self.h, self.c, self.mode)
+	local b = Box:new(self.x, self.y, self.w, self.h, self.c, self.mode)
+	b.angle = self.angle
+	b.wP = self.wP:copy()
+	b.hP = self.hP:copy()
+
+	for i = 1, 4 do
+		b.p[i] = self.p[i]:copy()
+	end
+	
+	return b
 end
 
 function Box:move(dx, dy)

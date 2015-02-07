@@ -44,10 +44,16 @@ function love.load()
 
 	box2 = box1:copy()
 	box2:rotate(math.pi/2, box2.x, box2.y+box2.r)
+	box3 = boxR:copy()
+	box3.c = EasyLD.color:new(5,255,255,125)
+
 	box2.c = EasyLD.color:new(0,100,255,125)
+
+
 
 	area = EasyLD.area:new(box)
 	area:attach(box1)
+	--area:attach(box3)
 	area:attach(box2)
 	area:attach(boxR)
 	area:rotate(math.pi/2, box1.x, box1.y)
@@ -69,6 +75,7 @@ end
 
 function love.draw()
 	area:draw()
+	box3:draw()
 	--map:draw(0, 0, 5, 5, 0, 0)
 	--EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
