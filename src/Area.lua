@@ -33,8 +33,7 @@ end
 
 function Area:translate(dx, dy)
 	for _,o in ipairs(self.forms) do
-		o.x = o.x + dx
-		o.y = o.y + dy
+		o:translate(dx, dy)
 	end
 
 	self.x = self.x + dx

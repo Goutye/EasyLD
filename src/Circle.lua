@@ -34,7 +34,12 @@ function Circle.__sub(c, v)
 	end
 end
 
-function Circle:move(dx, dy)
+function Circle:moveTo(x, y)
+	self.x = x
+	self.y = y
+end
+
+function Circle:translate(dx, dy)
 	self.x = self.x + dx
 	self.y = self.y + dy
 end

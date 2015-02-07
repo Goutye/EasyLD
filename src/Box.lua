@@ -55,11 +55,11 @@ function Box:copy()
 	for i = 1, 4 do
 		b.p[i] = self.p[i]:copy()
 	end
-	
+
 	return b
 end
 
-function Box:move(dx, dy)
+function Box:translate(dx, dy)
 	self.x = self.x + dx
 	self.y = self.y + dy
 
@@ -72,7 +72,7 @@ end
 function Box:moveTo(x, y)
 	local dx, dy = x - self.x, y - self.y
 	
-	self:move(dx, dy)
+	self:translate(dx, dy)
 end
 
 function Box:draw(mode)

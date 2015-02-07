@@ -31,7 +31,7 @@ function love.load()
 	ox = box.x
 	boxR:rotate(math.pi/4, ox, box.y)
 	boxL:rotate(math.pi/3, ox, box.y)
-	boxL:move(100,100)
+	boxL:translate(100,100)
 	boxR.c = EasyLD.color:new(0,255,0,125)
 	--boxR:rotate(math.pi/4, ox, box.y)
 
@@ -57,6 +57,7 @@ function love.load()
 	area:attach(box2)
 	area:attach(boxR)
 	area:rotate(math.pi/2, box1.x, box1.y)
+	area:translate(100, 10)
 end
 function love.update(dt)
 	boxL:moveTo(love.mouse.getPosition())
