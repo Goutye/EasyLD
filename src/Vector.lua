@@ -76,6 +76,7 @@ function Vector:dot(v)
 end
 
 function Vector:rotate(angle)
+	local cos, sin = math.cos(angle), math.sin(angle)
 	self.x = self.x * math.cos(angle) - self.y * math.sin(angle)
 	self.y = self.x * math.sin(angle) + self.y * math.cos(angle)
 end

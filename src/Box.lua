@@ -79,7 +79,7 @@ function Box:draw(mode)
 end
 
 function Box:rotate(angle, ox, oy)
-	self.angle = angle
+	self.angle = self.angle + angle
 	local cos, sin = math.cos(angle), math.sin(angle)
 	local mat = Matrix:newRotation(angle)
 	local v = Vector:new(self.x - ox, self.y - oy)

@@ -41,6 +41,12 @@ function Area:translate(dx, dy)
 	self.y = self.y + dy
 end
 
+function Area:rotate(angle, ox, oy)
+	for _,o in ipairs(self.forms) do
+		o:rotate(angle, ox, oy)
+	end
+end
+
 function Area:draw()
 	for _,o in ipairs(self.forms) do
 		o:draw()

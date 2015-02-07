@@ -1,5 +1,8 @@
 local class = require 'middleclass'
 
+local Matrix = require 'Matrix'
+local Vector = require 'Vector'
+
 local Circle = class('Circle')
 
 function Circle:initialize(x, y, r, c, mode)
@@ -41,6 +44,20 @@ function Circle:draw(mode, nbSeg)
 		mode = self.mode
 	end
 	EasyLD.graphics:circle(mode, self, nbSeg, self.c)
+end
+
+function Circle:rotate(angle, ox, oy)
+	local cos, sin = math.cos(angle), math.sin(angle)
+	local mat = Matrix:newRotation(angle)
+	local v = Vector:new(self.x - ox, self.y - oy)
+	v = mat * v
+
+	self.x = v.x + ox
+	self.y = v.y + oy
+end
+
+function Circle:copy()
+	return Circle:new(self.x, self.y, self.r, self.c, self.mode)
 end
 
 return Circle

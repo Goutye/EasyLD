@@ -26,9 +26,6 @@ function love.load()
 	box = EasyLD.box:new(200,270, 54, 45,EasyLD.color:new(255,25,25,125), "fill")
 	box1 = EasyLD.circle:new(170,335, 20,EasyLD.color:new(25,25,25,125), "fill")
 	box2 = EasyLD.box:new(80,89, 54, 45,EasyLD.color:new(255,255,25,125), "fill")
-	area = EasyLD.area:new(box)
-	area:attach(box1)
-	area:attach(box2)
 	boxR = box:copy()
 	boxL = box:copy()
 	ox = box.x
@@ -44,6 +41,16 @@ function love.load()
 			m.d[i][j] = math.random(-3, 4)
 		end
 	end
+
+	box2 = box1:copy()
+	box2:rotate(math.pi/2, box2.x, box2.y+box2.r)
+	box2.c = EasyLD.color:new(0,100,255,125)
+
+	area = EasyLD.area:new(box)
+	area:attach(box1)
+	area:attach(box2)
+	area:attach(boxR)
+	area:rotate(math.pi/2, box1.x, box1.y)
 end
 function love.update(dt)
 	boxL:moveTo(love.mouse.getPosition())
@@ -61,12 +68,9 @@ function love.update(dt)
 end
 
 function love.draw()
+	area:draw()
 	--map:draw(0, 0, 5, 5, 0, 0)
 	--EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
-	box:draw()
-	box1:draw()
-	boxR:draw()
-	boxL:draw()
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 
