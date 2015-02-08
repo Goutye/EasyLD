@@ -18,12 +18,8 @@ box = nil
 area = nil
 
 function love.load()
-	--tl = EasyLD.tileset:new("assets/tilesets/tileset.png", 32)
-	--map = EasyLD.map:new("assets/maps/map2.map", tl)
-	--map:load()
 	box = EasyLD.box:new(200,270, 54, 45,EasyLD.color:new(255,25,25,125), "fill")
 	box1 = EasyLD.circle:new(170,335, 20,EasyLD.color:new(25,25,25,125), "fill")
-	box2 = EasyLD.box:new(80,89, 54, 45,EasyLD.color:new(255,255,25,125), "fill")
 	boxR = box:copy()
 	boxL = box:copy()
 	ox = box.x
@@ -31,7 +27,6 @@ function love.load()
 	boxL:rotate(math.pi/3, ox, box.y)
 	boxL:translate(100,100)
 	boxR.c = EasyLD.color:new(0,255,0,125)
-	--boxR:rotate(math.pi/4, ox, box.y)
 
 	m = EasyLD.matrix:new(2, 2)
 	for i = 0, 1 do
@@ -44,20 +39,18 @@ function love.load()
 	box2:rotate(math.pi/2, box2.x, box2.y+box2.r)
 	box3 = boxR:copy()
 	box3.c = EasyLD.color:new(5,255,255,125)
-
 	box2.c = EasyLD.color:new(0,100,255,125)
-
-
 
 	area = EasyLD.area:new(box)
 	area:attach(box1)
-	--area:attach(box3)
 	area:attach(box2)
 	area:attach(boxR)
 	area:rotate(math.pi/2, box1.x, box1.y)
 	area:translate(100, 10)
 end
 function love.update(dt)
+	area:rotate(math.pi/180, box1.x, box1.y)
+
 	boxL:moveTo(love.mouse.getPosition())
 	if EasyLD.collide:OBB_OBB(boxR, boxL) then
 		boxL.c = EasyLD.color:new(0,255,0,125)
@@ -76,8 +69,6 @@ function love.draw()
 	area:draw()
 	box3:draw()
 	boxL:draw()
-	--map:draw(0, 0, 5, 5, 0, 0)
-	--EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 
