@@ -1,7 +1,5 @@
 local Mouse = {}
 
-local Point = require 'Point'
-
 function Mouse.getPosition()
 	return EasyLD.mouse.x, EasyLD.mouse.y
 end

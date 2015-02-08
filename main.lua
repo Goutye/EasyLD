@@ -1,11 +1,9 @@
 package.path = package.path .. ';src/?.lua'
 package.path = package.path .. ';lib/?.lua'
 
-AdapterImage = require 'LoveImage'
-AdapterGraphics = require 'LoveGraphics'
 EasyLD = require 'EasyLD'
-EasyLD.load.adapterImage(AdapterImage)
-EasyLD.load.adapterGraphics(AdapterGraphics)
+EasyLD.load("Löve2D")
+
 --LOCAL VARIABLE
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -61,7 +59,7 @@ function love.load()
 end
 function love.update(dt)
 	boxL:moveTo(love.mouse.getPosition())
-	if EasyLD.collide:OBB_OBB(boxR, boxL) or EasyLD.collide:OBB_circle(boxL, box1) then
+	if EasyLD.collide:OBB_OBB(boxR, boxL) then
 		boxL.c = EasyLD.color:new(0,255,0,125)
 	else
 		boxL.c = EasyLD.color:new(255,0,0,125)
@@ -77,6 +75,7 @@ end
 function love.draw()
 	area:draw()
 	box3:draw()
+	boxL:draw()
 	--map:draw(0, 0, 5, 5, 0, 0)
 	--EasyLD.graphics:polygon("fill", EasyLD.point:new(1,1), EasyLD.point:new(1,90), EasyLD.point:new(50,159), EasyLD.point:new(59,1))
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)

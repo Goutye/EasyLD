@@ -67,7 +67,7 @@ function drystal.update(dt)
 
 	area:rotate(math.pi/180, box1.x, box1.y)
 	boxL:moveTo(EasyLD.mouse:getPosition())
-	if EasyLD.collide:OBB_OBB(boxR, boxL) or EasyLD.collide:OBB_OBB(boxL, box1) then
+	if EasyLD.collide:OBB_OBB(boxR, boxL) then
 		boxL.c = EasyLD.color:new(0,255,0,125)
 	else
 		boxL.c = EasyLD.color:new(255,0,0,125)
