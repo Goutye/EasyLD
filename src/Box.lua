@@ -49,7 +49,7 @@ function Box.__sub(b, v)
 end
 
 function Box:copy()
-	local b = Box:new(self.x, self.y, self.w, self.h, self.c, self.mode)
+	local b = Box:new(self.x, self.y, self.w, self.h, self.c:copy(), self.mode)
 	b.angle = self.angle
 	b.wP = self.wP:copy()
 	b.hP = self.hP:copy()

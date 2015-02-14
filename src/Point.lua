@@ -55,7 +55,7 @@ function Point.__le(v1, v2)
 end
 
 function Point:copy()
-	return Point:new(self.x, self.y)
+	return Point:new(self.x, self.y, self.c:copy())
 end
 
 function Point:dot(v)

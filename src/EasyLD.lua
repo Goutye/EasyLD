@@ -11,6 +11,7 @@ EasyLD.vector = require 'Vector'
 EasyLD.collide = require 'Collide'
 
 EasyLD.area = require 'Area'
+EasyLD.polygon = require 'Polygon'
 EasyLD.box = require 'Box'
 EasyLD.circle = require 'Circle'
 EasyLD.segment = require 'Segment'

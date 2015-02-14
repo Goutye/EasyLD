@@ -24,4 +24,8 @@ function Segment:draw()
 	EasyLD.graphics:line(self.p1, self.p2, self.c)
 end
 
+function Segment:copy()
+	return Segment:new(p1:copy(), p2:copy(), self.c:copy())
+end
+
 return Segment

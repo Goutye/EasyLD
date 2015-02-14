@@ -62,7 +62,7 @@ function Circle:rotate(angle, ox, oy)
 end
 
 function Circle:copy()
-	return Circle:new(self.x, self.y, self.r, self.c, self.mode)
+	return Circle:new(self.x, self.y, self.r, self.c:copy(), self.mode)
 end
 
 --EasyLD.collide functions

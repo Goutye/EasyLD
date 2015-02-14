@@ -13,4 +13,8 @@ function Color:initialize(r, g, b, a)
 	end
 end
 
+function Color:copy()
+	return Color:new(self.r, self.g, self.b, self.a)
+end
+
 return Color
