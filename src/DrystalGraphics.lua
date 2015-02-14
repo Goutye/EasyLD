@@ -48,4 +48,28 @@ function DrystalGraphics:polygon(mode, color, ...)
 	drystal.set_alpha(255)
 end
 
+function DrystalGraphics:point(p, color)
+	drystal.set_color(color.r, color.g, color.b)
+	drystal.set_alpha(color.a)
+
+	drystal.draw_point(p.x, p.y, 1)
+
+	drystal.set_color(255,255,255)
+	drystal.set_alpha(255)
+end
+
+function DrystalGraphics:line(p1, p2, color)
+	drystal.set_color(color.r, color.g, color.b)
+	drystal.set_alpha(color.a)
+
+	drystal.draw_line(p1.x, p1.y, p2.x, p2.y)
+
+	drystal.set_color(255,255,255)
+	drystal.set_alpha(255)
+end
+
+function DrystalGraphics:triangle(mode, p1, p2, p3, color)
+	DrystalGraphics:polygon(mode, color, p1, p2, p3)
+end
+
 return DrystalGraphics

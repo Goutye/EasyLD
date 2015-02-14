@@ -1,10 +1,13 @@
 local class = require 'middleclass'
 
-local Point = class('Point')
+local Shape = require 'Shape'
 
-function Point:initialize(x, y)
+local Point = class('Point', Shape)
+
+function Point:initialize(x, y, color)
 	self.x = x
 	self.y = y
+	self.c = color or EasyLD.color:new(255,255,255)
 end
 
 function Point.__add(v1, v2)
@@ -57,6 +60,28 @@ end
 
 function Point:dot(v)
 	return self.x * v.x + self.y * v.y
+end
+
+function Point:draw()
+	if mode == nil then
+		mode = self.mode
+	end
+	EasyLD.graphics:point(self, self.c)
+end
+
+function Point:translate(dx, dy)
+	self.x = self.x + dx
+	self.y = self.y + dy
+end
+
+function Point:rotate(angle, ox, oy)
+	local cos, sin = math.cos(angle), math.sin(angle)
+	local mat = EasyLD.matrix:newRotation(angle)
+	local v = EasyLD.vector:new(self.x - ox, self.y - oy)
+	v = mat * v
+
+	self.x = v.x + ox
+	self.y = v.y + oy
 end
 
 --EasyLD.collide functions

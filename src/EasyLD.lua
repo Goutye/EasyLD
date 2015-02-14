@@ -8,12 +8,13 @@ EasyLD.map = require 'Map'
 
 EasyLD.matrix = require 'Matrix'
 EasyLD.vector = require 'Vector'
-EasyLD.point = require 'Point'
 EasyLD.collide = require 'Collide'
 
 EasyLD.area = require 'Area'
 EasyLD.box = require 'Box'
 EasyLD.circle = require 'Circle'
+EasyLD.segment = require 'Segment'
+EasyLD.point = require 'Point'
 
 EasyLD.color = require 'Color'
 
@@ -21,6 +22,7 @@ EasyLD.mouse = require 'Mouse'
 EasyLD.keyboard = require 'Keyboard'
 
 EasyLD.inputText = require 'InputText'
+EasyLD.timer = require 'cron'
 
 local function loadAdapterImage(base)
 	EasyLD.image = base
@@ -51,6 +53,7 @@ end
 function EasyLD:update(dt)
 	EasyLD.keyboard:reset()
 	EasyLD.mouse:reset()
+	EasyLD.timer.update(dt)
 end
 
 EasyLD.load = loadAPI

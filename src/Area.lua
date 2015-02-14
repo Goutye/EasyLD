@@ -1,28 +1,35 @@
 local class = require 'middleclass'
 
-local Box = require 'Box'
-local Circle = require 'Circle'
+local Shape = require 'Shape'
 local Area = class('Area')
 
-function Area:initialize(obj)
+function Area:initialize(obj, ox, oy)
 	self.forms = {}
-	if not obj:isInstanceOf(Box) and not obj:isInstanceOf(Circle) then
+	if not obj:isInstanceOf(Shape) then
 		print("Bad using of Area : Obj is not a Boc or Circle")
 	end
 	table.insert(self.forms, obj)
 
 	self.x = obj.x
 	self.y = obj.y
+	self.ox = ox
+	self.oy = oy
+
+	self.follower = nil
 end
 
 function Area:attach(obj)
-	if obj:isInstanceOf(Box) or obj:isInstanceOf(Circle) then
+	if obj:isInstanceOf(Shape) then
 		table.insert(self.forms, obj)
 	end
 end
 
 function Area:detach(obj)
 	table.remove(self.forms, obj)
+end
+
+function Area:follow(obj)
+	self.follower = obj
 end
 
 function Area:moveTo(x, y)
@@ -41,6 +48,13 @@ function Area:translate(dx, dy)
 end
 
 function Area:rotate(angle, ox, oy)
+	if self.follower ~= nil and self.follower:isInstanceOf(Shape) then
+		ox = self.follower.x
+		oy = self.follower.y
+	elseif ox == nil or oy == nil then
+		ox = self.ox
+		oy = self.oy
+	end
 	for _,o in ipairs(self.forms) do
 		o:rotate(angle, ox, oy)
 	end

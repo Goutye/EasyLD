@@ -4,7 +4,9 @@ local Point = require 'Point'
 local Vector = require 'Vector'
 local Matrix = require 'Matrix'
 
-local Box = class('Box')
+local Shape = require 'Shape'
+
+local Box = class('Box', Shape)
 
 function Box:initialize(x, y, w, h, c, mode)
 	self.x = x
@@ -89,17 +91,16 @@ end
 
 function Box:rotate(angle, ox, oy)
 	self.angle = self.angle + angle
-	local cos, sin = math.cos(angle), math.sin(angle)
+	local point = EasyLD.point:new(self.x, self.y)
 	local mat = Matrix:newRotation(angle)
-	local v = Vector:new(self.x - ox, self.y - oy)
-	v = mat * v
+	point:rotate(angle, ox, oy)
 
 	self.wP = mat * self.wP
 	self.hP = mat * self.hP
 
 	local p = {}
 	local w, h = self.wP, self.hP
-	table.insert(p, Point:new(v.x + ox, v.y + oy))
+	table.insert(p, Point:new(point.x, point.y))
 	table.insert(p, Point:new(p[1].x + w.x, p[1].y + w.y))
 	table.insert(p, Point:new(p[2].x + h.x, p[2].y + h.y))
 	table.insert(p, Point:new(p[1].x + h.x, p[1].y + h.y))

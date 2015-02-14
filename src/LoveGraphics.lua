@@ -33,4 +33,24 @@ function LoveGraphics:polygon(mode, color, ...)
 	love.graphics.setColor(r, g, b, a)
 end
 
+function LoveGraphics:point(p, color)
+	local r, g, b, a = love.graphics.getColor()
+
+	love.graphics.setColor(color.r, color.g, color.b, color.a)
+	love.graphics.point(p.x, p.y)
+	love.graphics.setColor(r, g, b, a)
+end
+
+function LoveGraphics:line(p1, p2, color)
+	local r, g, b, a = love.graphics.getColor()
+
+	love.graphics.setColor(color.r, color.g, color.b, color.a)
+	love.graphics.line(p1.x, p1.y, p2.x, p2.y)
+	love.graphics.setColor(r, g, b, a)
+end
+
+function LoveGraphics:triangle(mode, p1, p2, p3, color)
+	LoveGraphics:polygon(mode, color, p1, p2, p3)
+end
+
 return LoveGraphics
