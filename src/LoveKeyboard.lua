@@ -16,4 +16,8 @@ function love.keyreleased(key)
 	EasyLD.keyboard:keyReleased(key)
 end
 
+function love.textinput(t)
+	EasyLD.keyboard.lastChar = t
+end
+
 return Keyboard

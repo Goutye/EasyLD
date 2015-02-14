@@ -1,7 +1,7 @@
 local Mouse = {}
 
 function Mouse.getPosition()
-	return love.mouse.getPosition()
+	return EasyLD.point:new(love.mouse.getPosition())
 end
 
 function love.mousepressed(x, y, button)

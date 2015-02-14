@@ -10,6 +10,7 @@ function Keyboard.new()
 	local self = setmetatable({}, Keyboard)
 
 	self.last = nil
+	self.lastChar = nil
 
 	return self
 end

@@ -1,7 +1,7 @@
 local Mouse = {}
 
 function Mouse.getPosition()
-	return EasyLD.mouse.x, EasyLD.mouse.y
+	return EasyLD.point:new(EasyLD.mouse.x, EasyLD.mouse.y)
 end
 
 function drystal.mouse_press(x, y, button)

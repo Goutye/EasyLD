@@ -31,3 +31,9 @@ Developper : Gautier Boëda
 
 Drystal : http://drystal.github.io/ (Run on Web (Javascript HTML5) or Linux)
 Löve2D : https://love2d.org/ (Run on Windows-MacOS/X-Linux)
+
+
+Library :
+---------
+middleclass.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota
+utf8.lua - BSD License - Copyright (c) 2006-2007 Kyle Smith

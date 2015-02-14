@@ -5,6 +5,8 @@ AdaptaterImage = require 'LoveImage'
 EasyLD = require 'EasyLD'
 EasyLD.load.adaptaterImage(AdaptaterImage)
 
+local utf8 = require 'utf8'
+
 local Mouse = require 'Mouse'
 local Keyboard = require 'Keyboard'
 
@@ -370,6 +372,10 @@ function love.keyreleased(key)
 	end
 
 	keyboard:keyReleased(key)
+end
+
+function love.textinput(t)
+	keyboard.lastChar = t
 end
 
 function love.mousepressed(x, y, button)

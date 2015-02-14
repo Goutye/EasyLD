@@ -14,7 +14,7 @@ end
 
 function InputText:update(dt)
 	if EasyLD.mouse:isPressed("l") then
-		if EasyLD.collide:AABB_point(self.box, EasyLD.point:new(EasyLD.mouse:getPosition())) then
+		if EasyLD.collide:AABB_point(self.box, EasyLD.mouse:getPosition()) then
 			self.focus = true
 		else
 			self.focus = false
@@ -25,11 +25,14 @@ function InputText:update(dt)
 		local key = EasyLD.keyboard:lastKeyPressed()
 
 		if key ~= nil and self.lastKey ~= key then
-			if string.len(key) == 1 and ((string.byte(key) > 64 and string.byte(key) < 123) 
-				or (string.byte(key) > 47 and string.byte(key) < 58)) and self.text:len() < self.nbChar then
-				self.text = self.text .. key
+			if string.len(key) == 1 and string.utf8len(self.text) < self.nbChar then
+				self.text = self.text .. (EasyLD.keyboard.lastChar or key)
 			elseif key == "backspace" then
-				self.text = string.sub(self.text, 0, -2)
+				if string.utf8len(self.text) == 1 then
+					self.text = ""
+				else
+					self.text = string.utf8sub(self.text, 0, -2)
+				end
 			end
 
 			self.lastKey = key

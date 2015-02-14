@@ -1,5 +1,7 @@
 local class = require 'middleclass'
 
+local utf8 = require 'utf8'
+
 local EasyLD = {}
 EasyLD.tileset = require 'Tileset'
 EasyLD.map = require 'Map'
