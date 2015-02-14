@@ -109,4 +109,33 @@ function Box:rotate(angle, ox, oy)
 	self.y = p[1].y
 end
 
+--EasyLD.collide functions
+function Box:collide(area)
+	return area:collideBox(self)
+end
+
+function Box:collideBox(b)
+	if self.angle == 0 and area.angle == 0 then
+		return EasyLD.collide:AABB_AABB(self, b)
+	else
+		return EasyLD.collide:OBB_OBB(self, b)
+	end
+end
+
+function Box:collideCircle(c)
+	if self.angle == 0 then
+		return EasyLD.collide:AABB_circle(self, c)
+	else
+		return EasyLD.collide:OBB_circle(self, c)
+	end
+end
+
+function Box:collidePoint(p)
+	if self.angle == 0 then
+		return EasyLD.collide:AABB_point(self, p)
+	else
+		return EasyLD.collide:OBB_point(self, p)
+	end
+end
+
 return Box

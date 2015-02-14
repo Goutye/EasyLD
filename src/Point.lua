@@ -59,4 +59,25 @@ function Point:dot(v)
 	return self.x * v.x + self.y * v.y
 end
 
+--EasyLD.collide functions
+function Point:collide(area)
+	return area:collidePoint(self)
+end
+
+function Point:collideBox(b)
+	if b.angle == 0 then
+		return EasyLD.collide:AABB_point(b, self)
+	else
+		return EasyLD.collide:OBB_point(b, self)
+	end
+end
+
+function Point:collideCircle(c)
+	return EasyLD.collide:Circle_point(c, self)
+end
+
+function Point:collidePoint(p)
+	return p.x == self.x and p.y == self.y
+end
+
 return Point

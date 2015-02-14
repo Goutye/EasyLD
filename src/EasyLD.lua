@@ -18,6 +18,8 @@ EasyLD.color = require 'Color'
 EasyLD.mouse = require 'Mouse'
 EasyLD.keyboard = require 'Keyboard'
 
+EasyLD.inputText = require 'InputText'
+
 local function loadAdapterImage(base)
 	EasyLD.image = base
 end
@@ -42,6 +44,11 @@ local function loadAPI(name)
 		loadAdapterGraphics(require 'LoveGraphics')
 		loadAdapterImage(require 'LoveImage')
 	end
+end
+
+function EasyLD:update(dt)
+	EasyLD.keyboard:reset()
+	EasyLD.mouse:reset()
 end
 
 EasyLD.load = loadAPI

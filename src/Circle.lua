@@ -65,4 +65,25 @@ function Circle:copy()
 	return Circle:new(self.x, self.y, self.r, self.c, self.mode)
 end
 
+--EasyLD.collide functions
+function Circle:collide(area)
+	return area:collideCircle(self)
+end
+
+function Circle:collideBox(b)
+	if b.angle == 0 then
+		return EasyLD.collide:AABB_circle(b, self)
+	else
+		return EasyLD.collide:OBB_circle(b, self)
+	end
+end
+
+function Circle:collideCircle(c)
+	return EasyLD.collide:Circle_circle(self, c)
+end
+
+function Circle:collidePoint(p)
+	return EasyLD.collide:Circle_point(self, p)
+end
+
 return Circle

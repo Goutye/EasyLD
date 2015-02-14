@@ -14,7 +14,7 @@ function Keyboard.new()
 	return self
 end
 
-function Keyboard:whatKeyIsPressed()
+function Keyboard:lastKeyPressed()
 	return self.last
 end
 

@@ -16,15 +16,18 @@ tl = nil
 map = nil
 box = nil
 area = nil
+inputtext = nil
 
 function love.load()
+	inputtext = EasyLD.inputText:new(EasyLD.box:new(10,10,100,30), EasyLD.color:new(150,10,10), EasyLD.color:new(255,255,255))
+
 	box = EasyLD.box:new(200,270, 54, 45,EasyLD.color:new(255,25,25,125), "fill")
 	box1 = EasyLD.circle:new(170,335, 20,EasyLD.color:new(25,25,25,125), "fill")
 	boxR = box:copy()
 	boxL = box:copy()
 	ox = box.x
 	boxR:rotate(math.pi/4, ox, box.y)
-	boxL:rotate(math.pi/3, ox, box.y)
+	--boxL:rotate(math.pi/3, ox, box.y)
 	boxL:translate(100,100)
 	boxR.c = EasyLD.color:new(0,255,0,125)
 
@@ -48,7 +51,10 @@ function love.load()
 	area:rotate(math.pi/2, box1.x, box1.y)
 	area:translate(100, 10)
 end
+
 function love.update(dt)
+	inputtext:update(dt)
+
 	area:rotate(math.pi/180, box1.x, box1.y)
 
 	boxL:moveTo(love.mouse.getPosition())
@@ -63,23 +69,14 @@ function love.update(dt)
 	else
 		box1.c = EasyLD.color:new(25,25,25,125)
 	end
+
+	EasyLD:update(dt)
 end
 
 function love.draw()
 	area:draw()
 	box3:draw()
 	boxL:draw()
+	inputtext:draw()
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
-end
-
-function love.keypressed(key)
-end
-
-function love.keyreleased(key)
-end
-
-function love.mousepressed(x, y, button)
-end
-
-function love.mousereleased(x, y, button)
 end

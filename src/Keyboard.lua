@@ -9,12 +9,12 @@ Keyboard.__index = Keyboard
 function Keyboard.new()
 	local self = setmetatable({}, Keyboard)
 
-	self.last = ""
+	self.last = nil
 
 	return self
 end
 
-function Keyboard:whatKeyIsPressed()
+function Keyboard:lastKeyPressed()
 	return self.last
 end
 
@@ -31,7 +31,7 @@ function Keyboard:keyReleased(key)
 	self.downTime[key] = nil
 
 	if self.last == key then
-		self.last = ""
+		self.last = nil
 	end
 end
 
@@ -61,7 +61,7 @@ function Keyboard:reset()
 	for key, value in pairs(self.released) do
 		self.released[key] = false
 	end
-	self.last = ""
+	self.last = nil
 end
 
 return Keyboard:new()

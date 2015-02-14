@@ -53,7 +53,9 @@ tlHeightPlusBox = {x = WINDOW_WIDTH-100, y = 40, w = 20, h = 20}
 tlHeightMinusBox = {x = WINDOW_WIDTH-100, y = 60, w = 20, h = 20}
 
 buttonSaveBox = {x = WINDOW_WIDTH-70, y = 27, w = 40, h = 20}
+inputTextBox = EasyLD.box:new(WINDOW_WIDTH-300, 2, 150, 30)
 
+inputText = nil
 clickPos = nil
 
 currentTimeBeforeIncr = 0
@@ -73,6 +75,8 @@ end
 function love.load()
 	mouse = Mouse:new()
 	keyboard = Keyboard:new()
+	EasyLD.mouse = mouse
+	EasyLD.keyboard = keyboard
 
 	if srcTileset == nil then
 		srcTileset = "assets/tilesets/tileset.png"
@@ -97,9 +101,13 @@ function love.load()
 	mapNbTilesX = math.floor(WINDOW_WIDTH / tl.tileSize)
 	mapNbTilesY = math.floor((WINDOW_HEIGHT - tilesetBox.h) / tl.tileSizeY )
 	mapBox.w, mapBox.h = mapNbTilesX*tl.tileSize, mapNbTilesY*tl.tileSizeY
+
+	inputText = EasyLD.inputText:new(inputTextBox, {r=120, g=10, b=10, a=255}, {r=255, g=255, b=255, a=255}, 16)
 end
 
 function love.update(dt)
+	inputText:update(dt)
+
 	if mouse:isPressed("r") then
 		local pos = mouse:getPosition()
 		clickPos = pos
@@ -189,6 +197,9 @@ function love.update(dt)
 		end
 
 		if EasyLD.collide:AABB_point(buttonSaveBox, pos) then
+			if inputText.text ~= "" then
+				map.src = "assets/maps/" .. inputText.text .. ".map"
+			end
 			map:save()
 			print("Map saved (" .. map.src..")")
 		end
@@ -266,6 +277,7 @@ function love.draw()
 	tl:draw(tilesetBox.x, tilesetBox.y, tilesetNbTilesX, tilesetNbTilesY, tilesetBeginX, tilesetBeginY)
 
 	drawTileSelected()
+	inputText:draw()
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 
@@ -345,10 +357,18 @@ function changeTilesetNB(x, y)
 end
 
 function love.keypressed(key)
+	if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") and string.byte(key) > 64 and string.byte(key) < 123 then
+		key = string.upper(key)
+	end
+
 	keyboard:keyPressed(key)
 end
 
 function love.keyreleased(key)
+	if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") and string.byte(key) >= 65 and string.byte(key) < 123 then
+		key = string.upper(key)
+	end
+
 	keyboard:keyReleased(key)
 end
 
