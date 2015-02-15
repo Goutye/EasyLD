@@ -85,6 +85,10 @@ function Vector:copy()
 	return Vector:new(self.x, self.y)
 end
 
+function Vector:normal()
+	return Vector:new(-self.y, self.x)
+end
+
 function Vector:getAngle()
 	local v = self:copy()
 	v:normalize()

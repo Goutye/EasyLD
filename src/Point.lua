@@ -4,6 +4,20 @@ local Shape = require 'Shape'
 
 local Point = class('Point', Shape)
 
+function Point.static:proj(p1, p2, pos)
+	local v = EasyLD.vector:of(p1, p2)
+	local v2 = EasyLD.vector:of(p1, pos)
+	local norm = v:length()
+	local dot = v:dot(v2) / (norm * norm)
+	return p1 + (v * dot), dot
+end
+
+function Point.static:projDot(p1, axis, pos)
+	local v2 = EasyLD.vector:of(p1, pos)
+	local norm = axis:length()
+	return axis:dot(v2) / (norm * norm)
+end
+
 function Point:initialize(x, y, color)
 	self.x = x
 	self.y = y

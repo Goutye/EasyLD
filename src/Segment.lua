@@ -20,12 +20,18 @@ function Segment:rotate(angle, ox, oy)
 	self.p2:rotate(angle, ox, oy)
 end
 
+function Segment:moveTo(x, y)
+	local dx, dy = x - self.p1.x, y - self.p1.y
+
+	self:translate(dx, dy)
+end
+
 function Segment:draw()
 	EasyLD.graphics:line(self.p1, self.p2, self.c)
 end
 
 function Segment:copy()
-	return Segment:new(p1:copy(), p2:copy(), self.c:copy())
+	return Segment:new(self.p1:copy(), self.p2:copy(), self.c:copy())
 end
 
 return Segment

@@ -27,7 +27,7 @@ In the side of Drystal :
 Version :
 ---------
 
-There is no available version. All the code are not correctly optimized, well wrote (Except some parts). Please wait the first release version. (Before April, 17th 2015 (LD32)).
+There is no available version. All the code are not correctly optimized, well written (Except some parts). Please wait the first release version. (Before April, 17th 2015 (LD32)).
 
 Developper : Gautier Boëda
 
