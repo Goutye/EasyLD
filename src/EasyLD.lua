@@ -24,6 +24,7 @@ EasyLD.keyboard = require 'Keyboard'
 
 EasyLD.inputText = require 'InputText'
 EasyLD.timer = require 'cron'
+EasyLD.flux = require 'flux'
 
 local function loadAdapterImage(base)
 	EasyLD.image = base
@@ -55,6 +56,7 @@ function EasyLD:update(dt)
 	EasyLD.keyboard:reset()
 	EasyLD.mouse:reset()
 	EasyLD.timer.update(dt)
+	EasyLD.flux.update(dt)
 end
 
 EasyLD.load = loadAPI

@@ -70,6 +70,14 @@ function Circle:collide(area)
 	return area:collideCircle(self)
 end
 
+function Circle:collideArea(area)
+	return area:collideCircle(self)
+end
+
+function Circle:collidePolygon(poly)
+	return EasyLD.collide:Polygon_circle(poly, self)
+end
+
 function Circle:collideBox(b)
 	if b.angle == 0 then
 		return EasyLD.collide:AABB_circle(b, self)
@@ -80,6 +88,10 @@ end
 
 function Circle:collideCircle(c)
 	return EasyLD.collide:Circle_circle(self, c)
+end
+
+function Circle:collideSegment(s)
+	return EasyLD.collide:Circle_segment(self, s)
 end
 
 function Circle:collidePoint(p)

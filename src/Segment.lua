@@ -8,16 +8,22 @@ function Segment:initialize(p1, p2, color)
 	self.p1 = p1
 	self.p2 = p2
 	self.c = color or EasyLD.color:new(255,255,255)
+	self.x = p1.x
+	self.y = p1.y
 end
 
 function Segment:translate(dx, dy)
 	self.p1:translate(dx, dy)
 	self.p2:translate(dx, dy)
+	self.x = self.p1.x
+	self.y = self.p1.y
 end
 
 function Segment:rotate(angle, ox, oy)
 	self.p1:rotate(angle, ox, oy)
 	self.p2:rotate(angle, ox, oy)
+	self.x = self.p1.x
+	self.y = self.p1.y
 end
 
 function Segment:moveTo(x, y)
@@ -32,6 +38,35 @@ end
 
 function Segment:copy()
 	return Segment:new(self.p1:copy(), self.p2:copy(), self.c:copy())
+end
+
+--EasyLD.collide functions
+function Segment:collide(area)
+	return area:collideSegment(self)
+end
+
+function Segment:collideArea(area)
+	return area:collideSegment(self)
+end
+
+function Segment:collidePolygon(poly)
+	return EasyLD.collide:Polygon_segment(poly, self)
+end
+
+function Segment:collideBox(b)
+	return EasyLD.collide:OBB_segment(b, self)
+end
+
+function Segment:collideCircle(c)
+	return EasyLD.collide:Circle_segment(c, self)
+end
+
+function Segment:collideSegment(s)
+	return EasyLD.collide:Segment_segment(s, self)
+end
+
+function Segment:collidePoint(p)
+	return EasyLD.collide:Segment_point(self, p)
 end
 
 return Segment

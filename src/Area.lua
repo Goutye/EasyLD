@@ -1,12 +1,12 @@
 local class = require 'middleclass'
 
 local Shape = require 'Shape'
-local Area = class('Area')
+local Area = class('Area', Shape)
 
 function Area:initialize(obj, ox, oy)
 	self.forms = {}
 	if not obj:isInstanceOf(Shape) then
-		print("Bad using of Area : Obj is not a Boc or Circle")
+		print("Bad using of Area : Obj is not a shape")
 	end
 	table.insert(self.forms, obj)
 
@@ -32,6 +32,21 @@ function Area:follow(obj)
 	self.follower = obj
 end
 
+function Area:copy()
+	local a = Area:new(self.forms[1]:copy(), self.ox, self.oy)
+
+	for i = 2, #self.forms do
+		table.insert(a.forms, self.forms[i]:copy())
+		print(a.forms[i].c.a .. " " .. self.forms[i].c.a)
+	end
+
+	a.x = self.x
+	a.y = self.y
+	a.follower = self.follower
+
+	return a
+end
+
 function Area:moveTo(x, y)
 	local dx, dy = x - self.x, y - self.y
 
@@ -43,8 +58,8 @@ function Area:translate(dx, dy)
 		o:translate(dx, dy)
 	end
 
-	self.x = self.x + dx
-	self.y = self.y + dy
+	self.x = self.forms[1].x
+	self.y = self.forms[1].y
 end
 
 function Area:rotate(angle, ox, oy)
@@ -58,6 +73,9 @@ function Area:rotate(angle, ox, oy)
 	for _,o in ipairs(self.forms) do
 		o:rotate(angle, ox, oy)
 	end
+
+	self.x = self.forms[1].x
+	self.y = self.forms[1].y
 end
 
 function Area:draw()
@@ -65,5 +83,74 @@ function Area:draw()
 		o:draw()
 	end
 end
+
+--EasyLD.collide functions
+function Area:collide(area)
+	return area:collideArea(self)
+end
+
+function Area:collideArea(area)
+	for _,f in ipairs(self.forms) do
+		for _,f2 in ipairs(area.forms) do
+			if f:collide(f2) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+function Area:collidePolygon(poly)
+	for _,f in ipairs(self.forms) do
+		if f:collidePolygon(poly) then
+			return true
+		end
+	end
+
+	return false
+end
+
+function Area:collideBox(b)
+	for _,f in ipairs(self.forms) do
+		if f:collideBox(b) then
+			return true
+		end
+	end
+
+	return false
+end
+
+function Area:collideCircle(c)
+	for _,f in ipairs(self.forms) do
+		if f:collideCircle(c) then
+			return true
+		end
+	end
+
+	return false
+end
+
+function Area:collideSegment(s)
+	for _,f in ipairs(self.forms) do
+		if f:collideSegment(s) then
+			return true
+		end
+	end
+
+	return false
+end
+
+function Area:collidePoint(p)
+	for _,f in ipairs(self.forms) do
+		if f:collidePoint(p) then
+			return true
+		end
+	end
+
+	return false
+end
+
+
 
 return Area

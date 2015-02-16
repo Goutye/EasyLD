@@ -5,16 +5,16 @@ Project to allow the programmer (who uses Löve2D or Drystal) to programm a game
 Current features :
 -----------------
 
-* Tileset
-* Map
+* Tileset / Map
 * MapEditor
 * Matrix / Vector / Point
-* Collide (OBB, AABB, Circle, Point)
-* Box
-* Circle (fill)
+* Collide (Area, Polygon, OBB, AABB, Circle, Segment, Point)
+* Area (Contains Shapes)
+* Shapes : Area, Polygon / Box / Circle (fill) / Segment / Point
 * InputText
-* Keyboard
-* Mouse
+* Keyboard / Mouse
+* Timer (callback)
+* Flux (Tweening)
 
 In the side of LÖVE2D :
 ----------------------
@@ -39,4 +39,6 @@ Library :
 ---------
 
 middleclass.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota  
-utf8.lua - BSD License - Copyright (c) 2006-2007 Kyle Smith  
+utf8.lua - BSD License - Copyright (c) 2006-2007 Kyle Smith
+cron.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota
+flux.lua - MIT Licence - Copyright (c) 2014, rxi

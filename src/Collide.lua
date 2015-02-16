@@ -44,7 +44,7 @@ local _overlaps1WaySeg = function(b, bAxis, bOrigin, bBorder)
 			end
 		end
 
-		if (tMin > bBorder[a]) or (tMax < 0) then
+		if (tMin > bBorder) or (tMax < 0) then
 			return false
 		end
 	end
@@ -309,11 +309,10 @@ function Collide:OBB_segment(b, seg)
 
 	
 	seg1Origin[1] = s1.p[1]
-	seg1Border[1] = 0
+	seg1Border = 0
 	seg2Origin[1] = b.p[1]
 	seg2Origin[2] = b.p[1]
-	seg2Border[1] = 1
-	seg2Border[2] = 1
+	seg2Border = 1
 
 	return _overlaps1WaySeg(s1, seg2Axis, seg2Origin, seg2Border) and _overlaps1WaySeg(b, seg1Axis, seg1Origin, seg1Border)
 end
@@ -360,7 +359,7 @@ function Collide:Segment_segment(seg1, seg2)
 		seg2Origin[i] = s2.p[1]
 	end
 
-	return _overlaps1WaySeg(s1, seg2Axis, seg2Origin) and _overlaps1WaySeg(s2, seg1Axis, seg1Origin)
+	return _overlaps1WaySeg(s1, seg2Axis, seg2Origin, 0) and _overlaps1WaySeg(s2, seg1Axis, seg1Origin, 0)
 end
 
 function Collide:Segment_point(seg, point)

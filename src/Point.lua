@@ -88,6 +88,11 @@ function Point:translate(dx, dy)
 	self.y = self.y + dy
 end
 
+function Point:moveTo(x, y)
+	self.x = x
+	self.y = y
+end
+
 function Point:rotate(angle, ox, oy)
 	local cos, sin = math.cos(angle), math.sin(angle)
 	local mat = EasyLD.matrix:newRotation(angle)
@@ -103,6 +108,14 @@ function Point:collide(area)
 	return area:collidePoint(self)
 end
 
+function Point:collideArea(area)
+	return area:collidePoint(self)
+end
+
+function Point:collidePolygon(poly)
+	return EasyLD.collide:Polygon_point(poly, self)
+end
+
 function Point:collideBox(b)
 	if b.angle == 0 then
 		return EasyLD.collide:AABB_point(b, self)
@@ -113,6 +126,10 @@ end
 
 function Point:collideCircle(c)
 	return EasyLD.collide:Circle_point(c, self)
+end
+
+function Point:collideSegment(s)
+	return EasyLD.collide:Segment_point(s, self)
 end
 
 function Point:collidePoint(p)

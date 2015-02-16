@@ -48,4 +48,33 @@ function Polygon:copy()
 	return Polygon:new(self.mode, self.c:copy(), unpack(p))
 end
 
+--EasyLD.collide functions
+function Polygon:collide(area)
+	return area:collidePolygon(self)
+end
+
+function Polygon:collideArea(area)
+	return area:collidePolygon(self)
+end
+
+function Polygon:collidePolygon(poly)
+	return EasyLD.collide:Polygon_polygon(poly, self)
+end
+
+function Polygon:collideBox(b)
+	return EasyLD.collide:Polygon_OBB(self, b)
+end
+
+function Polygon:collideCircle(c)
+	return EasyLD.collide:Polygon_circle(self, c)
+end
+
+function Polygon:collideSegment(s)
+	return EasyLD.collide:Polygon_segment(self, s)
+end
+
+function Polygon:collidePoint(p)
+	return EasyLD.collide:Polygon_point(self, p)
+end
+
 return Polygon

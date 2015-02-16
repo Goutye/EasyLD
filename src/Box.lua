@@ -115,6 +115,14 @@ function Box:collide(area)
 	return area:collideBox(self)
 end
 
+function Box:collideArea(area)
+	return area:collideBox(self)
+end
+
+function Box:collidePolygon(poly)
+	return EasyLD.collide:Polygon_OBB(poly, self)
+end
+
 function Box:collideBox(b)
 	if self.angle == 0 and area.angle == 0 then
 		return EasyLD.collide:AABB_AABB(self, b)
@@ -129,6 +137,10 @@ function Box:collideCircle(c)
 	else
 		return EasyLD.collide:OBB_circle(self, c)
 	end
+end
+
+function Box:collideSegment(s)
+	return EasyLD.collide:OBB_segment(self, s)
 end
 
 function Box:collidePoint(p)
