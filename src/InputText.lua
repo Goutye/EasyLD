@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 local InputText = class('InputText')
 
-function InputText:initialize(box, colorBack, colorText, charLimit)
+function InputText:initialize(box, colorBack, colorText, charLimit, font, size)
 	self.box = box
 	self.cBack = colorBack
 	self.cText = colorText
@@ -10,6 +10,8 @@ function InputText:initialize(box, colorBack, colorText, charLimit)
 	self.lastKey = nil
 	self.focus = false
 	self.nbChar = charLimit or 10
+	self.font = font or EasyLD.font.fonts[1]
+	self.fontSize = size or 16
 end
 
 function InputText:update(dt)
@@ -47,7 +49,7 @@ function InputText:draw()
 	self.box:draw("fill")
 	self.box.c = self.cText
 	self.box:draw("line")
-	love.graphics.print(self.text, self.box.x + 5, self.box.y + self.box.h / 2 - 3)
+	self.font:print(self.text, self.fontSize, self.box, nil, "center", self.colorText)
 	--TEXT DRAW
 end
 

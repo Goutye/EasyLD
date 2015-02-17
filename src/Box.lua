@@ -24,8 +24,8 @@ function Box:initialize(x, y, w, h, c, mode)
 	table.insert(p, Point:new(p[1].x, p[1].y + h))
 
 	self.p = p
-	self.wP = Point:new(self.w, 0)
-	self.hP = Point:new(0, self.h)
+	self.wP = Vector:new(self.w, 0)
+	self.hP = Vector:new(0, self.h)
 
 	if c == nil then
 		self.c = EasyLD.color:new(255,255,255)

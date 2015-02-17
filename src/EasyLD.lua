@@ -18,6 +18,7 @@ EasyLD.segment = require 'Segment'
 EasyLD.point = require 'Point'
 
 EasyLD.color = require 'Color'
+EasyLD.font = require 'Font'
 
 EasyLD.mouse = require 'Mouse'
 EasyLD.keyboard = require 'Keyboard'
@@ -38,17 +39,25 @@ local function loadAdapterMouse(base)
 	EasyLD.mouse.getPosition = base.getPosition
 end
 
+local function loadAdapterFont(base)
+	EasyLD.font.newFont = base.newFont
+	EasyLD.font.printAdapter = base.printAdapter
+	EasyLD.font.printOutLineAdapter = base.printOutLineAdapter
+end
+
 local function loadAPI(name)
 	if name == "Drystal" then
 		require 'DrystalKeyboard'
 		loadAdapterMouse(require 'DrystalMouse')
 		loadAdapterGraphics(require 'DrystalGraphics')
 		loadAdapterImage(require 'DrystalImage')
+		loadAdapterFont(require 'DrystalFont')
 	elseif name == "Löve2D" then
 		require 'LoveKeyboard'
 		loadAdapterMouse(require 'LoveMouse')
 		loadAdapterGraphics(require 'LoveGraphics')
 		loadAdapterImage(require 'LoveImage')
+		loadAdapterFont(require 'LoveFont')
 	end
 end
 
