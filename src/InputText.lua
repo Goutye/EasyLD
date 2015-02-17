@@ -28,13 +28,19 @@ function InputText:update(dt)
 
 		if key ~= nil and self.lastKey ~= key then
 			if string.len(key) == 1 and string.utf8len(self.text) < self.nbChar then
-				self.text = self.text .. (EasyLD.keyboard.lastChar or key)
+				self.text = self.text .. EasyLD.keyboard.lastChar
 			elseif key == "backspace" then
 				if string.utf8len(self.text) == 1 then
 					self.text = ""
 				else
 					self.text = string.utf8sub(self.text, 0, -2)
 				end
+			elseif key == "space" then
+				self.text = self.text .. " "
+			end
+
+			if self.font:sizeOf(self.text, self.fontSize) > self.box.w then
+				self.text = string.utf8sub(self.text, 0, -2)
 			end
 
 			self.lastKey = key
@@ -50,7 +56,6 @@ function InputText:draw()
 	self.box.c = self.cText
 	self.box:draw("line")
 	self.font:print(self.text, self.fontSize, self.box, nil, "center", self.colorText)
-	--TEXT DRAW
 end
 
 return InputText

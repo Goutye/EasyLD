@@ -43,6 +43,7 @@ local function loadAdapterFont(base)
 	EasyLD.font.newFont = base.newFont
 	EasyLD.font.printAdapter = base.printAdapter
 	EasyLD.font.printOutLineAdapter = base.printOutLineAdapter
+	EasyLD.font.sizeOfAdapter = base.sizeOfAdapter
 end
 
 local function loadAPI(name)

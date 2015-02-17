@@ -103,6 +103,10 @@ function Point:rotate(angle, ox, oy)
 	self.y = v.y + oy
 end
 
+function Point:get()
+	return self.x, self.y
+end
+
 --EasyLD.collide functions
 function Point:collide(area)
 	return area:collidePoint(self)

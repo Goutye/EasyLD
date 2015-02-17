@@ -37,7 +37,6 @@ function Area:copy()
 
 	for i = 2, #self.forms do
 		table.insert(a.forms, self.forms[i]:copy())
-		print(a.forms[i].c.a .. " " .. self.forms[i].c.a)
 	end
 
 	a.x = self.x
