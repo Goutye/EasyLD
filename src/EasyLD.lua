@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 local utf8 = require 'utf8'
 
-local EasyLD = {}
+EasyLD = {}
 EasyLD.tileset = require 'Tileset'
 EasyLD.map = require 'Map'
 EasyLD.spriteAnimation = require 'SpriteAnimation'
@@ -70,7 +70,11 @@ function EasyLD:update(dt)
 	EasyLD.flux.update(dt)
 end
 
-EasyLD.load = loadAPI
+if love ~= nil then
+	loadAPI("Löve2D")
+else
+	loadAPI("Drystal")	
+end
 
 function string:split(delimiter)
 	local result = { }

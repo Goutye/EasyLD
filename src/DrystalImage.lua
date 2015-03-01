@@ -20,9 +20,14 @@ function DrystalImage:initialize(src, filter)
 	end
 end
 
-function DrystalImage:draw(x, y)
+function DrystalImage:draw(x, y, r, sx, sy, ox, oy)
 	self.src:draw_from()
-	drystal.draw_image(0, 0, self.w, self.h, x, y)
+
+	if r ~= 0 then
+		drystal.draw_sprite_rotated({x=0, y=0, w=self.w, h=self.h}, x, y, r, ox-x, oy-y)
+	else
+		drystal.draw_image(0, 0, self.w, self.h, x, y)
+	end
 end
 
 function DrystalImage:drawPart(mapX, mapY, x, y, w, h)
