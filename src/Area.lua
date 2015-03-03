@@ -12,8 +12,8 @@ function Area:initialize(obj, ox, oy)
 
 	self.x = obj.x
 	self.y = obj.y
-	self.ox = ox
-	self.oy = oy
+	self.ox = ox or obj.x
+	self.oy = oy or obj.y
 
 	self.follower = nil
 end
