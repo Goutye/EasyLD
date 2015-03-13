@@ -60,27 +60,27 @@ function Music:getCurrentTime()
 end
 
 function Music:setPosition(x, y, z)
-	self.m:setPosition(x, y, z)
+	print("Not yet implemented in drystal")
 end
 
 function Music:setDirection(x, y, z)
-	self.m:setDirection(x, y, z)
+	print("Not yet implemented in drystal")
 end
 
 function Music:setVelocity(x, y, z)
-	self.m:setVelocity(x, y, z)
+	print("Not yet implemented in drystal")
 end
 
 function Music:setLooping(bool)
-	self.m:setLooping(bool)
+	self.looping = bool
 end
 
 function Music:setPitch(n)
-	self.m:setPitch(n)
+	self.m:set_pitch(n)
 end
 
 function Music:setVolume(v)
-	self.m:setVolume(v)
+	self.m:set_volume(v)
 end
 
 return Music
