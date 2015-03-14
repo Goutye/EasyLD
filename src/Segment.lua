@@ -10,6 +10,7 @@ function Segment:initialize(p1, p2, color)
 	self.c = color or EasyLD.color:new(255,255,255)
 	self.x = p1.x
 	self.y = p1.y
+	self.angle = 0 --TODO Angle segment from P1 P2
 end
 
 function Segment:translate(dx, dy)
@@ -24,6 +25,7 @@ function Segment:rotate(angle, ox, oy)
 	self.p2:rotate(angle, ox, oy)
 	self.x = self.p1.x
 	self.y = self.p1.y
+	self.angle = self.angle + angle
 end
 
 function Segment:moveTo(x, y)
@@ -33,7 +35,11 @@ function Segment:moveTo(x, y)
 end
 
 function Segment:draw()
-	EasyLD.graphics:line(self.p1, self.p2, self.c)
+	if self.img == nil then
+		EasyLD.graphics:line(self.p1, self.p2, self.c)
+	else
+		self.img:draw(self.x, self.y, self.angle)
+	end
 end
 
 function Segment:copy()

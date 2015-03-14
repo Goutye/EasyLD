@@ -10,6 +10,7 @@ function Polygon:initialize(mode, color, ...)
 	self.mode = mode
 	self.x = self.p[1].x
 	self.y = self.p[1].y
+	self.angle = 0
 end
 
 function Polygon:translate(dx, dy)
@@ -28,6 +29,7 @@ function Polygon:rotate(angle, ox, oy)
 
 	self.x = self.p[1].x
 	self.y = self.p[1].y
+	self.angle = self.angle + angle
 end
 
 function Polygon:moveTo(x, y)
@@ -36,7 +38,11 @@ function Polygon:moveTo(x, y)
 end
 
 function Polygon:draw()
-	EasyLD.graphics:polygon(self.mode, self.c, unpack(self.p))
+	if self.img == nil then
+		EasyLD.graphics:polygon(self.mode, self.c, unpack(self.p))
+	else
+		self.img:draw(self.x, self.y, self.angle)
+	end
 end
 
 function Polygon:copy()

@@ -20,6 +20,9 @@ EasyLD.point = require 'Point'
 
 EasyLD.color = require 'Color'
 EasyLD.font = require 'Font'
+EasyLD.printTimed = require 'PrintTimed'
+
+EasyLD.playlist = require 'Playlist'
 
 EasyLD.mouse = require 'Mouse'
 EasyLD.keyboard = require 'Keyboard'
@@ -47,6 +50,10 @@ local function loadAdapterFont(base)
 	EasyLD.font.sizeOfAdapter = base.sizeOfAdapter
 end
 
+local function loadAdapterMusic(base)
+	EasyLD.music = base
+end
+
 local function loadAPI(name)
 	if name == "Drystal" then
 		require 'DrystalKeyboard'
@@ -54,12 +61,14 @@ local function loadAPI(name)
 		loadAdapterGraphics(require 'DrystalGraphics')
 		loadAdapterImage(require 'DrystalImage')
 		loadAdapterFont(require 'DrystalFont')
+		loadAdapterMusic(require 'DrystalMusic')
 	elseif name == "Löve2D" then
 		require 'LoveKeyboard'
 		loadAdapterMouse(require 'LoveMouse')
 		loadAdapterGraphics(require 'LoveGraphics')
 		loadAdapterImage(require 'LoveImage')
 		loadAdapterFont(require 'LoveFont')
+		loadAdapterMusic(require 'LoveMusic')
 	end
 end
 

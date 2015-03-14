@@ -3,14 +3,26 @@ local class = require 'middleclass'
 local Music = class('Music')
 
 function Music:initialize(name, type)
-	self.m = love.audio.newSource(name, type or "stream")
+	if type == "static" then
+		self.mData = love.sound.newSoundData(name)
+		self.m = love.audio.newSource(self.mData)
+		self.static = true
+	else
+		self.m = love.audio.newSource(name)
+		self.static = false
+	end
+	self.timer = nil
+	self.looping = false
+	self.name = name
 end
 
-function Music:play(callback)
+function Music:play(callback, ...)
 	self.m:play()
 
-	if callback ~= nil then
-		--TODO
+	if callback ~= nil and not self.looping then
+		if self.static then
+			self.timer = EasyLD.timer.after(self:getDuration(), callback, ...)
+		end
 	end
 end
 
@@ -46,6 +58,10 @@ function Music:getCurrentTime()
 	return self.m:tell("seconds")
 end
 
+function Music:getDuration()
+	return self.mData:getDuration()
+end
+
 function Music:setPosition(x, y, z)
 	self.m:setPosition(x, y, z)
 end
@@ -60,6 +76,7 @@ end
 
 function Music:setLooping(bool)
 	self.m:setLooping(bool)
+	self.looping = bool
 end
 
 function Music:setPitch(n)

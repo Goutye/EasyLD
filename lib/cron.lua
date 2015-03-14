@@ -46,7 +46,14 @@ end
 local function updateTimedEntry(self, dt) -- returns true if expired
 	self.running = self.running + dt
 	if self.running >= self.time then
-		self.callback(unpack(self.args))
+		if type(self.callback) == 'table' and self.callback:isInstanceOf(Object) then
+			local name = self.args[1]
+			self.args[1] = self.callback
+			self.callback[name](unpack(self.args))
+			self.args[1] = name
+		else
+			self.callback(unpack(self.args))
+		end
 		return true
 	end
 end

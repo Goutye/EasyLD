@@ -22,6 +22,7 @@ function Point:initialize(x, y, color)
 	self.x = x
 	self.y = y
 	self.c = color or EasyLD.color:new(255,255,255)
+	self.angle = 0
 end
 
 function Point.__add(v1, v2)
@@ -77,10 +78,11 @@ function Point:dot(v)
 end
 
 function Point:draw()
-	if mode == nil then
-		mode = self.mode
+	if self.img == nil then
+		EasyLD.graphics:point(self, self.c)
+	else
+		self.img:draw(self.x, self.y, self.angle)
 	end
-	EasyLD.graphics:point(self, self.c)
 end
 
 function Point:translate(dx, dy)
@@ -101,6 +103,7 @@ function Point:rotate(angle, ox, oy)
 
 	self.x = v.x + ox
 	self.y = v.y + oy
+	self.angle = self.angle + angle
 end
 
 function Point:get()

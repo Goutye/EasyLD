@@ -82,10 +82,14 @@ function Box:draw(mode)
 		mode = self.mode
 	end
 
-	if self.angle == 0 then
-		EasyLD.graphics:rectangle(mode, self, self.c)
+	if self.img == nil then
+		if self.angle == 0 then
+			EasyLD.graphics:rectangle(mode, self, self.c)
+		else
+			EasyLD.graphics:polygon(mode, self.c, unpack(self.p))
+		end
 	else
-		EasyLD.graphics:polygon(mode, self.c, unpack(self.p))
+		self.img:draw(self.x, self.y, self.angle)
 	end
 end
 

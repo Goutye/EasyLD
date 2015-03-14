@@ -7,11 +7,13 @@ Current features :
 
 * Tileset / Map
 * MapEditor
+* Entity / SpriteAnimation
 * Matrix / Vector / Point
 * Collide (Area, Polygon, OBB, AABB, Circle, Segment, Point)
 * Area (Contains Shapes)
 * Shapes : Area, Polygon / Box / Circle (fill) / Segment / Point
 * InputText
+* Font
 * Keyboard / Mouse
 * Timer (callback)
 * Flux (Tweening)
@@ -20,6 +22,7 @@ In the side of LÖVE2D :
 ----------------------
 
 * Circle (line)
+* Print text with rotation
 
 In the side of Drystal :
 ----------------------
@@ -39,6 +42,6 @@ Library :
 ---------
 
 middleclass.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota  
-utf8.lua - BSD License - Copyright (c) 2006-2007 Kyle Smith
-cron.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota
-flux.lua - MIT Licence - Copyright (c) 2014, rxi
+utf8.lua - BSD License - Copyright (c) 2006-2007 Kyle Smith  
+cron.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota  
+flux.lua - MIT Licence - Copyright (c) 2014, rxi  

@@ -13,6 +13,7 @@ function Circle:initialize(x, y, r, c, mode)
 	self.r = r
 	self.c = c
 	self.mode = mode
+	self.angle = 0
 
 	if c == nil then
 		self.c = EasyLD.color:new(255,255,255)
@@ -50,7 +51,12 @@ function Circle:draw(mode, nbSeg)
 	if mode == nil then
 		mode = self.mode
 	end
-	EasyLD.graphics:circle(mode, self, nbSeg, self.c)
+
+	if self.img == nil then
+		EasyLD.graphics:circle(mode, self, nbSeg, self.c)
+	else
+		self.img:draw(self.x, self.y, self.angle)
+	end
 end
 
 function Circle:rotate(angle, ox, oy)
@@ -59,6 +65,7 @@ function Circle:rotate(angle, ox, oy)
 
 	self.x = p.x
 	self.y = p.y
+	self.angle = self.angle + angle
 end
 
 function Circle:copy()

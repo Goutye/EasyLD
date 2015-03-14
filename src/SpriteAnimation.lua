@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 local SpriteAnimation = class('SpriteAnimation')
 
-local function _nextSprite(sAnim8) 
+local function _nextSprite(sAnim8)
 	sAnim8.current = sAnim8.current + 1
 	if sAnim8.current == sAnim8.nbImg then
 		sAnim8.current = 0
@@ -35,11 +35,10 @@ function SpriteAnimation:initialize(obj, name, nbImg, time, w, h, idStart, nbCyc
 	self.nbImg = nbImg
 	self.idStart = idStart or 0
 	self.current = 0
-	self.obj.img = EasyLD.image:new(self.src)
+	self.img = EasyLD.image:new(self.src)
 	self.w = w
 	self.h = h
-	self.nbSpriteW = math.floor(self.obj.img.w/self.w)
-
+	self.nbSpriteW = math.floor(self.img.w/self.w)
 	self.time = time
 	self.nbCycle = nbCycle or 1
 	self:play()
@@ -85,6 +84,7 @@ function SpriteAnimation:playNumber()
 end
 
 function SpriteAnimation:play()
+	self.obj.img = self
 	if type(self.time) == "number" then
 		self:playNumber()
 	else
@@ -92,10 +92,11 @@ function SpriteAnimation:play()
 	end
 end
 
-function SpriteAnimation:draw(pos)
+function SpriteAnimation:draw(mapX, mapY, angle)
 	local x = ((self.idStart + self.current) % self.nbSpriteW ) * self.w
 	local y = math.floor(((self.idStart + self.current) / self.nbSpriteW )) * self.h
-	self.obj.img:drawPart(pos.x, pos.y, x, y, self.w, self.h)
+	print(x, y)
+	self.img:drawPart(mapX, mapY, x, y, self.w, self.h, self.current, angle)
 end
 
 return SpriteAnimation
