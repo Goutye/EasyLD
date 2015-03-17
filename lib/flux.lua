@@ -172,8 +172,8 @@ function flux:update(deltatime)
 						t.obj:moveTo(v.start + x * v.diff, t.obj.y)
 					elseif k == "y" then
 						t.obj:moveTo(t.obj.x, v.start + x * v.diff)
-					elseif k == "r" then
-						t.obj:rotate(v.start + x * v.diff)
+					elseif k == "angle" then
+						t.obj:rotateTo(v.start + x * v.diff)
 					else
 						t.obj[k] = v.start + x * v.diff
 					end

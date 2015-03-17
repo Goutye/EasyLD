@@ -14,6 +14,7 @@ function Area:initialize(obj, ox, oy)
 	self.y = obj.y
 	self.ox = ox or obj.x
 	self.oy = oy or obj.y
+	self.angle = 0
 
 	self.follower = nil
 end
@@ -75,6 +76,11 @@ function Area:rotate(angle, ox, oy)
 
 	self.x = self.forms[1].x
 	self.y = self.forms[1].y
+	self.angle = self.angle + angle
+end
+
+function Area:rotateTo(angle, ox, oy)
+	self:rotate(angle-self.angle, ox, oy)
 end
 
 function Area:draw()
