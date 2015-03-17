@@ -6,6 +6,11 @@
 -- This library is free software; you can redistribute it and/or modify it
 -- under the terms of the MIT license. See LICENSE for details.
 --
+--
+-- Modified by Goutye for Shapes compatibility. 2015
+--
+
+local Shape = require 'Shape'
 
 local flux = { _version = "0.1.4" }
 flux.__index = flux
@@ -161,8 +166,22 @@ function flux:update(deltatime)
 			t.progress = t.progress + t.rate * deltatime 
 			local p = t.progress
 			local x = p >= 1 and 1 or flux.easing[t._ease](p)
-			for k, v in pairs(t.vars) do
-				t.obj[k] = v.start + x * v.diff
+			if t.obj:isInstanceOf(Shape) then
+				for k, v in pairs(t.vars) do
+					if k == "x" then
+						t.obj:moveTo(v.start + x * v.diff, t.obj.y)
+					elseif k == "y" then
+						t.obj:moveTo(t.obj.x, v.start + x * v.diff)
+					elseif k == "r" then
+						t.obj:rotate(v.start + x * v.diff)
+					else
+						t.obj[k] = v.start + x * v.diff
+					end
+				end
+			else
+				for k, v in pairs(t.vars) do
+					t.obj[k] = v.start + x * v.diff
+				end
 			end
 			if t._onupdate then t._onupdate() end
 			if p >= 1 then
