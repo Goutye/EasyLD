@@ -95,7 +95,6 @@ end
 function SpriteAnimation:draw(mapX, mapY, angle)
 	local x = ((self.idStart + self.current) % self.nbSpriteW ) * self.w
 	local y = math.floor(((self.idStart + self.current) / self.nbSpriteW )) * self.h
-	print(x, y)
 	self.img:drawPart(mapX, mapY, x, y, self.w, self.h, self.current, angle)
 end
 
