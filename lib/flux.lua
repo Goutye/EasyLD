@@ -195,12 +195,20 @@ function flux:update(deltatime)
 						t.obj:rotate(xvDif - t.varAngle)
 						t.varAngle = xvDif
 					else
-						t.obj[k] = v.start + x * v.diff
+						if t.mode == "relative" then
+							t.obj[k] = t.obj[k] + x * v.diff
+						else
+							t.obj[k] = v.start + x * v.diff
+						end
 					end
 				end
 			else
 				for k, v in pairs(t.vars) do
-					t.obj[k] = v.start + x * v.diff
+					if t.mode == "relative" then
+						t.obj[k] = t.obj[k] + x * v.diff
+					else
+						t.obj[k] = v.start + x * v.diff
+					end
 				end
 			end
 			if t._onupdate then t._onupdate() end
