@@ -169,11 +169,26 @@ function flux:update(deltatime)
 			if t.obj:isInstanceOf(Shape) then
 				for k, v in pairs(t.vars) do
 					if k == "x" then
-						t.obj:moveTo(v.start + x * v.diff, t.obj.y)
+						if t.varX == nil then
+							t.varX = 0
+						end
+						local xvDif = x * v.diff
+						t.obj:translate(xvDif - t.varX, 0)
+						t.varX = xvDif
 					elseif k == "y" then
-						t.obj:moveTo(t.obj.x, v.start + x * v.diff)
+						if t.varY == nil then
+							t.varY = 0
+						end
+						local xvDif = x * v.diff
+						t.obj:translate(0, xvDif - t.varY)
+						t.varY = xvDif
 					elseif k == "angle" then
-						t.obj:rotateTo(v.start + x * v.diff)
+						if t.varAngle == nil then
+							t.varAngle = 0
+						end
+						local xvDif = x * v.diff
+						t.obj:rotate(xvDif - t.varAngle)
+						t.varAngle = xvDif
 					else
 						t.obj[k] = v.start + x * v.diff
 					end

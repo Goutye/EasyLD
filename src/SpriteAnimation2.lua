@@ -25,15 +25,16 @@ function SpriteAnimation:initialize(pos, area, timeFrames, frames, looping, call
 end
 
 function SpriteAnimation:pause()
-
+	EasyLD.timer.cancel(self.timer)
 end
 
 function SpriteAnimation:stop()
-
+	EasyLD.timer.cancel(self.timer)
+	self.current = 1
 end
 
 function SpriteAnimation:play()
-
+	self.timer = EasyLD.timer.after(self.timeFrame[(self.current - 2) % #self.timerFrame + 1], self.nextFrame, self)
 end
 
 function SpriteAnimation:nextFrame()
