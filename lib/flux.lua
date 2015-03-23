@@ -178,22 +178,17 @@ function flux:update(deltatime)
 				if (t.vars.x ~= nil or t.vars.y ~= nil) and t.vars.angle ~= nil then
 					if t.varPrev.angle == nil then
 						local vect = Vector:new(t.vars.x.diff or 0, t.vars.y.diff or 0)
-						t.vars.r = vect:length()
+						t.varsTemp = {r = {diff = vect:length()} }
 						t.varPrev.r = 0
 						t.varPrev.angle = 0
 					end
-					local r = x * t.vars.r
+					local r = x * t.varsTemp.r.diff
 					local angle = x * t.vars.angle.diff
 					local point = Point:new(t.obj.x, t.obj.y)
-					print(point.x, point.y, angle - t.varPrev.angle)
 					point:rotate(angle - t.varPrev.angle, t.obj.follower.x, t.obj.follower.y)
-					print(point.x, point.y)
 					local vecto = Vector:of(point, Point:new(t.obj.follower.x, t.obj.follower.y))
 					vecto:normalize()
-					print(vecto.x, vecto.y)
-					print("[RRR] " .. vecto.x *r .. " " .. vecto.x *t.vars.r)
 					local dx, dy =  vecto.x * r - vecto.x * t.varPrev.r, vecto.y * r - vecto.y * t.varPrev.r
-					print(dx, dy)
 					t.obj:rotate(angle - t.varPrev.angle)
 					t.obj:translate(dx, dy)
 					
@@ -227,7 +222,10 @@ function flux:update(deltatime)
 								if t.varPrev[k] == nil then
 									t.varPrev[k] = 0
 								end
+								print(k)
+								print(t.obj)
 								local xDif = x * v.diff
+								print(t.obj[k], xDif, t.varPrev[k])
 								t.obj[k] = t.obj[k] + xDif - t.varPrev[k]
 								t.varPrev[k] = xDif
 							else
@@ -250,10 +248,10 @@ function flux:update(deltatime)
 					end
 				end
 			end
-			if t._onupdate then t._onupdate() end
+			if t._onupdate then t._onupdate(t.obj) end
 			if p >= 1 then
 				flux.remove(self, i)
-				if t._oncomplete then t._oncomplete() end
+				if t._oncomplete then t._oncomplete(t.obj) end
 			end
 		end
 	end

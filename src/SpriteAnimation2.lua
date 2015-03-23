@@ -25,7 +25,6 @@ function SA:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	self.timeFrames = timeFrames
 	self.frames = frames
 	self.looping = looping
-
 	self.areaList = { exploreArea(area) }
 	--Init ->	loading of all shapes
 	--			list of all area
@@ -69,10 +68,11 @@ function SA:nextFrame()
 				vars.x = v.translation.x
 				vars.y = v.translation.y
 			end
-			EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative"):ease("linear")
+			self.areaList[i].SA = self
+			EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative"):ease("linear"):oncomplete(function(obj)
+					obj.SA:nextFrame()
+				end)
 		end
-		--EasyLD.timer.cancel(self.timer)
-		self.timer = EasyLD.timer.after(self.timeFrames[self.current], self.nextFrame, self)
 	else
 		self.callback(unpack(self.args))
 	end
@@ -80,7 +80,7 @@ function SA:nextFrame()
 end
 
 function SA:draw(mapX, mapY, angle)
-
+	self.obj:draw()
 end
 
 return SA
