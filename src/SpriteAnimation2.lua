@@ -1,7 +1,7 @@
 local class = require 'middleclass'
-
-local SpriteAnimation = class('SpriteAnimation')
 local AreaFile = require 'Area'
+
+local SA = class('SA')
 
 local function exploreArea(area)
 	local areaList = {}
@@ -19,7 +19,7 @@ local function exploreArea(area)
 	return unpack(areaList)
 end
 
-function SpriteAnimation:initialize(pos, area, timeFrames, frames, looping, callback, args)
+function SA:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	self.obj = area
 	area:moveTo(pos.x, pos.y)
 	self.timeFrames = timeFrames
@@ -42,47 +42,45 @@ function SpriteAnimation:initialize(pos, area, timeFrames, frames, looping, call
 	self.args = args
 end
 
-function SpriteAnimation:pause()
+function SA:pause()
 	EasyLD.timer.cancel(self.timer)
 end
 
-function SpriteAnimation:stop()
+function SA:stop()
 	EasyLD.timer.cancel(self.timer)
 	self.current = 1
 end
 
-function SpriteAnimation:play()
-	self.timer = EasyLD.timer.after(self.timeFrame[(self.current - 2) % #self.timerFrame + 1], self.nextFrame, self)
+function SA:play()
+	self:nextFrame()
 end
 
-function SpriteAnimation:nextFrame()
-	self.current = self.current + 1
+function SA:nextFrame()
 	if self.looping and self.current > #self.frames then
 		self.current = 1
 	end
-
 	if self.current <= #self.frames then
-		for i,v in ipairs(self.tweenFrame) do
-			v:stop()
-		end
-
 		for i,v in ipairs(self.frames[self.current]) do
+			local vars = {}
 			if v.rotation ~= nil then
-				EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], {angle = v.rotation}, "relative"):ease("linear")
+				vars.angle = v.rotation
 			end
 			if v.translation ~= nil then
-				EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], {x = v.translation.x, y = v.translation.y}, "relative"):ease("linear")
+				vars.x = v.translation.x
+				vars.y = v.translation.y
 			end
+			EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative"):ease("linear")
 		end
 		--EasyLD.timer.cancel(self.timer)
 		self.timer = EasyLD.timer.after(self.timeFrames[self.current], self.nextFrame, self)
 	else
 		self.callback(unpack(self.args))
 	end
+	self.current = self.current + 1
 end
 
-function SpriteAnimation:draw(mapX, mapY, angle)
+function SA:draw(mapX, mapY, angle)
 
 end
 
-return SpriteAnimation
+return SA

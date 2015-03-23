@@ -16,7 +16,7 @@ function Area:initialize(obj, ox, oy)
 	self.oy = oy or obj.y
 	self.angle = 0
 
-	self.follower = nil
+	self.follower = obj
 end
 
 function Area:attach(obj)
@@ -63,10 +63,12 @@ function Area:translate(dx, dy)
 end
 
 function Area:rotate(angle, ox, oy)
-	if self.follower ~= nil and self.follower:isInstanceOf(Shape) then
+	if ox ~= nil and oy ~= nil then
+		
+	elseif self.follower ~= nil and self.follower:isInstanceOf(Shape) then
 		ox = self.follower.x
 		oy = self.follower.y
-	elseif ox == nil or oy == nil then
+	else
 		ox = self.ox
 		oy = self.oy
 	end

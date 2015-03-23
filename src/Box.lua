@@ -14,7 +14,7 @@ function Box:initialize(x, y, w, h, c, mode)
 	self.w = w
 	self.h = h
 	self.c = c
-	self.mode = mode
+	self.mode = mode or "fill"
 	self.angle = 0
 
 	local p = {}

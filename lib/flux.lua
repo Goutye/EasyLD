@@ -11,6 +11,8 @@
 --
 
 local Shape = require 'Shape'
+local Vector = require 'Vector'
+local Point = require 'Point'
 
 local flux = { _version = "0.1.4" }
 flux.__index = flux
@@ -98,6 +100,7 @@ function tween.new(obj, time, vars, mode)
 	self._delay = 0
 	self._ease = "quadout"
 	self.vars = {}
+	self.varPrev = {}
 	self.mode = mode or "absolute"
 	for k, v in pairs(vars) do
 		if type(v) ~= "number" then
@@ -172,40 +175,76 @@ function flux:update(deltatime)
 			local p = t.progress
 			local x = p >= 1 and 1 or flux.easing[t._ease](p)
 			if t.obj:isInstanceOf(Shape) then
-				for k, v in pairs(t.vars) do
-					if k == "x" then
-						if t.varX == nil then
-							t.varX = 0
-						end
-						local xvDif = x * v.diff
-						t.obj:translate(xvDif - t.varX, 0)
-						t.varX = xvDif
-					elseif k == "y" then
-						if t.varY == nil then
-							t.varY = 0
-						end
-						local xvDif = x * v.diff
-						t.obj:translate(0, xvDif - t.varY)
-						t.varY = xvDif
-					elseif k == "angle" then
-						if t.varAngle == nil then
-							t.varAngle = 0
-						end
-						local xvDif = x * v.diff
-						t.obj:rotate(xvDif - t.varAngle)
-						t.varAngle = xvDif
-					else
-						if t.mode == "relative" then
-							t.obj[k] = t.obj[k] + x * v.diff
+				if (t.vars.x ~= nil or t.vars.y ~= nil) and t.vars.angle ~= nil then
+					if t.varPrev.angle == nil then
+						local vect = Vector:new(t.vars.x.diff or 0, t.vars.y.diff or 0)
+						t.vars.r = vect:length()
+						t.varPrev.r = 0
+						t.varPrev.angle = 0
+					end
+					local r = x * t.vars.r
+					local angle = x * t.vars.angle.diff
+					local point = Point:new(t.obj.x, t.obj.y)
+					print(point.x, point.y, angle - t.varPrev.angle)
+					point:rotate(angle - t.varPrev.angle, t.obj.follower.x, t.obj.follower.y)
+					print(point.x, point.y)
+					local vecto = Vector:of(point, Point:new(t.obj.follower.x, t.obj.follower.y))
+					vecto:normalize()
+					print(vecto.x, vecto.y)
+					print("[RRR] " .. vecto.x *r .. " " .. vecto.x *t.vars.r)
+					local dx, dy =  vecto.x * r - vecto.x * t.varPrev.r, vecto.y * r - vecto.y * t.varPrev.r
+					print(dx, dy)
+					t.obj:rotate(angle - t.varPrev.angle)
+					t.obj:translate(dx, dy)
+					
+					t.varPrev.r = r
+					t.varPrev.angle = angle
+				else
+					for k, v in pairs(t.vars) do
+						if k == "x" then
+							if t.varPrev[k] == nil then
+								t.varPrev[k] = 0
+							end
+							local xvDif = x * v.diff
+							t.obj:translate(xvDif - t.varPrev[k], 0)
+							t.varPrev[k] = xvDif
+						elseif k == "y" then
+							if t.varPrev[k] == nil then
+								t.varPrev[k] = 0
+							end
+							local xvDif = x * v.diff
+							t.obj:translate(0, xvDif - t.varPrev[k])
+							t.varPrev[k] = xvDif
+						elseif k == "angle" then
+							if t.varPrev[k] == nil then
+								t.varPrev[k] = 0
+							end
+							local xvDif = x * v.diff
+							t.obj:rotate(xvDif - t.varPrev[k])
+							t.varPrev[k] = xvDif
 						else
-							t.obj[k] = v.start + x * v.diff
+							if t.mode == "relative" then
+								if t.varPrev[k] == nil then
+									t.varPrev[k] = 0
+								end
+								local xDif = x * v.diff
+								t.obj[k] = t.obj[k] + xDif - t.varPrev[k]
+								t.varPrev[k] = xDif
+							else
+								t.obj[k] = v.start + x * v.diff
+							end
 						end
 					end
 				end
 			else
 				for k, v in pairs(t.vars) do
 					if t.mode == "relative" then
-						t.obj[k] = t.obj[k] + x * v.diff
+						if t.varPrev[k] == nil then
+							t.varPrev[k] = 0
+						end
+						local xDif = x * v.diff
+						t.obj[k] = t.obj[k] + xDif - t.varPrev[k]
+						t.varPrev[k] = xDif
 					else
 						t.obj[k] = v.start + x * v.diff
 					end
