@@ -203,6 +203,9 @@ function flux:update(deltatime)
 							local xvDif = x * v.diff
 							t.obj:translate(xvDif - t.varPrev[k], 0)
 							t.varPrev[k] = xvDif
+							if t.obj.name == "lol" then
+								print(v.diff, x)
+							end
 						elseif k == "y" then
 							if t.varPrev[k] == nil then
 								t.varPrev[k] = 0
@@ -222,10 +225,7 @@ function flux:update(deltatime)
 								if t.varPrev[k] == nil then
 									t.varPrev[k] = 0
 								end
-								print(k)
-								print(t.obj)
 								local xDif = x * v.diff
-								print(t.obj[k], xDif, t.varPrev[k])
 								t.obj[k] = t.obj[k] + xDif - t.varPrev[k]
 								t.varPrev[k] = xDif
 							else
