@@ -90,7 +90,7 @@ tween.onupdate		= makefsetter("_onupdate")
 tween.oncomplete	= makefsetter("_oncomplete")
 
 
-function tween.new(obj, time, vars)
+function tween.new(obj, time, vars, mode)
 	local self = setmetatable({}, tween)
 	self.obj = obj
 	self.rate = time > 0 and 1 / time or 0
@@ -98,6 +98,7 @@ function tween.new(obj, time, vars)
 	self._delay = 0
 	self._ease = "quadout"
 	self.vars = {}
+	self.mode = mode or "absolute"
 	for k, v in pairs(vars) do
 		if type(v) ~= "number" then
 			error("bad value for key '" .. k .. "'; expected number")
@@ -114,7 +115,11 @@ function tween:init()
 		if type(x) ~= "number" then
 			error("bad value on object key '" .. k .. "'; expected number")
 		end
-		self.vars[k] = { start = x, diff = v - x }
+		if self.mode == "relative" then
+			self.vars[k] = { start = 0, diff = v }
+		else
+			self.vars[k] = { start = x, diff = v - x }
+		end
 	end
 	self.inited = true
 end
@@ -144,8 +149,8 @@ function flux.group()
 end
 
 
-function flux:to(obj, time, vars)
-	return flux.add(self, tween.new(obj, time, vars))
+function flux:to(obj, time, vars, mode)
+	return flux.add(self, tween.new(obj, time, vars, mode))
 end
 
 

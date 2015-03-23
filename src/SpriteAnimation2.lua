@@ -1,14 +1,32 @@
 local class = require 'middleclass'
 
 local SpriteAnimation = class('SpriteAnimation')
+local AreaFile = require 'Area'
+
+local function exploreArea(area)
+	local areaList = {}
+	for i,v in ipairs(area.forms) do
+		if v:isInstanceOf(AreaFile) then
+			table.insert(areaList, v)
+			local tab = { exploreArea(v) }
+
+			for i2,v2 in ipairs(tab) do
+				table.insert(areaList, v2)
+			end
+		end
+	end
+
+	return unpack(areaList)
+end
 
 function SpriteAnimation:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	self.obj = area
 	area:moveTo(pos.x, pos.y)
-	self.areaList = {}
 	self.timeFrames = timeFrames
 	self.frames = frames
 	self.looping = looping
+
+	self.areaList = { exploreArea(area) }
 	--Init ->	loading of all shapes
 	--			list of all area
 	--			create a list of transformation in area
@@ -44,20 +62,20 @@ function SpriteAnimation:nextFrame()
 	end
 
 	if self.current <= #self.frames then
-		for i,v in self.tweenFrame do
+		for i,v in ipairs(self.tweenFrame) do
 			v:stop()
 		end
 
-		for i,v in self.frames[self.current] do
+		for i,v in ipairs(self.frames[self.current]) do
 			if v.rotation ~= nil then
-				EasyLD.flux.to(self.areaList[i], self.timeFrame[self.current], {angle = self.areaList[i].angle + v.rotation}):ease("linear")
+				EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], {angle = v.rotation}, "relative"):ease("linear")
 			end
 			if v.translation ~= nil then
-				EasyLD.flux.to(self.areaList[i], self.timeFrame[self.current], {x = self.areaList[i].x + v.translation.x, y = self.areaList[i].y + v.translation.y}):ease("linear")
+				EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], {x = v.translation.x, y = v.translation.y}, "relative"):ease("linear")
 			end
 		end
 		--EasyLD.timer.cancel(self.timer)
-		self.timer = EasyLD.timer.after(self.timeFrame[self.current], self.nextFrame, self)
+		self.timer = EasyLD.timer.after(self.timeFrames[self.current], self.nextFrame, self)
 	else
 		self.callback(unpack(self.args))
 	end
