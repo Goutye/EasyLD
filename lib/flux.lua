@@ -92,7 +92,7 @@ tween.onupdate		= makefsetter("_onupdate")
 tween.oncomplete	= makefsetter("_oncomplete")
 
 
-function tween.new(obj, time, vars, mode)
+function tween.new(obj, time, vars, modeTween, modeArea)
 	local self = setmetatable({}, tween)
 	self.obj = obj
 	self.rate = time > 0 and 1 / time or 0
@@ -101,7 +101,8 @@ function tween.new(obj, time, vars, mode)
 	self._ease = "quadout"
 	self.vars = {}
 	self.varPrev = {}
-	self.mode = mode or "absolute"
+	self.mode = modeTween or "absolute"
+	self.modeArea = modeArea or "absolute"
 	for k, v in pairs(vars) do
 		if type(v) ~= "number" then
 			error("bad value for key '" .. k .. "'; expected number")
@@ -152,8 +153,8 @@ function flux.group()
 end
 
 
-function flux:to(obj, time, vars, mode)
-	return flux.add(self, tween.new(obj, time, vars, mode))
+function flux:to(obj, time, vars, modeTween, modeArea)
+	return flux.add(self, tween.new(obj, time, vars, modeTween, modeArea))
 end
 
 
@@ -175,62 +176,38 @@ function flux:update(deltatime)
 			local p = t.progress
 			local x = p >= 1 and 1 or flux.easing[t._ease](p)
 			if t.obj:isInstanceOf(Shape) then
-				if (t.vars.x ~= nil or t.vars.y ~= nil) and t.vars.angle ~= nil then
-					if t.varPrev.angle == nil then
-						local vect = Vector:new(t.vars.x.diff or 0, t.vars.y.diff or 0)
-						t.varsTemp = {r = {diff = vect:length()} }
-						t.varPrev.r = 0
-						t.varPrev.angle = 0
-					end
-					local r = x * t.varsTemp.r.diff
-					local angle = x * t.vars.angle.diff
-					local point = Point:new(t.obj.x, t.obj.y)
-					point:rotate(angle - t.varPrev.angle, t.obj.follower.x, t.obj.follower.y)
-					local vecto = Vector:of(point, Point:new(t.obj.follower.x, t.obj.follower.y))
-					vecto:normalize()
-					local dx, dy =  vecto.x * r - vecto.x * t.varPrev.r, vecto.y * r - vecto.y * t.varPrev.r
-					t.obj:rotate(angle - t.varPrev.angle)
-					t.obj:translate(dx, dy)
-					
-					t.varPrev.r = r
-					t.varPrev.angle = angle
-				else
-					for k, v in pairs(t.vars) do
-						if k == "x" then
+				for k, v in pairs(t.vars) do
+					if k == "x" then
+						if t.varPrev[k] == nil then
+							t.varPrev[k] = 0
+						end
+						local xvDif = x * v.diff
+						t.obj:translate(xvDif - t.varPrev[k], 0, t.modeArea)
+						t.varPrev[k] = xvDif
+					elseif k == "y" then
+						if t.varPrev[k] == nil then
+							t.varPrev[k] = 0
+						end
+						local xvDif = x * v.diff
+						t.obj:translate(0, xvDif - t.varPrev[k], t.modeArea)
+						t.varPrev[k] = xvDif
+					elseif k == "angle" then
+						if t.varPrev[k] == nil then
+							t.varPrev[k] = 0
+						end
+						local xvDif = x * v.diff
+						t.obj:rotate(xvDif - t.varPrev[k])
+						t.varPrev[k] = xvDif
+					else
+						if t.mode == "relative" then
 							if t.varPrev[k] == nil then
 								t.varPrev[k] = 0
 							end
-							local xvDif = x * v.diff
-							t.obj:translate(xvDif - t.varPrev[k], 0)
-							t.varPrev[k] = xvDif
-							if t.obj.name == "lol" then
-								print(v.diff, x)
-							end
-						elseif k == "y" then
-							if t.varPrev[k] == nil then
-								t.varPrev[k] = 0
-							end
-							local xvDif = x * v.diff
-							t.obj:translate(0, xvDif - t.varPrev[k])
-							t.varPrev[k] = xvDif
-						elseif k == "angle" then
-							if t.varPrev[k] == nil then
-								t.varPrev[k] = 0
-							end
-							local xvDif = x * v.diff
-							t.obj:rotate(xvDif - t.varPrev[k])
-							t.varPrev[k] = xvDif
+							local xDif = x * v.diff
+							t.obj[k] = t.obj[k] + xDif - t.varPrev[k]
+							t.varPrev[k] = xDif
 						else
-							if t.mode == "relative" then
-								if t.varPrev[k] == nil then
-									t.varPrev[k] = 0
-								end
-								local xDif = x * v.diff
-								t.obj[k] = t.obj[k] + xDif - t.varPrev[k]
-								t.varPrev[k] = xDif
-							else
-								t.obj[k] = v.start + x * v.diff
-							end
+							t.obj[k] = v.start + x * v.diff
 						end
 					end
 				end

@@ -69,15 +69,13 @@ function SA:nextFrame()
 				vars.y = v.translation.y
 			end
 			
-			local tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative"):ease("linear")
+			local tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative", "relative"):ease("linear")
 
 			if i == 1 then
 				self.areaList[i].SA = self
 				tween:oncomplete(function(obj)
 									obj.SA:nextFrame()
 								end)
-			else
-				self.areaList[i].name = "lol"
 			end
 		end
 	else

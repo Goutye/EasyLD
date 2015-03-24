@@ -1,6 +1,7 @@
 local class = require 'middleclass'
 
 local Shape = require 'Shape'
+local Vector = require 'Vector'
 local Area = class('Area', Shape)
 
 function Area:initialize(obj, ox, oy)
@@ -43,7 +44,6 @@ function Area:copy()
 	a.x = self.x
 	a.y = self.y
 	a.follower = self.follower
-
 	return a
 end
 
@@ -53,11 +53,25 @@ function Area:moveTo(x, y)
 	self:translate(dx, dy)
 end
 
-function Area:translate(dx, dy)
-	for _,o in ipairs(self.forms) do
-		o:translate(dx, dy)
-	end
+function Area:translate(dx, dy, mode)
+	local vx, vy
 
+	if mode == "relative" then
+		local cos, sin = math.cos(self.angle), math.sin(self.angle)
+		vx = Vector:new(cos, sin)
+		vy = Vector:new(-sin, cos)
+	else
+		vx = Vector:new(1, 0)
+		vy = Vector:new(0, 1)
+	end
+		
+	vx = dx * vx
+	vy = dy * vy
+
+	for _,o in ipairs(self.forms) do
+		o:translate(vx.x + vy.x, vx.y + vy.y)
+	end
+	
 	self.x = self.forms[1].x
 	self.y = self.forms[1].y
 end
