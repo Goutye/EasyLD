@@ -58,8 +58,11 @@ function SA:nextFrame()
 	if self.looping and self.current > #self.frames then
 		self.current = 1
 	end
+	
+
 	if self.current <= #self.frames then
 		for i,v in ipairs(self.frames[self.current]) do
+			local easeFct = "linear"
 			local vars = {}
 			if v.rotation ~= nil then
 				vars.angle = v.rotation
@@ -68,8 +71,12 @@ function SA:nextFrame()
 				vars.x = v.translation.x
 				vars.y = v.translation.y
 			end
-			
-			local tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative", "relative"):ease("linear")
+
+			if v.ease ~= nil then
+				easeFct = v.ease
+			end
+
+			local tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative", "relative"):ease(easeFct)
 
 			if i == 1 then
 				self.areaList[i].SA = self
