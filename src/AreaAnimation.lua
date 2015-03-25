@@ -1,7 +1,7 @@
 local class = require 'middleclass'
 local AreaFile = require 'Area'
 
-local SA = class('SA')
+local AreaAnimation = class('AreaAnimation')
 
 local function exploreArea(area)
 	local areaList = {}
@@ -19,20 +19,13 @@ local function exploreArea(area)
 	return unpack(areaList)
 end
 
-function SA:initialize(pos, area, timeFrames, frames, looping, callback, args)
+function AreaAnimation:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	self.obj = area
 	area:moveTo(pos.x, pos.y)
 	self.timeFrames = timeFrames
 	self.frames = frames
 	self.looping = looping
 	self.areaList = { exploreArea(area) }
-	--Init ->	loading of all shapes
-	--			list of all area
-	--			create a list of transformation in area
-	--A point is where an area is "attached".  (follow for rotation)
-	--EASY EASY EASY translation OR rotation cascade.
-	--Frame : Each frame contains two moves : Translation/Rotation
-	--callback end of animation
 	self.frameTween = {}
 	self.current = 1
 	self.timer = nil
@@ -42,17 +35,17 @@ function SA:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	self.shouldStop = false
 end
 
-function SA:pause()
+function AreaAnimation:pause()
 	for i,v in ipairs(self.frameTween) do
 		v:stop()
 	end
 end
 
-function SA:stop()
+function AreaAnimation:stop()
 	self.shouldStop = true
 end
 
-function SA:play()
+function AreaAnimation:play()
 	if self.shouldStop then
 		self.shouldStop = false
 	elseif #self.frameTween > 0 then
@@ -64,7 +57,7 @@ function SA:play()
 	end
 end
 
-function SA:nextFrame()
+function AreaAnimation:nextFrame()
 	if self.looping and self.current > #self.frames then
 		self.current = 1
 		if self.shouldStop then
@@ -95,9 +88,9 @@ function SA:nextFrame()
 			local tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative", "relative"):ease(easeFct)
 
 			if i == 1 then
-				self.areaList[i].SA = self
+				self.areaList[i].AreaAnimation = self
 				tween:oncomplete(function(obj)
-									obj.SA:nextFrame()
+									obj.AreaAnimation:nextFrame()
 								end)
 			end
 
@@ -109,8 +102,8 @@ function SA:nextFrame()
 	self.current = self.current + 1
 end
 
-function SA:draw(mapX, mapY, angle)
+function AreaAnimation:draw(mapX, mapY, angle)
 	self.obj:draw()
 end
 
-return SA
+return AreaAnimation

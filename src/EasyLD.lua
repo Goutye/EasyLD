@@ -6,6 +6,7 @@ EasyLD = {}
 EasyLD.tileset = require 'Tileset'
 EasyLD.map = require 'Map'
 EasyLD.spriteAnimation = require 'SpriteAnimation'
+EasyLD.areaAnimation = require 'AreaAnimation'
 
 EasyLD.matrix = require 'Matrix'
 EasyLD.vector = require 'Vector'
