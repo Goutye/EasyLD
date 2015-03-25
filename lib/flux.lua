@@ -141,6 +141,10 @@ function tween:after(...)
 	return t
 end
 
+function tween:play()
+	flux.add(self.parent, self)
+end
+
 
 function tween:stop()
 	flux.remove(self.parent, self)

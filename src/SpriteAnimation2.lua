@@ -33,31 +33,47 @@ function SA:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	--EASY EASY EASY translation OR rotation cascade.
 	--Frame : Each frame contains two moves : Translation/Rotation
 	--callback end of animation
-	self.tweenFrame = {}
+	self.frameTween = {}
 	self.current = 1
 	self.timer = nil
 
 	self.callback = callback
 	self.args = args
+	self.shouldStop = false
 end
 
 function SA:pause()
-	EasyLD.timer.cancel(self.timer)
+	for i,v in ipairs(self.frameTween) do
+		v:stop()
+	end
 end
 
 function SA:stop()
-	EasyLD.timer.cancel(self.timer)
-	self.current = 1
+	self.shouldStop = true
 end
 
 function SA:play()
-	self:nextFrame()
+	if self.shouldStop then
+		self.shouldStop = false
+	elseif #self.frameTween > 0 then
+		for i,v in ipairs(self.frameTween) do
+			v:play()
+		end
+	else
+		self:nextFrame()
+	end
 end
 
 function SA:nextFrame()
 	if self.looping and self.current > #self.frames then
 		self.current = 1
+		if self.shouldStop then
+			self.shouldStop = false
+			return
+		end
 	end
+
+	self.frameTween = {}
 	
 
 	if self.current <= #self.frames then
@@ -84,6 +100,8 @@ function SA:nextFrame()
 									obj.SA:nextFrame()
 								end)
 			end
+
+			table.insert(self.frameTween, tween)
 		end
 	else
 		self.callback(unpack(self.args))
