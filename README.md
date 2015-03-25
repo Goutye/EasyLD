@@ -7,7 +7,7 @@ Current features :
 
 * Tileset / Map
 * MapEditor
-* Entity / SpriteAnimation
+* Entity / SpriteAnimation / AreaAnimation
 * Matrix / Vector / Point
 * Collide (Area, Polygon, OBB, AABB, Circle, Segment, Point)
 * Area (Contains Shapes)
@@ -17,15 +17,33 @@ Current features :
 * Keyboard / Mouse
 * Timer (callback)
 * Flux (Tweening)
+* Music
 
 In the side of LÖVE2D :
 ----------------------
 
 * Circle (line)
-* Print text with rotation
+* Music (Some stuffs available only in LÖVE2D)
 
 In the side of Drystal :
 ----------------------
+
+Upcoming stuffs : (Priority order)
+----------------------
+
+* Software to create as easily as possible an AreaAnimation
+* Window
+* Camera
+
+How to program with EasyLD
+----------------------
+
+1. EasyLD = require 'EasyLD'
+2. add 3 functions to your main.lua :
+	* EasyLD:load()
+	* EasyLD:update(dt)
+	* EasyLD:draw()
+3. Free cookies
 
 Version :
 ---------
@@ -44,4 +62,4 @@ Library :
 middleclass.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota  
 utf8.lua - BSD License - Copyright (c) 2006-2007 Kyle Smith  
 cron.lua - MIT Licence - Copyright (c) 2011 Enrique García Cota  
-flux.lua - MIT Licence - Copyright (c) 2014, rxi  
+flux.lua - MIT Licence - Copyright (c) 2014, rxi (Modified version for the needs of EasyLD - 2015, Goutye)
