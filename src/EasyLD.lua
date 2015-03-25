@@ -56,6 +56,8 @@ end
 
 local function loadAPI(name)
 	if name == "Drystal" then
+		drystal = require 'drystal'
+		require 'DrystalMain'
 		require 'DrystalKeyboard'
 		loadAdapterMouse(require 'DrystalMouse')
 		loadAdapterGraphics(require 'DrystalGraphics')
@@ -63,6 +65,7 @@ local function loadAPI(name)
 		loadAdapterFont(require 'DrystalFont')
 		loadAdapterMusic(require 'DrystalMusic')
 	elseif name == "Löve2D" then
+		require 'LoveMain'
 		require 'LoveKeyboard'
 		loadAdapterMouse(require 'LoveMouse')
 		loadAdapterGraphics(require 'LoveGraphics')
@@ -72,7 +75,7 @@ local function loadAPI(name)
 	end
 end
 
-function EasyLD:update(dt)
+function EasyLD:updateComponents(dt)
 	EasyLD.keyboard:reset()
 	EasyLD.mouse:reset()
 	EasyLD.timer.update(dt)
@@ -82,7 +85,7 @@ end
 if love ~= nil then
 	loadAPI("Löve2D")
 else
-	loadAPI("Drystal")	
+	loadAPI("Drystal")
 end
 
 function string:split(delimiter)
