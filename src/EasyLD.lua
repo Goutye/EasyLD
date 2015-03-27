@@ -51,6 +51,10 @@ local function loadAdapterFont(base)
 	EasyLD.font.sizeOfAdapter = base.sizeOfAdapter
 end
 
+local function loadAdapterWindow(base)
+	EasyLD.window = base
+end
+
 local function loadAdapterMusic(base)
 	EasyLD.music = base
 end
@@ -65,6 +69,7 @@ local function loadAPI(name)
 		loadAdapterImage(require 'DrystalImage')
 		loadAdapterFont(require 'DrystalFont')
 		loadAdapterMusic(require 'DrystalMusic')
+		loadAdapterWindow(require 'DrystalWindow')
 	elseif name == "Löve2D" then
 		require 'LoveMain'
 		require 'LoveKeyboard'
@@ -73,6 +78,7 @@ local function loadAPI(name)
 		loadAdapterImage(require 'LoveImage')
 		loadAdapterFont(require 'LoveFont')
 		loadAdapterMusic(require 'LoveMusic')
+		loadAdapterWindow(require 'LoveWindow')
 	end
 end
 
