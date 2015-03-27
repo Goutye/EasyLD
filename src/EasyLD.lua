@@ -62,23 +62,23 @@ end
 local function loadAPI(name)
 	if name == "Drystal" then
 		drystal = require 'drystal'
-		require 'DrystalMain'
-		require 'DrystalKeyboard'
-		loadAdapterMouse(require 'DrystalMouse')
-		loadAdapterGraphics(require 'DrystalGraphics')
-		loadAdapterImage(require 'DrystalImage')
-		loadAdapterFont(require 'DrystalFont')
-		loadAdapterMusic(require 'DrystalMusic')
-		loadAdapterWindow(require 'DrystalWindow')
+		require 'drystal.DrystalMain'
+		require 'drystal.DrystalKeyboard'
+		loadAdapterMouse(require 'drystal.DrystalMouse')
+		loadAdapterGraphics(require 'drystal.DrystalGraphics')
+		loadAdapterImage(require 'drystal.DrystalImage')
+		loadAdapterFont(require 'drystal.DrystalFont')
+		loadAdapterMusic(require 'drystal.DrystalMusic')
+		loadAdapterWindow(require 'drystal.DrystalWindow')
 	elseif name == "Löve2D" then
-		require 'LoveMain'
-		require 'LoveKeyboard'
-		loadAdapterMouse(require 'LoveMouse')
-		loadAdapterGraphics(require 'LoveGraphics')
-		loadAdapterImage(require 'LoveImage')
-		loadAdapterFont(require 'LoveFont')
-		loadAdapterMusic(require 'LoveMusic')
-		loadAdapterWindow(require 'LoveWindow')
+		require 'love.LoveMain'
+		require 'love.LoveKeyboard'
+		loadAdapterMouse(require 'love.LoveMouse')
+		loadAdapterGraphics(require 'love.LoveGraphics')
+		loadAdapterImage(require 'love.LoveImage')
+		loadAdapterFont(require 'love.LoveFont')
+		loadAdapterMusic(require 'love.LoveMusic')
+		loadAdapterWindow(require 'love.LoveWindow')
 	end
 end
 
