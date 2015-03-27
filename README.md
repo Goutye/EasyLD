@@ -18,6 +18,7 @@ Current features :
 * Timer (callback)
 * Flux (Tweening)
 * Music
+* Window
 
 In the side of LÖVE2D :
 ----------------------
@@ -32,7 +33,6 @@ Upcoming stuffs : (Priority order)
 ----------------------
 
 * Software to create as easily as possible an AreaAnimation
-* Window
 * Camera
 
 How to program with EasyLD

@@ -2,14 +2,16 @@ local class = require 'middleclass'
 
 local PrintTimed = class('PrintTimed')
 
-function PrintTimed:initialize(text, font, argsFont, type, time, timeBefore, timeAfter)
+function PrintTimed:initialize(text, font, argsFont, type, typeTimed, time, timeBefore, timeAfter)
 	self.text = text
 	self.timeBefore = timeBefore or 0
 	self.time = time + self.timeBefore
-	self.timeAfter = (timeAfter or 0) + time
+	self.timeAfter = (timeAfter or 0) + self.time
 	self.type = type or "fading"
+	self.typeTimed = typeTimed or "permanent"
+	self.startAfter = self.typeTimed ~= "permanent"
 	self.argsFont = argsFont
-
+	self.alpha = argsFont[5].a
 	self.currentTime = 0
 end
 
@@ -21,13 +23,20 @@ function PrintTimed:print()
 	if self.currentTime < self.timeBefore then
 
 	elseif self.currentTime >= self.timeBefore and self.currentTime < self.time then
-		local text = string.sub(self.text, 0, math.floor(self.currentTime / self.time * string.len(self.text)) - 1)
+		local text = string.sub(self.text, 0, math.floor((self.currentTime - self.timeBefore)/ (self.time - self.timeBefore) * string.len(self.text)))
 		font:print(text, unpack(self.argsFont))
-	elseif self.currentTime >= self.time and self.currentTime < self.timeAfter then
-		font:print(text, unpack(self.argsFont))
+	elseif self.currentTime >= self.time and self.currentTime < self.timeAfter and self.startAfter then
+		self.argsFont[5].a = self.alpha - self.alpha * ( (self.currentTime - self.time)/(self.timeAfter - self.time))
+		font:print(self.text, unpack(self.argsFont))
 	else
-		font:print(text, unpack(self.argsFont))
+		font:print(self.text, unpack(self.argsFont))
 	end
+end
+
+function PrintTimed:startEnd(time)
+	self.startAfter = true
+	self.timeAfter = self.time + time
+	self.currentTime = self.time
 end
 
 return PrintTimed
