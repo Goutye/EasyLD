@@ -89,7 +89,13 @@ function Box:draw(mode)
 			EasyLD.graphics:polygon(mode, self.c, unpack(self.p))
 		end
 	else
-		self.img:draw(self.x, self.y, self.angle)
+		if self.imgType == "center" then
+			local x = self.x + self.wP.x/2 - self.img.w/2 + self.hP.x/2
+			local y = self.y + self.hP.y/2 - self.img.h/2 + self.hP.y/2
+			self.img:draw(x, y, self.angle)
+		else
+			self.img:draw(self.x, self.y, self.angle)
+		end
 	end
 end
 
