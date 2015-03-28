@@ -13,6 +13,7 @@ function PrintTimed:initialize(text, font, argsFont, type, typeTimed, time, time
 	self.argsFont = argsFont
 	self.alpha = argsFont[5].a
 	self.currentTime = 0
+	self.font = font
 end
 
 function PrintTimed:update(dt)
@@ -24,12 +25,12 @@ function PrintTimed:print()
 
 	elseif self.currentTime >= self.timeBefore and self.currentTime < self.time then
 		local text = string.sub(self.text, 0, math.floor((self.currentTime - self.timeBefore)/ (self.time - self.timeBefore) * string.len(self.text)))
-		font:print(text, unpack(self.argsFont))
+		self.font:print(text, unpack(self.argsFont))
 	elseif self.currentTime >= self.time and self.currentTime < self.timeAfter and self.startAfter then
 		self.argsFont[5].a = self.alpha - self.alpha * ( (self.currentTime - self.time)/(self.timeAfter - self.time))
-		font:print(self.text, unpack(self.argsFont))
+		self.font:print(self.text, unpack(self.argsFont))
 	else
-		font:print(self.text, unpack(self.argsFont))
+		self.font:print(self.text, unpack(self.argsFont))
 	end
 end
 

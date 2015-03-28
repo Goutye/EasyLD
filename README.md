@@ -39,7 +39,7 @@ How to program with EasyLD
 ----------------------
 
 1. EasyLD = require 'EasyLD'
-2. add 3 functions to your main.lua :
+2. Add 3 functions to your main.lua :
 	* EasyLD:load()
 	* EasyLD:update(dt)
 	* EasyLD:draw()
