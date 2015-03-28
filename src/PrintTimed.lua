@@ -2,12 +2,11 @@ local class = require 'middleclass'
 
 local PrintTimed = class('PrintTimed')
 
-function PrintTimed:initialize(text, font, argsFont, type, typeTimed, time, timeBefore, timeAfter)
+function PrintTimed:initialize(text, font, argsFont, typeTimed, time, timeBefore, timeAfter)
 	self.text = text
 	self.timeBefore = timeBefore or 0
 	self.time = time + self.timeBefore
 	self.timeAfter = (timeAfter or 0) + self.time
-	self.type = type or "fading"
 	self.typeTimed = typeTimed or "permanent"
 	self.startAfter = self.typeTimed ~= "permanent"
 	self.argsFont = argsFont

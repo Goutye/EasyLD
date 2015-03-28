@@ -45,7 +45,11 @@ function Playlist:play(str)
 		self.current = self.current % #self.list + 1
 	end
 
-	self.list[self.current]:play(self, "play", "next")
+	local fct = function () 
+					self:play("next")
+				end
+
+	self.list[self.current]:play(fct)
 end
 
 function Playlist:stop()
