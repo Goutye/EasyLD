@@ -23,7 +23,25 @@ function LoveImage:initialize(src, filter1, filter2)
 end
 
 function LoveImage:draw(x, y, r, sx, sy, ox, oy, kx, ky)
-	love.graphics.draw(self.src, x, y, r, sx, sy, ox, oy, kx, ky)
+	if (ox == nil or oy == nil) and r ~= 0 then
+		love.graphics.translate(x,y)
+		love.graphics.rotate(r)
+		love.graphics.translate(-x, -y)
+		love.graphics.draw(self.src, x, y, 0)
+		love.graphics.translate(x,y)
+		love.graphics.rotate(-r)
+		love.graphics.translate(-x, -y)
+	elseif r ~= 0 then
+		love.graphics.translate(ox,oy)
+		love.graphics.rotate(r)
+		love.graphics.translate(-ox, -oy)
+		love.graphics.draw(self.src, x, y, 0)
+		love.graphics.translate(ox,oy)
+		love.graphics.rotate(-r)
+		love.graphics.translate(-ox, -oy)
+	else
+		love.graphics.draw(self.src, x, y, r, sx, sy, ox, oy, kx, ky)
+	end
 end
 
 function LoveImage:drawPart(mapX, mapY, x, y, w, h, id, angle)

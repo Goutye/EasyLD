@@ -90,8 +90,14 @@ function Box:draw(mode)
 		end
 	else
 		if self.imgType == "center" then
-			local x = self.x + self.wP.x/2 - self.img.w/2 + self.hP.x/2
-			local y = self.y + self.hP.y/2 - self.img.h/2 + self.hP.y/2
+			local zW = self.wP:copy()
+			local zH = self.hP:copy()
+			zW:normalize()
+			zH:normalize()
+			zW = zW * self.img.w
+			zH = zH * self.img.h 
+			local x = self.x + self.wP.x/2 + self.hP.x/2 - zW.x/2 - zH.x/2
+			local y = self.y + self.wP.y/2 + self.hP.y/2 - zH.y/2 - zW.y/2
 			self.img:draw(x, y, self.angle)
 		else
 			self.img:draw(self.x, self.y, self.angle)

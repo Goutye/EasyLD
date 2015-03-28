@@ -11,8 +11,8 @@ function Circle:initialize(x, y, r, c, mode)
 	self.x = x
 	self.y = y
 	self.r = r
-	self.c = c
-	self.mode = mode
+	self.c = c or EasyLD.color:new(255,255,255)
+	self.mode = mode or "fill"
 	self.angle = 0
 
 	if c == nil then
@@ -22,7 +22,6 @@ end
 
 function Circle.__add(c, v)
 	if type(c) == "table" and c.r ~= nil and type(v) == "table" then
-		print(c.c)
 		return Circle:new(c.x + v.x, c.y + v.y, c.r, c.c)
 	else
 		return c
@@ -55,7 +54,19 @@ function Circle:draw(mode, nbSeg)
 	if self.img == nil then
 		EasyLD.graphics:circle(mode, self, nbSeg, self.c)
 	else
-		self.img:draw(self.x, self.y, self.angle)
+		if self.imgType == "center" then
+			local zW = Vector:new(1, 0)
+			local zH = Vector:new(0, 1)
+			zW:rotate(self.angle)
+			zH:rotate(self.angle)
+			zW = zW * self.img.w/2
+			zH = zH * self.img.h/2
+			local x = self.x  - zW.x - zH.x
+			local y = self.y - zH.y - zW.y
+			self.img:draw(x, y, self.angle)
+		else
+			self.img:draw(self.x, self.y, self.angle)
+		end
 	end
 end
 

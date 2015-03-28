@@ -2,6 +2,7 @@ local class = require 'middleclass'
 
 local Shape = require 'Shape'
 
+local Vector = require 'Vector'
 local Polygon = class('Polygon', Shape)
 
 function Polygon:initialize(mode, color, ...)
@@ -37,11 +38,35 @@ function Polygon:moveTo(x, y)
 	self:translate(dx, dy)
 end
 
+function Polygon:barycenter()
+	local bx, by = 0, 0
+
+	for _,p in ipairs(self.p) do
+		bx = bx + p.x
+		by = by + p.y
+	end
+
+	return bx / #self.p, by / #self.p
+end
+
 function Polygon:draw()
 	if self.img == nil then
 		EasyLD.graphics:polygon(self.mode, self.c, unpack(self.p))
 	else
-		self.img:draw(self.x, self.y, self.angle)
+		if self.imgType == "center" then
+			local bx, by = self:barycenter()
+			local zW = Vector:new(1, 0)
+			local zH = Vector:new(0, 1)
+			zW:rotate(self.angle)
+			zH:rotate(self.angle)
+			zW = zW * self.img.w/2
+			zH = zH * self.img.h/2
+			local x = bx - zW.x - zH.x
+			local y = by - zH.y - zW.y
+			self.img:draw(x, y, self.angle)
+		else
+			self.img:draw(self.x, self.y, self.angle)
+		end
 	end
 end
 

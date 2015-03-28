@@ -76,9 +76,10 @@ function Vector:dot(v)
 end
 
 function Vector:rotate(angle)
-	local cos, sin = math.cos(angle), math.sin(angle)
-	self.x = self.x * math.cos(angle) - self.y * math.sin(angle)
-	self.y = self.x * math.sin(angle) + self.y * math.cos(angle)
+	local mat = EasyLD.matrix:newRotation(angle)
+	local v = mat * self
+	self.x = v.x
+	self.y = v.y
 end
 
 function Vector:copy()
