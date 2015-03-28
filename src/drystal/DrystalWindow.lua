@@ -2,6 +2,8 @@ local Window = {}
 
 function Window:resize(W, H)
 	drystal.resize(W, H)
+	drystal.boxBackground.w = W
+	drystal.boxBackground.h = H
 end
 
 function Window:setTitle(title)
