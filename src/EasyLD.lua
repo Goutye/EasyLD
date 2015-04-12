@@ -1,12 +1,13 @@
 local class = require 'middleclass'
 
-local utf8 = require 'utf8'
+require 'lib.utf8'
 
 EasyLD = {}
 EasyLD.tileset = require 'Tileset'
 EasyLD.map = require 'Map'
 EasyLD.spriteAnimation = require 'SpriteAnimation'
 EasyLD.areaAnimation = require 'AreaAnimation'
+EasyLD.camera = require 'Camera'
 
 EasyLD.matrix = require 'Matrix'
 EasyLD.vector = require 'Vector'
@@ -55,6 +56,13 @@ local function loadAdapterWindow(base)
 	EasyLD.window = base
 end
 
+local function loadAdapterCamera(base)
+	EasyLD.camera.scale = base.scale
+	EasyLD.camera.move = base.move
+	EasyLD.camera.rotate = base.rotate
+	EasyLD.camera.draw = base.draw
+end
+
 local function loadAdapterMusic(base)
 	EasyLD.music = base
 end
@@ -70,6 +78,7 @@ local function loadAPI(name)
 		loadAdapterFont(require 'drystal.DrystalFont')
 		loadAdapterMusic(require 'drystal.DrystalMusic')
 		loadAdapterWindow(require 'drystal.DrystalWindow')
+		loadAdapterCamera(require 'drystal.DrystalCamera')
 	elseif name == "Löve2D" then
 		require 'love.LoveMain'
 		require 'love.LoveKeyboard'
@@ -79,6 +88,7 @@ local function loadAPI(name)
 		loadAdapterFont(require 'love.LoveFont')
 		loadAdapterMusic(require 'love.LoveMusic')
 		loadAdapterWindow(require 'love.LoveWindow')
+		loadAdapterCamera(require 'love.LoveCamera')
 	end
 end
 
@@ -87,6 +97,7 @@ function EasyLD:updateComponents(dt)
 	EasyLD.mouse:reset()
 	EasyLD.timer.update(dt)
 	EasyLD.flux.update(dt)
+	EasyLD.camera.update(dt)
 end
 
 if love ~= nil then

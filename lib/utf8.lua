@@ -176,6 +176,7 @@ end
 -- install in the string library
 if not string.utf8len then
 	string.utf8len = utf8len
+	print("text")
 end
 
 -- functions identically to string.sub except that i and j are UTF-8 characters

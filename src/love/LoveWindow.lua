@@ -6,6 +6,8 @@ function Window:resize(W, H, flags)
 	end
 	
 	love.window.setMode(W, H, {vsync = false, unpack(flags)})
+	EasyLD.window.w = W
+	EasyLD.window.h = H
 end
 
 function Window:setTitle(title)

@@ -1,7 +1,11 @@
 local Mouse = {}
 
 function Mouse.getPosition()
-	return EasyLD.point:new(love.mouse.getPosition())
+	local m = EasyLD.point:new(love.mouse.getPosition())
+	m:rotate(EasyLD.camera.angle, EasyLD.window.w/2, EasyLD.window.h/2)
+	local p = m - EasyLD.camera:getPosition()
+	print(p.x, p.y)
+	return p
 end
 
 function love.mousepressed(x, y, button)

@@ -71,6 +71,8 @@ function LoveFont.printOutLineAdapter(text, font, box, modeW, modeH, color, colo
 
 	love.graphics.setColor(color.r, color.g, color.b, color.a)
 	love.graphics.print(text, x, y, box.angle, 1, 1, 0, 0)
+
+	love.graphics.setColor(255,255,255,255)
 end
 
 function LoveFont.sizeOfAdapter(font, str)

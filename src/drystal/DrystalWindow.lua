@@ -4,6 +4,8 @@ function Window:resize(W, H)
 	drystal.resize(W, H)
 	drystal.boxBackground.w = W
 	drystal.boxBackground.h = H
+	EasyLD.window.w = W
+	EasyLD.window.h = H
 end
 
 function Window:setTitle(title)

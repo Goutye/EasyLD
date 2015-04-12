@@ -10,9 +10,9 @@ function LoveImage:initialize(src, filter1, filter2)
 	self.h = self.src:getHeight()
 
 	if filter1 == nil then
-		self.src:setFilter("nearest", "linear")
+		self.src:setFilter("nearest", "nearest")
 	elseif filter2 == nil then
-		self.src:setFilter(filter1, "linear")
+		self.src:setFilter(filter1, filter1)
 	else
 		self.src:setFilter(filter1, filter2)
 	end

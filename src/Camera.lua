@@ -1,48 +1,60 @@
 local Camera = {}
 
-function Camera.init(x, y, w, h, follower, mode, ox, oy)
-	Camera.scale = 1
-	Camera.x = x or 0
-	Camera.y = y or 0
-	Camera.w = w or
-	Camera.h = h
-	Camera.ox = ox or x
-	Camera.oy = oy or y
-	Camera.mode = mode
-	Camera.follower = follower
-	Camera.angle = 0
+Camera.scaleValue = 1
+Camera.scaleValueY = nil
+Camera.x = 0
+Camera.y = 0
+Camera.dx = 0
+Camera.dy = 0
+Camera.ox = 0
+Camera.oy = 0
+Camera.follower = nil
+Camera.angle = 0
+Camera.mode = "normal"
+
+function Camera:setMode(mode)
+	EasyLD.camera.mode = mode
 end
 
-function Camera.scaleTo(scale)
-	Camera.scale(scale - Camera.scale)
+function Camera:scaleTo(scale, scaleY)
+	EasyLD.camera:scale(scale - EasyLD.camera.scaleValue, (scaleY or scale) - (Camera.scaleValueY or Camera.scaleValue))
 end
 
-function Camera.scale(scale)
+function Camera:scale(scale, scaleY)
+	
+end
+
+function Camera:moveTo(x, y)
+	EasyLD.camera:move(x - EasyLD.camera.x, y - EasyLD.camera.y)
+end
+
+function Camera:move(x, y)
 
 end
 
-function Camera.moveTo(x, y)
-	Camera.move(x - Camera.x, y - Camera.y)
+function Camera:rotateTo(angle, ox, oy)
+	EasyLD.camera:rotate(angle - EasyLD.camera.angle, ox, oy)
 end
 
-function Camera.move(x, y)
+function Camera:rotate(angle, ox, oy)
 
 end
 
-function Camera.rotateTo(angle, ox, oy)
-	Camera.rotate(angle - Camera.angle, ox, oy)
+function Camera:follow(obj)
+	EasyLD.camera.follower = obj
 end
 
-function Camera.rotate(angle, ox, oy)
-	if ox ~= nil and oy ~= nil then
-
-	elseif Camera.follower ~= nil then
-
-	else
-		--Camera.ox, Camera.oy
+function Camera:update(dt)
+	if EasyLD.camera.follower ~= nil then
+		local f = EasyLD.camera.follower
+		EasyLD.camera.ox = f.x
+		EasyLD.camera.oy = f.y
 	end
 end
 
---Goal => Drystal camera || love rotation/translate
+function Camera:getPosition()
+	local p = EasyLD.point:new(-EasyLD.camera.ox - EasyLD.camera.x, -EasyLD.camera.oy - EasyLD.camera.y)
+	return p
+end
 
 return Camera

@@ -3,7 +3,7 @@ local Mouse = {}
 local drystalTable = {"l", "m", "r", "wu", "wd"}
 
 function Mouse.getPosition()
-	return EasyLD.point:new(EasyLD.mouse.x, EasyLD.mouse.y)
+	return EasyLD.point:new(EasyLD.mouse.x, EasyLD.mouse.y) - EasyLD.camera:getPosition()
 end
 
 function drystal.mouse_press(x, y, button)

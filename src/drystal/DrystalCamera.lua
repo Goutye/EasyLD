@@ -1,13 +1,15 @@
-function Camera.scale(scale)
-	drystal.camera.zoom = scale
+local Camera = {}
+
+function Camera:scale(scale)
+	EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
 end
 
-function Camera.move(dx, dy)
-	drystal.camera.x = drystal.camera.x + dx
-	drystal.camera.y = drystal.camera.y + dy
+function Camera:move(dx, dy)
+	EasyLD.camera.x = EasyLD.camera.x + dx
+	EasyLD.camera.y = EasyLD.camera.y + dy
 end
 
-function Camera.rotate(angle, ox, oy)
+function Camera:rotate(angle, ox, oy)
 	if ox ~= nil and oy ~= nil then
 
 	elseif Camera.follower ~= nil then
@@ -16,5 +18,14 @@ function Camera.rotate(angle, ox, oy)
 		--Camera.ox Camera.oy Currently : rotation around the center of the screen
 	end
 
-	drystal.camera.angle = drystal.camera.angle + angle
+	EasyLD.camera.angle = EasyLD.camera.angle + angle
 end
+
+function Camera:draw()
+	drystal.camera.zoom = EasyLD.camera.scaleValue
+	drystal.camera.x = -(EasyLD.camera.ox + EasyLD.camera.x)
+	drystal.camera.y = -(EasyLD.camera.oy + EasyLD.camera.y)
+	drystal.camera.angle = -EasyLD.camera.angle
+end
+
+return Camera

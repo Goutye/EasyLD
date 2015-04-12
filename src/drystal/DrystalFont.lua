@@ -1,7 +1,7 @@
 local DrystalFont = {}
 
 function DrystalFont.newFont(src, size)
-	return drystal.load_font(src, size)
+	return drystal.load_font(src, size/1.5)
 end
 
 local function _getX_Y(x, y, text, font, box, modeW, modeH)
@@ -68,6 +68,9 @@ function DrystalFont.printAdapter(text, font, box, modeW, modeH, color)
 		drystal.set_alpha(color.a)
 		font:draw(text, _getX_Y(box.x, box.y, text, font, box, modeW, modeH))
 	end
+
+	drystal.set_color(255,255,255)
+	drystal.set_alpha(255)
 end
 
 function DrystalFont.printOutLineAdapter(text, font, box, modeW, modeH, color, colorOut, thickness)

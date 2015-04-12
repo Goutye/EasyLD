@@ -8,5 +8,6 @@ function love.update(dt)
 end
 
 function love.draw()
+	EasyLD.camera:draw()
 	EasyLD:draw()
 end
