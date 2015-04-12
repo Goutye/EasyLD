@@ -97,7 +97,7 @@ function EasyLD:updateComponents(dt)
 	EasyLD.mouse:reset()
 	EasyLD.timer.update(dt)
 	EasyLD.flux.update(dt)
-	EasyLD.camera.update(dt)
+	EasyLD.camera:update(dt)
 end
 
 if love ~= nil then

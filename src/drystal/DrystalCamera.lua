@@ -13,7 +13,7 @@ function Camera:move(dx, dy, time, ...)
 	end
 end
 
-function Camera:rotate(angle, ox, oy)
+function Camera:rotate(angle, ox, oy, time, ...)
 	if ox ~= nil and oy ~= nil then
 
 	elseif Camera.follower ~= nil then
@@ -21,8 +21,11 @@ function Camera:rotate(angle, ox, oy)
 	else
 		--Camera.ox Camera.oy Currently : rotation around the center of the screen
 	end
-
-	EasyLD.camera.angle = EasyLD.camera.angle + angle
+	if EasyLD.camera.mode ~= "normal" then
+		local tween = EasyLD.flux.to(EasyLD.camera, time, {angle = EasyLD.camera.angle + angle}, ...):ease(EasyLD.camera.mode)
+	else
+		EasyLD.camera.angle = EasyLD.camera.angle + angle
+	end
 end
 
 function Camera:draw()
