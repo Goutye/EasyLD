@@ -179,7 +179,7 @@ function flux:update(deltatime)
 			t.progress = t.progress + t.rate * deltatime 
 			local p = t.progress
 			local x = p >= 1 and 1 or flux.easing[t._ease](p)
-			if t.obj:isInstanceOf(Shape) then
+			if t.obj.isInstanceOf ~= nil and t.obj:isInstanceOf(Shape) then
 				for k, v in pairs(t.vars) do
 					if k == "x" then
 						if t.varPrev[k] == nil then

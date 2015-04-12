@@ -8,18 +8,26 @@ function Camera:scale(scale, scaleY)
 	end
 end
 
-function Camera:move(dx, dy)
-	EasyLD.camera.x = EasyLD.camera.x + dx
-	EasyLD.camera.y = EasyLD.camera.y + dy
+function Camera:move(dx, dy, time, ...)
+	if EasyLD.camera.mode ~= "normal" then
+		local tween = EasyLD.flux.to(EasyLD.camera, time, {x = EasyLD.camera.x + dx, y = EasyLD.camera.y + dy}, ...):ease(EasyLD.camera.mode)
+	else
+		EasyLD.camera.x = EasyLD.camera.x + dx
+		EasyLD.camera.y = EasyLD.camera.y + dy
+	end
 end
 
-function Camera:rotate(angle, ox, oy)
+function Camera:rotate(angle, ox, oy, time, ...)
 	if ox ~= nil and oy ~= nil then
 		EasyLD.camera.ox = ox
 		EasyLD.camera.oy = oy
 	end
 
-	EasyLD.camera.angle = EasyLD.camera.angle + angle
+	if EasyLD.camera.mode ~= "normal" then
+		local tween = EasyLD.flux.to(EasyLD.camera, time, {angle = EasyLD.camera.angle + angle}, ...):ease(EasyLD.camera.mode)
+	else
+		EasyLD.camera.angle = EasyLD.camera.angle + angle
+	end
 end
 
 function Camera:draw()

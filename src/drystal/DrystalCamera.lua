@@ -4,9 +4,13 @@ function Camera:scale(scale)
 	EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
 end
 
-function Camera:move(dx, dy)
-	EasyLD.camera.x = EasyLD.camera.x + dx
-	EasyLD.camera.y = EasyLD.camera.y + dy
+function Camera:move(dx, dy, time, ...)
+	if EasyLD.camera.mode ~= "normal" then
+		local tween = EasyLD.flux.to(EasyLD.camera, time, {x = EasyLD.camera.x + dx, y = EasyLD.camera.y + dy}, ...):ease(EasyLD.camera.mode)
+	else
+		EasyLD.camera.x = EasyLD.camera.x + dx
+		EasyLD.camera.y = EasyLD.camera.y + dy
+	end
 end
 
 function Camera:rotate(angle, ox, oy)
