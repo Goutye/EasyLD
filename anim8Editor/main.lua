@@ -5,9 +5,11 @@ ezld = require 'EasyLD'
 Area = require 'Area'
 Point = require 'Point'
 Vector = require 'Vector'
---LOCAL VARIABLE
+
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
+
+oldMouse = nil
 
 function EasyLD:load()
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -59,6 +61,7 @@ function EasyLD:load()
 
 	tableAnim8 = {}
 	isPlay = false
+	oldMouse = EasyLD.mouse:getPosition()
 end
 
 function fullfilAreaText(a, stage)
@@ -83,7 +86,7 @@ function fullfilAreaText(a, stage)
 end 
 
 function EasyLD:update(dt)
-	local mousePos = EasyLD.mouse.getPosition()
+	local mousePos = EasyLD.mouse:getPosition()
 
 	if EasyLD.mouse:isPressed("l") and EasyLD.collide:AABB_point(boxAreaText, mousePos) then
 		for i,v in ipairs(box) do
@@ -106,9 +109,18 @@ function EasyLD:update(dt)
 	end
 	if EasyLD.mouse:isDown("r") then
 		local p = EasyLD.point:new(box[current].origin.x, box[current].origin.y)
+		local vMouseOld = Vector:of(box[current].obj.follower, oldMouse)
 		local vNew = Vector:of(box[current].obj.follower, mousePos)
-		box[current].obj:rotateTo(vNew:getAngle() - vOld:getAngle() + vOldAngle)
-
+		local angleNewOld = vNew:getAngle() - vOld:getAngle()
+		local angleDirection = vNew:getAngle() - vMouseOld:getAngle()
+		if angleDirection > 0 then
+			if angleNewOld < 0 then angleNewOld = angleNewOld + math.pi*2 end
+		elseif angleDirection < 0 then
+			if angleNewOld >= 0 then angleNewOld = angleNewOld - math.pi*2 end
+		end 
+		if angleDirection ~= 0 then
+			box[current].obj:rotateTo(angleNewOld + vOldAngle)
+		end
 	end
 	if EasyLD.mouse:isDown("l") and not EasyLD.collide:AABB_point(boxAreaText, mousePos) 
 		and box[current].obj:isInstanceOf(Area) then
@@ -130,6 +142,8 @@ function EasyLD:update(dt)
 	elseif EasyLD.keyboard:isPressed("p") then
 		play()
 	end
+
+	oldMouse = mousePos
 end
 
 function saveFrame()
@@ -138,6 +152,7 @@ function saveFrame()
 		table.insert(t, {x = v.x, y = v.y, angle = v.angle})
 	end
 	frame[idFrame] = t
+	tprint(t)
 end
 
 function newFrame()
@@ -188,8 +203,16 @@ function compute()
 				tArea.rotation = v.angle - areaList[i].angle
 				areaList[i]:rotateTo(v.angle)
 			end
-			if areaList[i].x ~= v.x or areaList[i].y ~= v.y then
-				--tArea.translation = {x = v.x - oldF[i].x, y = v.y - oldF[i].y}
+
+			local vTest = Vector:new(areaList[i].x - v.x, areaList[i].y - v.y)
+			if vTest:length() >= 1 then
+				local p = Point:new(v.x, v.y)
+				local p2 = Point:new(areaList[i].x, areaList[i].y)
+				local vTr = Vector:of(p, p2)
+				vTr:rotate(-areaList[i].angle)
+				
+				tArea.translation = {x = -vTr.x, y = -vTr.y}
+				areaList[i]:moveTo(v.x, v.y)
 			end
 			table.insert(t, tArea)
 		end
@@ -206,12 +229,12 @@ function play()
 		isPlay = true
 		compute()
 		sasa = EasyLD.areaAnimation:new(EasyLD.point:new(200,200), areaa2, tableTime, tableAnim8, true)
+		idFrame = 1
+		goFrame()
 		sasa:play()
 	else
 		isPlay = false
 		sasa:stop()
-		idFrame = 1
-		goFrame()
 	end
 end
 
