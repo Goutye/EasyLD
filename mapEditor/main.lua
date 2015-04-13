@@ -49,6 +49,7 @@ tlHeightPlusBox = {x = WINDOW_WIDTH-100, y = 40, w = 20, h = 20}
 tlHeightMinusBox = {x = WINDOW_WIDTH-100, y = 60, w = 20, h = 20}
 
 buttonSaveBox = {x = WINDOW_WIDTH-70, y = 27, w = 40, h = 20}
+buttonOpenBox = {x = WINDOW_WIDTH-70, y = 67, w = 40, h = 20}
 inputTextBox = EasyLD.box:new(WINDOW_WIDTH-300, 2, 150, 30)
 
 inputText = nil
@@ -98,7 +99,7 @@ function EasyLD:load()
 
 	font = EasyLD.font:new("assets/fonts/visitor.ttf")
 	font:load(24, EasyLD.color:new(255,255,255))
-	inputText = EasyLD.inputText:new(inputTextBox, {r=120, g=10, b=10, a=255}, {r=255, g=255, b=255, a=255}, 16)
+	inputText = EasyLD.inputText:new(inputTextBox, {r=120, g=10, b=10, a=255}, {r=255, g=255, b=255, a=255}, 16, font, 24)
 end
 
 function EasyLD:update(dt)
@@ -199,6 +200,18 @@ function EasyLD:update(dt)
 			map:save()
 			print("Map saved (" .. map.src..")")
 		end
+
+		if EasyLD.collide:AABB_point(buttonOpenBox, pos) then
+			if inputText.text ~= "" then
+				srcMap = "assets/maps/" .. inputText.text .. ".map"
+
+				if file_exists(srcMap) then
+					map = EasyLD.map:new(srcMap, tl)
+					map:load()
+					print("Map opened (" .. map.src..")")
+				end
+			end
+		end
 	end
 
 	if mouse:isDown("l") then
@@ -269,12 +282,13 @@ function EasyLD:update(dt)
 end
 
 function EasyLD:draw()
+	EasyLD.graphics:setColor()
 	map:draw(mapBox.x, mapBox.y, mapNbTilesX, mapNbTilesY, mapBeginX, mapBeginY)
 	tl:draw(tilesetBox.x, tilesetBox.y, tilesetNbTilesX, tilesetNbTilesY, tilesetBeginX, tilesetBeginY)
 
 	drawTileSelected()
 	inputText:draw()
-	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
+	--love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 
 function drawTileSelected()
@@ -282,36 +296,36 @@ function drawTileSelected()
 
 	if x < tilesetNbTilesX * tl.tileSize + tilesetBox.x 
 		and y < tilesetNbTilesY * tl.tileSizeY + tilesetBox.y then
-		love.graphics.setColor(200,0,0)
-		love.graphics.rectangle("line", x, y, tl.tileSize, tl.tileSizeY)
-		love.graphics.setColor(255,255,255)
+		EasyLD.graphics:rectangle("line", EasyLD.box:new(x, y, tl.tileSize, tl.tileSizeY), EasyLD.color:new(200,0,0))
 	end
 
-	love.graphics.printf("W:"..map.w, WINDOW_WIDTH-100, 10, 70, "right")
-	love.graphics.printf("H:"..map.h, WINDOW_WIDTH-100, 50, 70, "right")
-	love.graphics.printf("tlW:"..tilesetNbTilesX, WINDOW_WIDTH-160, 10, 50, "right")
-	love.graphics.printf("tlH:"..tilesetNbTilesY, WINDOW_WIDTH-160, 50, 50, "right")
-	love.graphics.rectangle("fill", widthPlusBox.x, widthPlusBox.y, widthPlusBox.w, widthPlusBox.h)
-	love.graphics.rectangle("fill", widthMinusBox.x, widthMinusBox.y, widthMinusBox.w, widthMinusBox.h)
-	love.graphics.rectangle("fill", heightPlusBox.x, heightPlusBox.y, heightPlusBox.w, heightPlusBox.h)
-	love.graphics.rectangle("fill", heightMinusBox.x, heightMinusBox.y, heightMinusBox.w, heightMinusBox.h)
-	love.graphics.rectangle("fill", tlWidthPlusBox.x, tlWidthPlusBox.y, tlWidthPlusBox.w, tlWidthPlusBox.h)
-	love.graphics.rectangle("fill", tlWidthMinusBox.x, tlWidthMinusBox.y, tlWidthMinusBox.w, tlWidthMinusBox.h)
-	love.graphics.rectangle("fill", tlHeightPlusBox.x, tlHeightPlusBox.y, tlHeightPlusBox.w, tlHeightPlusBox.h)
-	love.graphics.rectangle("fill", tlHeightMinusBox.x, tlHeightMinusBox.y, tlHeightMinusBox.w, tlHeightMinusBox.h)
-	love.graphics.rectangle("fill", buttonSaveBox.x, buttonSaveBox.y, buttonSaveBox.w, buttonSaveBox.h)
-	love.graphics.setColor(0,0,0)
-	love.graphics.printf("+", widthPlusBox.x, widthPlusBox.y, widthPlusBox.w, "center")
-	love.graphics.printf("-", widthMinusBox.x, widthMinusBox.y, widthMinusBox.w, "center")
-	love.graphics.printf("+", heightPlusBox.x, heightPlusBox.y, heightPlusBox.w, "center")
-	love.graphics.printf("-", heightMinusBox.x, heightMinusBox.y, heightMinusBox.w, "center")
-	love.graphics.printf("+", tlWidthPlusBox.x, tlWidthPlusBox.y, tlWidthPlusBox.w, "center")
-	love.graphics.printf("-", tlWidthMinusBox.x, tlWidthMinusBox.y, tlWidthMinusBox.w, "center")
-	love.graphics.printf("+", tlHeightPlusBox.x, tlHeightPlusBox.y, tlHeightPlusBox.w, "center")
-	love.graphics.printf("-", tlHeightMinusBox.x, tlHeightMinusBox.y, tlHeightMinusBox.w, "center")
-	love.graphics.printf("Save", buttonSaveBox.x, buttonSaveBox.y, buttonSaveBox.w, "center")
-	love.graphics.setColor(255,255,255)
-	love.graphics.rectangle("line", mapBox.x, mapBox.y, mapBox.w, mapBox.h)
+	font:load(16, EasyLD.color:new(255,255,255))
+	EasyLD.font.print("W:"..map.w, 1, 16, EasyLD.box:new(WINDOW_WIDTH-100, 10, 70, 30), "right")
+	EasyLD.font.print("H:"..map.h, 1, 16, EasyLD.box:new(WINDOW_WIDTH-100, 50, 70, 30), "right")
+	EasyLD.font.print("tlW:"..tilesetNbTilesX, 1, 16, EasyLD.box:new(WINDOW_WIDTH-160, 10, 50, 30), "right")
+	EasyLD.font.print("tlH:"..tilesetNbTilesY, 1, 16, EasyLD.box:new(WINDOW_WIDTH-160, 50, 50, 30), "right")
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(widthPlusBox.x, widthPlusBox.y, widthPlusBox.w, widthPlusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(widthMinusBox.x, widthMinusBox.y, widthMinusBox.w, widthMinusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(heightPlusBox.x, heightPlusBox.y, heightPlusBox.w, heightPlusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(heightMinusBox.x, heightMinusBox.y, heightMinusBox.w, heightMinusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(tlWidthPlusBox.x, tlWidthPlusBox.y, tlWidthPlusBox.w, tlWidthPlusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(tlWidthMinusBox.x, tlWidthMinusBox.y, tlWidthMinusBox.w, tlWidthMinusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(tlHeightPlusBox.x, tlHeightPlusBox.y, tlHeightPlusBox.w, tlHeightPlusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(tlHeightMinusBox.x, tlHeightMinusBox.y, tlHeightMinusBox.w, tlHeightMinusBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(buttonSaveBox.x, buttonSaveBox.y, buttonSaveBox.w, buttonSaveBox.h), EasyLD.color:new(255,255,255))
+	EasyLD.graphics:rectangle("fill", EasyLD.box:new(buttonOpenBox.x, buttonOpenBox.y, buttonOpenBox.w, buttonOpenBox.h), EasyLD.color:new(255,255,255))
+	font:load(16, EasyLD.color:new(0,0,0))
+	EasyLD.font.print("+", 1, 16, EasyLD.box:new(widthPlusBox.x, widthPlusBox.y, widthPlusBox.w, 30), "center")
+	EasyLD.font.print("-", 1, 16, EasyLD.box:new(widthMinusBox.x, widthMinusBox.y, widthMinusBox.w, 30), "center")
+	EasyLD.font.print("+", 1, 16, EasyLD.box:new(heightPlusBox.x, heightPlusBox.y, heightPlusBox.w, 30), "center")
+	EasyLD.font.print("-", 1, 16, EasyLD.box:new(heightMinusBox.x, heightMinusBox.y, heightMinusBox.w, 30), "center")
+	EasyLD.font.print("+", 1, 16, EasyLD.box:new(tlWidthPlusBox.x, tlWidthPlusBox.y, tlWidthPlusBox.w, 30), "center")
+	EasyLD.font.print("-", 1, 16, EasyLD.box:new(tlWidthMinusBox.x, tlWidthMinusBox.y, tlWidthMinusBox.w, 30), "center")
+	EasyLD.font.print("+", 1, 16, EasyLD.box:new(tlHeightPlusBox.x, tlHeightPlusBox.y, tlHeightPlusBox.w, 30), "center")
+	EasyLD.font.print("-", 1, 16, EasyLD.box:new(tlHeightMinusBox.x, tlHeightMinusBox.y, tlHeightMinusBox.w, 30), "center")
+	EasyLD.font.print("Save", 1, 16, EasyLD.box:new(buttonSaveBox.x, buttonSaveBox.y, buttonSaveBox.w, 30), "center")
+	EasyLD.font.print("Open", 1, 16, EasyLD.box:new(buttonOpenBox.x, buttonOpenBox.y, buttonOpenBox.w, 30), "center")
+	EasyLD.graphics:rectangle("line", EasyLD.box:new(mapBox.x, mapBox.y, mapBox.w, mapBox.h), EasyLD.color:new(255,255,255))
 end
 
 function selectTile(pos)

@@ -18,6 +18,8 @@ end
 function Font:load(size, color)
 	if self.font[size] == nil then
 		self.font[size] = EasyLD.font.newFont(self.src, size)
+	end
+	if color ~= nil then
 		self.color[size] = color or EasyLD.color:new(255,255,255)
 	end
 end

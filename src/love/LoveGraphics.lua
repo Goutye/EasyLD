@@ -53,4 +53,10 @@ function LoveGraphics:triangle(mode, p1, p2, p3, color)
 	LoveGraphics:polygon(mode, color, p1, p2, p3)
 end
 
+function LoveGraphics:setColor(color)
+	color = color or EasyLD.color:new(255,255,255)
+	love.graphics.setColor(color.r, color.g, color.b, color.a)
+end
+
+
 return LoveGraphics

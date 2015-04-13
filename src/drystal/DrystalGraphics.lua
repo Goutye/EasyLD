@@ -72,4 +72,10 @@ function DrystalGraphics:triangle(mode, p1, p2, p3, color)
 	DrystalGraphics:polygon(mode, color, p1, p2, p3)
 end
 
+function DrystalGraphics:setColor(color)
+	color = color or EasyLD.color:new(255,255,255)
+	drystal.set_color(color.r, color.g, color.b)
+	drystal.set_alpha(color.a)
+end
+
 return DrystalGraphics
