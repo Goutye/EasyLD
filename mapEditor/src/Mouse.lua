@@ -65,7 +65,7 @@ end
 
 function Mouse:getPosition()
 	local pos = {}
-	pos.x, pos.y = love.mouse.getPosition()
+--	pos.x, pos.y = love.mouse.getPosition()
 
 	return pos
 end
@@ -86,4 +86,4 @@ function Mouse:reset()
 	self.last = ""
 end
 
-return Mouse
+return Mouse:new()

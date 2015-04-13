@@ -45,6 +45,9 @@ function LoveImage:draw(x, y, r, sx, sy, ox, oy, kx, ky)
 end
 
 function LoveImage:drawPart(mapX, mapY, x, y, w, h, id, angle)
+	if angle == nil then
+		angle = 0
+	end
 	if id ~= nil then
 		if self.id[id] == nil then
 			self.id[id] = true

@@ -1,14 +1,9 @@
 package.path = package.path .. ';src/?.lua'
 package.path = package.path .. ';lib/?.lua'
 
-AdaptaterImage = require 'LoveImage'
 EasyLD = require 'EasyLD'
-EasyLD.load.adaptaterImage(AdaptaterImage)
 
 local utf8 = require 'utf8'
-
-local Mouse = require 'Mouse'
-local Keyboard = require 'Keyboard'
 
 mouse = nil
 keyboard = nil
@@ -22,9 +17,8 @@ srcMap = nil
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
-love.window.setTitle("Map Editor")
-love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-love.graphics.setBackgroundColor(0,0,0)
+EasyLD.window:setTitle("Map Editor")
+EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 tl = nil
 map = nil
@@ -74,11 +68,9 @@ function file_exists(name)
    if f~=nil then io.close(f) return true else return false end
 end
 
-function love.load()
-	mouse = Mouse:new()
-	keyboard = Keyboard:new()
-	EasyLD.mouse = mouse
-	EasyLD.keyboard = keyboard
+function EasyLD:load()
+	mouse = EasyLD.mouse
+	keyboard = EasyLD.keyboard
 
 	if srcTileset == nil then
 		srcTileset = "assets/tilesets/tileset.png"
@@ -104,10 +96,12 @@ function love.load()
 	mapNbTilesY = math.floor((WINDOW_HEIGHT - tilesetBox.h) / tl.tileSizeY )
 	mapBox.w, mapBox.h = mapNbTilesX*tl.tileSize, mapNbTilesY*tl.tileSizeY
 
+	font = EasyLD.font:new("assets/fonts/visitor.ttf")
+	font:load(24, EasyLD.color:new(255,255,255))
 	inputText = EasyLD.inputText:new(inputTextBox, {r=120, g=10, b=10, a=255}, {r=255, g=255, b=255, a=255}, 16)
 end
 
-function love.update(dt)
+function EasyLD:update(dt)
 	inputText:update(dt)
 
 	if mouse:isPressed("r") then
@@ -274,7 +268,7 @@ function love.update(dt)
 	keyboard:reset()
 end
 
-function love.draw()
+function EasyLD:draw()
 	map:draw(mapBox.x, mapBox.y, mapNbTilesX, mapNbTilesY, mapBeginX, mapBeginY)
 	tl:draw(tilesetBox.x, tilesetBox.y, tilesetNbTilesX, tilesetNbTilesY, tilesetBeginX, tilesetBeginY)
 
@@ -356,32 +350,4 @@ function changeTilesetNB(x, y)
 		mapNbTilesY = mapNbTilesY - y
 		tilesetBox.h = tilesetBox.h + y * tl.tileSize
 	end
-end
-
-function love.keypressed(key)
-	if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") and string.byte(key) > 64 and string.byte(key) < 123 then
-		key = string.upper(key)
-	end
-
-	keyboard:keyPressed(key)
-end
-
-function love.keyreleased(key)
-	if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") and string.byte(key) >= 65 and string.byte(key) < 123 then
-		key = string.upper(key)
-	end
-
-	keyboard:keyReleased(key)
-end
-
-function love.textinput(t)
-	keyboard.lastChar = t
-end
-
-function love.mousepressed(x, y, button)
-    mouse:buttonPressed(x,y,button)
-end
-
-function love.mousereleased(x, y, button)
-    mouse:buttonReleased(x,y,button)
 end

@@ -43,10 +43,8 @@ function DrystalFont.printAdapter(text, font, box, modeW, modeH, color)
 	drystal.set_color(color.r, color.g, color.b)
 
 	if box.angle ~= 0 then
-		local prevCamera = {angle = drystal.camera.angle, x = drystal.camera.x, y = drystal.camera.y}
-		drystal.camera.angle = 0
-		drystal.camera.x = 0
-		drystal.camera.y = 0
+		drystal.camera.push()
+		drystal.camera.reset()
 
 		local x,y = _getX_Y(box.x, box.y, text, font, box, modeW, modeH)
 		local xF, yF = font:sizeof(text)
@@ -69,9 +67,7 @@ function DrystalFont.printAdapter(text, font, box, modeW, modeH, color)
 		drystal.set_color(255,255,255)
 		drystal.set_alpha(255)
 
-		drystal.camera.angle = prevCamera.angle
-		drystal.camera.x = prevCamera.x
-		drystal.camera.y = prevCamera.y
+		drystal.camera.pop()
 		drystal.draw_sprite_rotated({x=0, y=0, w=surface.w, h=surface.h}, x, y, box.angle, 0, 0)
 	else
 		drystal.set_alpha(color.a)

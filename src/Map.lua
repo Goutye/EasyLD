@@ -46,6 +46,7 @@ function Map:generate(w, h)
 	self.tiles = {}
 	
 	for x = 0, self.w - 1 do
+		self.tiles[x] = {}
 		for y = 0, self.h - 1 do
 			self:putTile(0, x, y)
 		end
