@@ -6,14 +6,19 @@ Area = require 'Area'
 Point = require 'Point'
 Vector = require 'Vector'
 
+require 'table_io'
+
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
 oldMouse = nil
 
+START_POS = EasyLD.point:new(100,100)
+
 function EasyLD:load()
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
+	--[[
 	point = EasyLD.point:new(10,10)
 	point2 = EasyLD.point:new(20,20)
 	point3 = EasyLD.point:new(70, 70)
@@ -36,7 +41,35 @@ function EasyLD:load()
 	areaa2 = EasyLD.area:new(point)
 	areaa2:attach(point2)
 	areaa2:attach(areaa)
-	areaa2:attach(areaaCopy)
+	areaa2:attach(areaaCopy)]]
+
+	point = EasyLD.point:new(25,50)
+	point2 = EasyLD.point:new(0,100)
+	point3 = EasyLD.point:new(50,100)
+	line = EasyLD.segment:new(EasyLD.point:new(0,100), EasyLD.point:new(0,150))
+	line2 = EasyLD.segment:new(EasyLD.point:new(50,100), EasyLD.point:new(50,150))
+	areaJambe1 = EasyLD.area:new(line)
+	areaJambe2 = EasyLD.area:new(line2)
+	areaJambe1:follow(point2)
+	areaJambe2:follow(point3)
+	line3 = EasyLD.segment:new(EasyLD.point:new(25,50), EasyLD.point:new(0,100))
+	line4 = EasyLD.segment:new(EasyLD.point:new(25,50), EasyLD.point:new(50,100))
+	areaCuisse1 = EasyLD.area:new(line3)
+	areaCuisse2 = EasyLD.area:new(line4)
+	areaCuisse1:attach(point2)
+	areaCuisse1:attach(areaJambe1)
+	areaCuisse2:attach(point3)
+	areaCuisse2:attach(areaJambe2)
+	areaCuisse1:follow(point)
+	areaCuisse2:follow(point)
+	box = EasyLD.box:new(5,5, 45, 45)
+	areaGlobal = EasyLD.area:new(box)
+	areaGlobal:attach(point)
+	areaGlobal:attach(areaCuisse1)
+	areaGlobal:attach(areaCuisse2)
+	areaa2 = areaGlobal
+
+	areaa2:moveTo(START_POS.x,START_POS.y)
 	--[[sasa = EasyLD.areaAnimation:new(EasyLD.point:new(200,200), areaa2, {4,4,1}, { {{ease = "expoout", translation = {x = 50, y = 50}}, {rotation = math.pi}, {ease = "backin", translation = {x = -50, y = 50}}, {ease = "backout",rotation = -math.pi}}, 
 																{{rotation = math.pi*2}, {translation = {x = -50, y = -50}}, {rotation = math.pi*2}, {translation = {x = -50, y = -50}}},
 																{{ease = "expoin", translation = {x = -50, y = -50}, rotation = -math.pi*2}, {rotation = math.pi, translation = {x = 50, y = 50}}, {translation = {x = 50, y = -50}, rotation = -math.pi*2}, {rotation = -math.pi, translation = {x = 50, y = 50}}} }, true)
@@ -53,11 +86,14 @@ function EasyLD:load()
 	areaList = {}
 	fontSize = 20
 	fullfilAreaText({forms = {areaa2}}, 0)
+	--areaText:moveTo(WINDOW_WIDTH-150, 0)
 	current = 1
 
 	frame = {{}}
 	idFrame = 1
 	isComputing = false
+	saveFrame()
+	newFrame()
 
 	tableAnim8 = {}
 	isPlay = false
@@ -66,7 +102,7 @@ end
 
 function fullfilAreaText(a, stage)
 	for i,s in ipairs(a.forms) do
-		box[nb] = EasyLD.box:new(stage * 10, (nb-1)*fontSize, 100, fontSize)
+		box[nb] = EasyLD.box:new(stage * 10 + WINDOW_WIDTH - 150, (nb-1)*fontSize, 100, fontSize)
 		box[nb].text = string.sub(tostring(s.class), 7, -1)
 		box[nb].obj = s
 		box[nb].origin = {x = s.x, y = s.y, angle = s.angle}
@@ -81,7 +117,7 @@ function fullfilAreaText(a, stage)
 	end
 
 	if stage == 0 then
-		boxAreaText = EasyLD.box:new(0, 0, 150, nb * fontSize)
+		boxAreaText = EasyLD.box:new(WINDOW_WIDTH-150, 0, 150, nb * fontSize)
 	end
 end 
 
@@ -103,11 +139,11 @@ function EasyLD:update(dt)
 				end
 			end
 		end
-	elseif EasyLD.mouse:isPressed("r") then
+	elseif EasyLD.mouse:isPressed("r") and box[current].obj:isInstanceOf(Area) then
 		vOld = Vector:of(box[current].obj.follower, mousePos)
 		vOldAngle = box[current].obj.angle
 	end
-	if EasyLD.mouse:isDown("r") then
+	if EasyLD.mouse:isDown("r") and box[current].obj:isInstanceOf(Area) then
 		local p = EasyLD.point:new(box[current].origin.x, box[current].origin.y)
 		local vMouseOld = Vector:of(box[current].obj.follower, oldMouse)
 		local vNew = Vector:of(box[current].obj.follower, mousePos)
@@ -141,18 +177,27 @@ function EasyLD:update(dt)
 		goFrame()
 	elseif EasyLD.keyboard:isPressed("p") then
 		play()
+	elseif EasyLD.keyboard:isPressed("v") then
+		saveAnim()
 	end
 
 	oldMouse = mousePos
 end
 
+function saveAnim()
+	table.save(tableAnim8, "assets/anim8.anim8")
+	table.save(frame[1], "assets/anim8.anim8init") --attention la frame est décalé de 100 100 actuellmenet
+end
+
 function saveFrame()
+	areaa2:moveTo(0,0)
 	local t = {}
 	for i,v in ipairs(areaList) do
 		table.insert(t, {x = v.x, y = v.y, angle = v.angle})
 	end
 	frame[idFrame] = t
 	tprint(t)
+	areaa2:moveTo(START_POS:get())
 end
 
 function newFrame()
@@ -188,6 +233,7 @@ function tprint (tbl, indent)
 end
 
 function compute()
+	areaa2:moveTo(0,0)
 	tableAnim8 = {}
 	tableTime = {}
 
@@ -226,15 +272,18 @@ end
 
 function play()
 	if not isPlay then
-		isPlay = true
-		compute()
-		sasa = EasyLD.areaAnimation:new(EasyLD.point:new(200,200), areaa2, tableTime, tableAnim8, true)
 		idFrame = 1
 		goFrame()
+		isPlay = true
+		compute()
+		idFrame = 1
+		goFrame()
+		sasa = EasyLD.areaAnimation:new(EasyLD.point:new(100,100), areaa2, tableTime, tableAnim8, true)
 		sasa:play()
 	else
 		isPlay = false
 		sasa:stop()
+		areaa2:moveTo(100,100)
 	end
 end
 

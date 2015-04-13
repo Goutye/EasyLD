@@ -21,11 +21,30 @@ end
 
 function AreaAnimation:initialize(pos, area, timeFrames, frames, looping, callback, args)
 	self.obj = area
-	area:moveTo(pos.x, pos.y)
-	self.timeFrames = timeFrames
-	self.frames = frames
-	self.looping = looping
 	self.areaList = { exploreArea(area) }
+	--initPos
+	if type(frames) == "string" then
+		local f = table.load(frames .. "init")
+		--area:moveTo(100,100)
+		for i,v in ipairs(f) do
+			self.areaList[i]:rotateTo(v.angle)
+			self.areaList[i]:moveTo(v.x, v.y)
+		end
+	end
+	--MoveTo
+	area:moveTo(pos.x, pos.y)
+
+	if type(timeFrames) == "string" then
+		self.timeFrames = table.load(timeFrames)
+	else
+		self.timeFrames = timeFrames
+	end
+	if type(frames) == "string" then
+		self.frames = table.load(frames)
+	else
+		self.frames = frames
+	end
+	self.looping = looping
 	self.frameTween = {}
 	self.current = 1
 	self.timer = nil
