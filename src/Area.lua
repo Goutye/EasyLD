@@ -32,6 +32,7 @@ end
 
 function Area:follow(obj)
 	self.follower = obj
+	obj.isFollowed = true
 end
 
 function Area:copy()

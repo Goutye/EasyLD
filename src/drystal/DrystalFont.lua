@@ -1,7 +1,7 @@
 local DrystalFont = {}
 
 function DrystalFont.newFont(src, size)
-	return drystal.load_font(src, size/1.5)
+	return drystal.load_font(src, size/1.25 + 0.5)
 end
 
 local function _getX_Y(x, y, text, font, box, modeW, modeH)

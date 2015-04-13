@@ -67,7 +67,7 @@ function AreaAnimation:nextFrame()
 	end
 
 	self.frameTween = {}
-	
+	local completeOk = false
 
 	if self.current <= #self.frames then
 		for i,v in ipairs(self.frames[self.current]) do
@@ -85,13 +85,17 @@ function AreaAnimation:nextFrame()
 				easeFct = v.ease
 			end
 
-			local tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative", "relative"):ease(easeFct)
+			local tween = nil
+			if vars.angle ~= nil or vars.x ~= nil or vars.y ~= nil then
+				tween = EasyLD.flux.to(self.areaList[i], self.timeFrames[self.current], vars, "relative", "relative"):ease(easeFct)
+			end
 
-			if i == 1 then
+			if not completeOk and tween ~= nil then
 				self.areaList[i].AreaAnimation = self
 				tween:oncomplete(function(obj)
 									obj.AreaAnimation:nextFrame()
 								end)
+				completeOk = true
 			end
 
 			table.insert(self.frameTween, tween)
