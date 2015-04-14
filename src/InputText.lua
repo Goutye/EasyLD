@@ -55,7 +55,7 @@ function InputText:draw()
 	self.box:draw("fill")
 	self.box.c = self.cText
 	self.box:draw("line")
-	self.font:print(self.text, self.fontSize, self.box, nil, "center", self.colorText)
+	self.font:print(self.text, self.fontSize, self.box, nil, "center", self.cText)
 end
 
 return InputText
