@@ -25,7 +25,6 @@ function AreaAnimation:initialize(pos, area, timeFrames, frames, looping, callba
 	--initPos
 	if type(frames) == "string" then
 		local f = table.load(frames .. "init")
-		--area:moveTo(100,100)
 		for i,v in ipairs(f) do
 			self.areaList[i]:rotateTo(v.angle)
 			self.areaList[i]:moveTo(v.x, v.y)
