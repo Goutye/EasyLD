@@ -86,6 +86,8 @@ function EasyLD:load()
 	nb = 1
 	box = {}
 	areaList = {}
+	tableTime = {}
+	tableTime[1] = 1
 	fontSize = 20
 	fullfilAreaText({forms = {areaa2}}, 0)
 	--areaText:moveTo(WINDOW_WIDTH-150, 0)
@@ -100,6 +102,19 @@ function EasyLD:load()
 	tableAnim8 = {}
 	isPlay = false
 	oldMouse = EasyLD.mouse:getPosition()
+
+	listEase = {"linear", "quad", "cubic", "quart", "quint", "expo", "sine", "circ", "back", "elastic"}
+	listTypeEase = {"in", "out", "inout"}
+	idEase = 1
+	idTypeEase = 1
+	currentEase = "linear"
+	boxDisplayEase = EasyLD.box:new(WINDOW_WIDTH-200, WINDOW_HEIGHT-20, 200, 20, EasyLD.color:new(0,0,0))
+
+	timeFrame = 1
+	idIncrTime = 2
+	incrTimePossible = {0.01, 0.1, 1, 10}
+	incrTime = incrTimePossible[idIncrTime]
+	boxDisplayTime = EasyLD.box:new(150, WINDOW_HEIGHT-50, 50, 50)
 end
 
 function fullfilAreaText(a, stage)
@@ -131,6 +146,11 @@ function EasyLD:update(dt)
 			if EasyLD.collide:AABB_point(v, mousePos) and i ~= current then
 				current = i
 				v.c = EasyLD.color:new(200,255,200)
+				if v.obj:isInstanceOf(Area) then
+					idEase = v.obj.ease or 1
+					idTypeEase = v.obj.easeType or 1
+					updateCurrentEase()
+				end
 			else
 				if v.obj:isInstanceOf(Area) then
 					v.c = EasyLD.color:new(255,200,200)
@@ -197,26 +217,67 @@ function EasyLD:update(dt)
 		saveAnim()
 	elseif EasyLD.keyboard:isPressed("r") then
 		reset()
+	elseif EasyLD.keyboard:isPressed("a") then
+		idEase = idEase - 1
+		if idEase < 1 then idEase = #listEase end
+		updateCurrentEase()
+	elseif EasyLD.keyboard:isPressed("e") then
+		idEase = idEase + 1
+		if idEase > #listEase then idEase = 1 end
+		updateCurrentEase()
+	elseif EasyLD.keyboard:isPressed("z") then
+		idTypeEase = idTypeEase + 1
+		if idTypeEase > #listTypeEase then idTypeEase = 1 end
+		updateCurrentEase()
+	elseif EasyLD.keyboard:isPressed("w") then
+		idIncrTime = idIncrTime - 1
+		if idIncrTime < 1 then idIncrTime = 1 end
+		incrTime = incrTimePossible[idIncrTime]
+	elseif EasyLD.keyboard:isPressed("c") then
+		idIncrTime = idIncrTime + 1
+		if idIncrTime > #incrTimePossible then idIncrTime = #incrTimePossible end
+		incrTime = incrTimePossible[idIncrTime]
+	elseif EasyLD.mouse:isPressed("wu") then
+		timeFrame = timeFrame + incrTime 
+	elseif EasyLD.mouse:isPressed("wd") then
+		if timeFrame - incrTime > 0 then
+			timeFrame = timeFrame - incrTime
+		end
 	end
 
 	oldMouse = mousePos
 end
 
+function updateCurrentEase()
+	if idEase == 1 then
+		currentEase = "linear"
+	else
+		currentEase = listEase[idEase] .. listTypeEase[idTypeEase]
+	end
+	box[current].obj.ease = idEase
+	box[current].obj.easeType = idTypeEase
+end
+
 function saveAnim()
+	local time = {}
+	for i = 2, #tableTime+1 do
+		time[i-1] = tableTime[i] or tableTime[1]
+	end
 	table.save(tableAnim8, "assets/anim8.anim8")
 	table.save(frame[1], "assets/anim8.anim8init")
-	table.save(tableTime, "assets/anim8.anim8time")
+	table.save(time, "assets/anim8.anim8time")
 end
 
 function saveFrame()
 	areaa2:moveTo(0,0)
 	local t = {}
 	for i,v in ipairs(areaList) do
-		table.insert(t, {x = v.x, y = v.y, angle = v.angle})
+		table.insert(t, {x = v.x, y = v.y, angle = v.angle, ease = v.ease or 1, easeType = v.easeType or 1})
 	end
 	frame[idFrame] = t
 	tprint(t)
 	areaa2:moveTo(START_POS:get())
+	tableTime[idFrame] = timeFrame
 end
 
 function newFrame()
@@ -224,9 +285,15 @@ function newFrame()
 	if idFrame <= #frame then
 		for i = #frame, idFrame, -1 do
 			frame[i + 1] = frame[i]
+			tableTime[i + 1] = tableTime[i]
 		end
 	end
 	frame[idFrame] = {}
+	tableTime[idFrame] = 1
+	for i,v in ipairs(areaList) do
+		v.ease = 1
+		v.easeType = 1
+	end
 end
 
 function goFrame(isRelated)
@@ -237,7 +304,11 @@ function goFrame(isRelated)
 		else
 			areaList[i]:moveTo(v.x, v.y)
 		end
+		areaList[i].ease = v.ease
+		areaList[i].easeType = v.easeType
 	end
+	if tableTime[idFrame] == nil then tableTime[idFrame] = 1 end
+	timeFrame = tableTime[idFrame]
 end
 
 function tprint (tbl, indent)
@@ -258,7 +329,6 @@ end
 function compute()
 	areaa2:moveTo(0,0)
 	tableAnim8 = {}
-	tableTime = {}
 
 	for i = 2, #frame+1 do
 		idFrame = i - 1
@@ -283,11 +353,16 @@ function compute()
 				tArea.translation = {x = -vTr.x, y = -vTr.y}
 				areaList[i]:moveTo(v.x, v.y)
 			end
+
+			if v.ease == 1 then
+				tArea.ease = "linear"
+			else
+				tArea.ease = listEase[v.ease] .. listTypeEase[v.easeType]
+			end
 			table.insert(t, tArea)
 		end
 
 		table.insert(tableAnim8, t)
-		table.insert(tableTime, 2)
 	end
 
 	tprint(tableAnim8)
@@ -299,13 +374,19 @@ function play()
 		goFrame()
 		isPlay = true
 		compute()
+		local time = {}
+		for i = 2, #tableTime+1 do
+			time[i-1] = tableTime[i] or tableTime[1]
+		end
 		idFrame = 1
 		goFrame()
-		sasa = EasyLD.areaAnimation:new(EasyLD.point:new(100,100), areaa2, tableTime, tableAnim8, true)
+		sasa = EasyLD.areaAnimation:new(EasyLD.point:new(100,100), areaa2, time, tableAnim8, true)
 		sasa:play()
 	else
 		isPlay = false
-		sasa:stop()
+		sasa:pause()
+		idFrame = 1
+		goFrame(true)
 	end
 end
 
@@ -315,5 +396,7 @@ function EasyLD:draw()
 	for i,v in ipairs(box) do
 		font:print(v.text, fontSize, v, "left", "center", EasyLD.color:new(0,0,0))
 	end
-	font:print("Frame: " .. idFrame .. "/" .. #frame, fontSize, EasyLD.box:new(0, WINDOW_HEIGHT-50, 50, 50), nil, nil, EasyLD.color:new(255,255,255))
+	font:print(currentEase, fontSize, boxDisplayEase, "center", nil, EasyLD.color:new(255,255,255))
+	font:print("Time: " .. string.sub(tostring(timeFrame),0,5) .. " Incr: " .. string.sub(tostring(incrTime), 0, 5), fontSize, boxDisplayTime)
+	font:print("Frame: " .. idFrame .. "/" .. #frame, fontSize, EasyLD.box:new(0, WINDOW_HEIGHT-50, 50, 50))
 end
