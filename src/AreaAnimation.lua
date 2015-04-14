@@ -34,15 +34,12 @@ function AreaAnimation:initialize(pos, area, timeFrames, frames, looping, callba
 	--MoveTo
 	area:moveTo(pos.x, pos.y)
 
-	if type(timeFrames) == "string" then
-		self.timeFrames = table.load(timeFrames)
-	else
-		self.timeFrames = timeFrames
-	end
 	if type(frames) == "string" then
 		self.frames = table.load(frames)
+		self.timeFrames = table.load(frames .. "time")
 	else
 		self.frames = frames
+		self.timeFrames = timeFrames
 	end
 	self.looping = looping
 	self.frameTween = {}

@@ -142,6 +142,8 @@ function EasyLD:update(dt)
 	elseif EasyLD.mouse:isPressed("r") and box[current].obj:isInstanceOf(Area) then
 		vOld = Vector:of(box[current].obj.follower, mousePos)
 		vOldAngle = box[current].obj.angle
+		totalDirection = 0
+		oldAngleNewOld = 0
 	end
 	if EasyLD.mouse:isDown("r") and box[current].obj:isInstanceOf(Area) then
 		local p = EasyLD.point:new(box[current].origin.x, box[current].origin.y)
@@ -149,13 +151,25 @@ function EasyLD:update(dt)
 		local vNew = Vector:of(box[current].obj.follower, mousePos)
 		local angleNewOld = vNew:getAngle() - vOld:getAngle()
 		local angleDirection = vNew:getAngle() - vMouseOld:getAngle()
-		if angleDirection > 0 then
+		if angleDirection > 0 and totalDirection > 0 then
 			if angleNewOld < 0 then angleNewOld = angleNewOld + math.pi*2 end
-		elseif angleDirection < 0 then
+		elseif angleDirection < 0 and totalDirection < 0 then
 			if angleNewOld >= 0 then angleNewOld = angleNewOld - math.pi*2 end
-		end 
+		end
 		if angleDirection ~= 0 then
+			if angleNewOld * oldAngleNewOld < 0 then
+				totalDirection = 0
+			end
+			local diff = oldAngleNewOld - angleNewOld
+			if diff > math.pi then
+				angleNewOld = angleNewOld + math.pi*2
+			elseif diff < -math.pi then
+				angleNewOld = angleNewOld - math.pi*2
+			end
+			totalDirection = totalDirection + angleNewOld
 			box[current].obj:rotateTo(angleNewOld + vOldAngle)
+			print(angleNewOld + vOldAngle, angleNewOld, totalDirection)
+			oldAngleNewOld = angleNewOld
 		end
 	end
 	if EasyLD.mouse:isDown("l") and not EasyLD.collide:AABB_point(boxAreaText, mousePos) 
@@ -170,15 +184,17 @@ function EasyLD:update(dt)
 	elseif EasyLD.keyboard:isPressed("q") then
 		idFrame = idFrame - 1
 		if idFrame < 1 then idFrame = #frame end
-		goFrame()
+		goFrame(true)
 	elseif EasyLD.keyboard:isPressed("d") then
 		idFrame = idFrame + 1
 		if idFrame > #frame then idFrame = 1 end
-		goFrame()
+		goFrame(true)
 	elseif EasyLD.keyboard:isPressed("p") then
 		play()
 	elseif EasyLD.keyboard:isPressed("v") then
 		saveAnim()
+	elseif EasyLD.keyboard:isPressed("r") then
+		reset()
 	end
 
 	oldMouse = mousePos
@@ -186,7 +202,8 @@ end
 
 function saveAnim()
 	table.save(tableAnim8, "assets/anim8.anim8")
-	table.save(frame[1], "assets/anim8.anim8init") --attention la frame est décalé de 100 100 actuellmenet
+	table.save(frame[1], "assets/anim8.anim8init")
+	table.save(tableTime, "assets/anim8.anim8time")
 end
 
 function saveFrame()
@@ -210,10 +227,14 @@ function newFrame()
 	frame[idFrame] = {}
 end
 
-function goFrame()
+function goFrame(isRelated)
 	for i,v in ipairs(frame[idFrame]) do
 		areaList[i]:rotateTo(v.angle)
-		areaList[i]:moveTo(v.x, v.y)
+		if isRelated then
+			areaList[i]:moveTo(v.x + START_POS.x, v.y + START_POS.y)
+		else
+			areaList[i]:moveTo(v.x, v.y)
+		end
 	end
 end
 
@@ -283,7 +304,6 @@ function play()
 	else
 		isPlay = false
 		sasa:stop()
-		areaa2:moveTo(100,100)
 	end
 end
 
