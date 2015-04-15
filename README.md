@@ -7,6 +7,7 @@ Current features :
 
 * Tileset / Map
 * MapEditor
+* Anim8Editor (Required an Area to use it)
 * Entity / SpriteAnimation / AreaAnimation
 * Matrix / Vector / Point
 * Collide (Area, Polygon, OBB, AABB, Circle, Segment, Point)
@@ -19,21 +20,23 @@ Current features :
 * Flux (Tweening)
 * Music
 * Window
+* Camera
 
 In the side of LÖVE2D :
 ----------------------
 
-* Circle (line)
 * Music (Some stuffs available only in LÖVE2D)
 
 In the side of Drystal :
 ----------------------
 
+* Mouse position (screen to scene) works with scaling
+
 Upcoming stuffs : (Priority order)
 ----------------------
 
-* Software to create as easily as possible an AreaAnimation
-* Camera
+* Entity manager
+* AreaEditor (Required for Anim8Editor)
 
 How to program with EasyLD
 ----------------------

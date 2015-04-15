@@ -22,10 +22,12 @@ function DrystalGraphics:circle(mode, circle, nbSeg, color)
 		drystal.draw_circle(circle.x, circle.y, circle.r)
 	else
 		local t = {}
-		local angle = math.pi*2/nbSeg
+		local anglePart = math.pi*2/nbSeg
+		local angle = 0
 		for i = 1, nbSeg do
-			table.insert(t, circle.x + circle.r * math.cos(angle * i))
-			table.insert(t, circle.y + circle.r * math.sin(angle * i))
+			table.insert(t, circle.x + circle.r * math.cos(angle))
+			table.insert(t, circle.y + circle.r * math.sin(angle))
+			angle = angle + anglePart
 		end
 
 		drystal.draw_polyline(unpack(t), unpack(t))
