@@ -5,7 +5,7 @@ local drystalTable = {"l", "m", "r", "wu", "wd"}
 function Mouse.getPosition()
 	local m = EasyLD.point:new(EasyLD.mouse.x, EasyLD.mouse.y)
 	m:rotate(EasyLD.camera.angle, EasyLD.window.w/2, EasyLD.window.h/2)
-	return m - EasyLD.camera:getPosition()
+	return EasyLD.point:new(drystal.screen2scene(EasyLD.mouse.x, EasyLD.mouse.y)) --m - EasyLD.camera:getPosition()
 end
 
 function drystal.mouse_press(x, y, button)
@@ -23,5 +23,7 @@ end
 
 EasyLD.mouse.x = 0
 EasyLD.mouse.y = 0
+
+
 
 return Mouse

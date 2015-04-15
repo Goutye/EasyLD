@@ -21,7 +21,14 @@ function DrystalGraphics:circle(mode, circle, nbSeg, color)
 	if mode == "fill" then
 		drystal.draw_circle(circle.x, circle.y, circle.r)
 	else
-		print("NOT IMPLEMENTED YET")
+		local t = {}
+		local angle = math.pi*2/nbSeg
+		for i = 1, nbSeg do
+			table.insert(t, circle.x + circle.r * math.cos(angle * i))
+			table.insert(t, circle.y + circle.r * math.sin(angle * i))
+		end
+
+		drystal.draw_polyline(unpack(t), unpack(t))
 	end
 
 	drystal.set_color(255,255,255)

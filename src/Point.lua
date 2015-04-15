@@ -82,8 +82,8 @@ function Point:draw()
 		EasyLD.graphics:point(self, self.c)
 	else
 		if self.imgType == "center" then
-			local zW = Vector:new(1, 0)
-			local zH = Vector:new(0, 1)
+			local zW = EasyLD.vector:new(1, 0)
+			local zH = EasyLD.vector:new(0, 1)
 			zW:rotate(self.angle)
 			zH:rotate(self.angle)
 			zW = zW * self.img.w/2

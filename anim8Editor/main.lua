@@ -44,31 +44,53 @@ function EasyLD:load()
 	areaa2:attach(areaaCopy)]]
 
 	point = EasyLD.point:new(25,50)
-	point2 = EasyLD.point:new(0,100)
-	point3 = EasyLD.point:new(50,100)
-	line = EasyLD.segment:new(EasyLD.point:new(0,100), EasyLD.point:new(0,150))
-	line2 = EasyLD.segment:new(EasyLD.point:new(50,100), EasyLD.point:new(50,150))
+	pointChest = EasyLD.point:new(25,35)
+	--point2 = EasyLD.point:new(0,100)
+	--point3 = EasyLD.point:new(50,100)
+	feet = EasyLD.point:new(20,60)
+	feet2 = EasyLD.point:new(30,60)
+	feet:attachImg(EasyLD.image:new("assets/feet.png"), "center")
+	feet2:attachImg(EasyLD.image:new("assets/feet.png"), "center")
+	line = EasyLD.segment:new(EasyLD.point:new(25,50), feet:copy())
+	line2 = EasyLD.segment:new(EasyLD.point:new(25,50), feet2:copy())
 	areaJambe1 = EasyLD.area:new(line)
+	areaJambe1:attach(feet)
 	areaJambe2 = EasyLD.area:new(line2)
-	areaJambe1:follow(point2)
-	areaJambe2:follow(point3)
-	line3 = EasyLD.segment:new(EasyLD.point:new(25,50), EasyLD.point:new(0,100))
-	line4 = EasyLD.segment:new(EasyLD.point:new(25,50), EasyLD.point:new(50,100))
-	areaCuisse1 = EasyLD.area:new(line3)
-	areaCuisse2 = EasyLD.area:new(line4)
-	areaCuisse1:attach(point2)
-	areaCuisse1:attach(areaJambe1)
-	areaCuisse2:attach(point3)
-	areaCuisse2:attach(areaJambe2)
-	areaCuisse1:follow(point)
-	areaCuisse2:follow(point)
+	areaJambe2:attach(feet2)
+	areaJambe1:follow(point)
+	areaJambe2:follow(point)
+
+	hand = EasyLD.point:new(5, 35)
+	hand:attachImg(EasyLD.image:new("assets/handfront.png"), "center")
+	hand2 = EasyLD.point:new(45, 35)
+	hand2:attachImg(EasyLD.image:new("assets/hand.png"), "center")
+	pointWrist = EasyLD.point:new(10, 35)
+	pointWrist2 = EasyLD.point:new(40, 35)
+	areaWrist = EasyLD.area:new(hand)
+	areaWrist2 = EasyLD.area:new(hand2)
+	areaWrist:follow(pointWrist)
+	areaWrist2:follow(pointWrist2)
+	areaArm = EasyLD.area:new(pointWrist)
+	areaArm2 = EasyLD.area:new(pointWrist2)
+	areaArm:attach(areaWrist)
+	areaArm2:attach(areaWrist2)
+	areaArm:follow(pointChest)
+	areaArm2:follow(pointChest)
+	
 	pointGlobal = EasyLD.point:new(0,0)
-	box = EasyLD.box:new(5,5, 45, 45)
+	box = EasyLD.box:new(10,20, 30, 30)
+	box:attachImg(EasyLD.image:new("assets/chest.png"), "center")
+	tete = EasyLD.point:new(25,10)
+	tete:attachImg(EasyLD.image:new("assets/head.png"), "center")
 	areaGlobal = EasyLD.area:new(pointGlobal)
+	areaGlobal:attach(tete)
 	areaGlobal:attach(box)
+	areaGlobal:attach(pointChest)
 	areaGlobal:attach(point)
-	areaGlobal:attach(areaCuisse1)
-	areaGlobal:attach(areaCuisse2)
+	areaGlobal:attach(areaJambe1)
+	areaGlobal:attach(areaJambe2)
+	areaGlobal:attach(areaArm)
+	areaGlobal:attach(areaArm2)
 	areaa2 = areaGlobal
 
 	areaa2:moveTo(START_POS.x,START_POS.y)
@@ -89,9 +111,9 @@ function EasyLD:load()
 	tableTime = {}
 	tableTime[1] = 1
 	fontSize = 20
+	current = 1
 	fullfilAreaText({forms = {areaa2}}, 0)
 	--areaText:moveTo(WINDOW_WIDTH-150, 0)
-	current = 1
 
 	frame = {{}}
 	idFrame = 1
@@ -127,6 +149,7 @@ function fullfilAreaText(a, stage)
 		
 		nb = nb + 1
 		if s:isInstanceOf(Area) then
+			current = nb - 1
 			if stage ~= 0 then table.insert(areaList, s) end
 			box[nb-1].c = EasyLD.color:new(255,200,200)
 			fullfilAreaText(s, stage + 1)
@@ -143,7 +166,7 @@ function EasyLD:update(dt)
 
 	if EasyLD.mouse:isPressed("l") and EasyLD.collide:AABB_point(boxAreaText, mousePos) then
 		for i,v in ipairs(box) do
-			if EasyLD.collide:AABB_point(v, mousePos) and i ~= current then
+			if EasyLD.collide:AABB_point(v, mousePos) and i ~= current and i ~= 1 then
 				current = i
 				v.c = EasyLD.color:new(200,255,200)
 				if v.obj:isInstanceOf(Area) then
@@ -190,7 +213,7 @@ function EasyLD:update(dt)
 			end
 			totalDirection = totalDirection + angleNewOld
 			box[current].obj:rotateTo(angleNewOld + vOldAngle)
-			print(angleNewOld + vOldAngle, angleNewOld, totalDirection)
+			--print(angleNewOld + vOldAngle, angleNewOld, totalDirection)
 			oldAngleNewOld = angleNewOld
 		end
 	end
