@@ -12,8 +12,14 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
 oldMouse = nil
+inputText = nil
 
 START_POS = EasyLD.point:new(100,100)
+
+function file_exists(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
+end
 
 function EasyLD:load()
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -102,6 +108,9 @@ function EasyLD:load()
 	--BEGIN MAIN AREA
 	font = EasyLD.font:new("assets/visitor.ttf")
 	font:load(20, EasyLD.color:new(0,0,0))
+	boxInputText = EasyLD.box:new(WINDOW_WIDTH-150, WINDOW_HEIGHT-150, 150, 20)
+	inputText = EasyLD.inputText:new(boxInputText, EasyLD.color:new(0,100,0), EasyLD.color:new(255,255,255), 20, font, 16)
+	boxOpen = EasyLD.box:new(WINDOW_WIDTH-90, WINDOW_HEIGHT-100, 50, 20)
 	point = EasyLD.point:new(0,0)
 	areaText = EasyLD.area:new(point)
 
@@ -119,7 +128,6 @@ function EasyLD:load()
 	idFrame = 1
 	isComputing = false
 	saveFrame()
-	newFrame()
 
 	tableAnim8 = {}
 	isPlay = false
@@ -164,7 +172,11 @@ end
 function EasyLD:update(dt)
 	local mousePos = EasyLD.mouse:getPosition()
 
-	if EasyLD.mouse:isPressed("l") and EasyLD.collide:AABB_point(boxAreaText, mousePos) then
+	if EasyLD.mouse:isPressed("l") and EasyLD.collide:AABB_point(boxOpen, mousePos) then
+		if file_exists("assets/"..inputText.text..".anim8") then
+			openAnim()
+		end
+	elseif EasyLD.mouse:isPressed("l") and EasyLD.collide:AABB_point(boxAreaText, mousePos) then
 		for i,v in ipairs(box) do
 			if EasyLD.collide:AABB_point(v, mousePos) and i ~= current and i ~= 1 then
 				current = i
@@ -222,58 +234,75 @@ function EasyLD:update(dt)
 		box[current].obj:moveTo(mousePos:get())
 	end
 
-	if EasyLD.keyboard:isPressed("s") then
-		saveFrame()
-	elseif EasyLD.keyboard:isPressed("f") then
-		newFrame()
-	elseif EasyLD.keyboard:isPressed("q") then
-		idFrame = idFrame - 1
-		if idFrame < 1 then idFrame = #frame end
-		goFrame(true)
-	elseif EasyLD.keyboard:isPressed("d") then
-		idFrame = idFrame + 1
-		if idFrame > #frame then idFrame = 1 end
-		goFrame(true)
-	elseif EasyLD.keyboard:isPressed("p") then
-		play()
-	elseif EasyLD.keyboard:isPressed("v") then
-		saveAnim()
-	elseif EasyLD.keyboard:isPressed("r") then
-		reset()
-	elseif EasyLD.keyboard:isPressed("a") then
-		idEase = idEase - 1
-		if idEase < 1 then idEase = #listEase end
-		updateCurrentEase()
-	elseif EasyLD.keyboard:isPressed("e") then
-		idEase = idEase + 1
-		if idEase > #listEase then idEase = 1 end
-		updateCurrentEase()
-	elseif EasyLD.keyboard:isPressed("z") then
-		idTypeEase = idTypeEase + 1
-		if idTypeEase > #listTypeEase then idTypeEase = 1 end
-		updateCurrentEase()
-	elseif EasyLD.keyboard:isPressed("w") then
-		idIncrTime = idIncrTime - 1
-		if idIncrTime < 1 then idIncrTime = 1 end
-		incrTime = incrTimePossible[idIncrTime]
-	elseif EasyLD.keyboard:isPressed("c") then
-		idIncrTime = idIncrTime + 1
-		if idIncrTime > #incrTimePossible then idIncrTime = #incrTimePossible end
-		incrTime = incrTimePossible[idIncrTime]
-	elseif EasyLD.mouse:isPressed("wu") then
-		timeFrame = timeFrame + incrTime 
-	elseif EasyLD.mouse:isPressed("wd") then
-		if timeFrame - incrTime > 0 then
-			timeFrame = timeFrame - incrTime
+	inputText:update(dt)
+
+	if inputText.focus then
+		if EasyLD.keyboard:isPressed("return") then
+			if file_exists("assets/"..inputText.text..".anim8") then
+				openAnim()
+			end
+		end
+	else
+		if EasyLD.keyboard:isPressed("s") then
+			saveFrame()
+		elseif EasyLD.keyboard:isPressed("f") then
+			newFrame()
+		elseif EasyLD.keyboard:isPressed("q") then
+			idFrame = idFrame - 1
+			if idFrame < 1 then idFrame = #frame end
+			goFrame(true)
+		elseif EasyLD.keyboard:isPressed("d") then
+			idFrame = idFrame + 1
+			if idFrame > #frame then idFrame = 1 end
+			goFrame(true)
+		elseif EasyLD.keyboard:isPressed("p") then
+			play()
+		elseif EasyLD.keyboard:isPressed("v") then
+			saveAnim()
+		elseif EasyLD.keyboard:isPressed("r") then
+			reset()
+		elseif EasyLD.keyboard:isPressed("a") then
+			idEase = type(idEase) == "number" and idEase - 1 or 1
+			if idEase < 1 then idEase = #listEase end
+			updateCurrentEase()
+		elseif EasyLD.keyboard:isPressed("e") then
+			idEase = type(idEase) == "number" and idEase + 1 or 1
+			if idEase > #listEase then idEase = 1 end
+			updateCurrentEase()
+		elseif EasyLD.keyboard:isPressed("z") then
+			idTypeEase = idTypeEase + 1
+			if idTypeEase > #listTypeEase then idTypeEase = 1 end
+			updateCurrentEase()
+		elseif EasyLD.keyboard:isPressed("w") then
+			idIncrTime = idIncrTime - 1
+			if idIncrTime < 1 then idIncrTime = 1 end
+			incrTime = incrTimePossible[idIncrTime]
+		elseif EasyLD.keyboard:isPressed("c") then
+			idIncrTime = idIncrTime + 1
+			if idIncrTime > #incrTimePossible then idIncrTime = #incrTimePossible end
+			incrTime = incrTimePossible[idIncrTime]
+		elseif EasyLD.keyboard:isPressed("x") then
+			print("coucou")
+			deleteFrame()
+		elseif EasyLD.keyboard:isPressed("n") then
+			print("coucou")
+			newAnim()
+		elseif EasyLD.mouse:isPressed("wu") then
+			timeFrame = timeFrame + incrTime 
+		elseif EasyLD.mouse:isPressed("wd") then
+			if timeFrame - incrTime > 0 then
+				timeFrame = timeFrame - incrTime
+			end
 		end
 	end
-
 	oldMouse = mousePos
 end
 
 function updateCurrentEase()
 	if idEase == 1 then
 		currentEase = "linear"
+	elseif type(idEase) == "string" then
+		currentEase = idEase
 	else
 		currentEase = listEase[idEase] .. listTypeEase[idTypeEase]
 	end
@@ -281,14 +310,52 @@ function updateCurrentEase()
 	box[current].obj.easeType = idTypeEase
 end
 
+function openAnim()
+	local name = inputText.text
+	tableAnim8 = table.load("assets/"..name .. ".anim8")
+	frame[1] = table.load("assets/"..name .. ".anim8init")
+	tprint(frame[1])
+	idFrame = 1
+	goFrame(true)
+
+	--build the other frameskkk
+	for j = 1, #tableAnim8 - 1 do
+		for i,v in ipairs(tableAnim8[j]) do
+			local easeFct = "linear"
+			local vars = {}
+
+			if v.rotation ~= nil then
+				areaList[i]:rotate(v.rotation)
+			end
+			if v.translation ~= nil then
+				areaList[i]:translate(v.translation.x, v.translation.y, "relative")
+			end
+
+			if v.ease ~= nil then
+				easeFct = v.ease
+			end
+			areaList[i].ease = easeFct
+		end
+		idFrame = j + 1
+		saveFrame()
+	end
+
+	local time = table.load("assets/"..name .. ".anim8time")
+	for i = 0, #time - 1 do
+		tableTime[i+1] = time[i] or time[#time]
+	end
+end
+
 function saveAnim()
 	local time = {}
 	for i = 2, #tableTime+1 do
 		time[i-1] = tableTime[i] or tableTime[1]
 	end
-	table.save(tableAnim8, "assets/anim8.anim8")
-	table.save(frame[1], "assets/anim8.anim8init")
-	table.save(time, "assets/anim8.anim8time")
+	local name = inputText.text
+	if name == "" then name = "anim8" end
+	table.save(tableAnim8, "assets/"..name..".anim8")
+	table.save(frame[1], "assets/"..name..".anim8init")
+	table.save(time, "assets/"..name..".anim8time")
 end
 
 function saveFrame()
@@ -301,6 +368,28 @@ function saveFrame()
 	tprint(t)
 	areaa2:moveTo(START_POS:get())
 	tableTime[idFrame] = timeFrame
+end
+
+function deleteFrame()
+	if #frame > 1 then
+		for i = idFrame, #frame - 1 do
+			frame[i] = frame[i + 1]
+			tableTime[i] = tableTime[i + 1]
+		end
+		frame[#frame] = nil
+		tableTime[#tableTime] = nil
+	end
+	if idFrame > #frame then
+		idFrame = #frame
+	end
+end
+
+function newAnim()
+	for i = 2, #frame do
+		frame[i] = nil
+		tableTime[i] = nil
+	end
+	idFrame = 1
 end
 
 function newFrame()
@@ -379,6 +468,8 @@ function compute()
 
 			if v.ease == 1 then
 				tArea.ease = "linear"
+			elseif type(v.ease) == "string" then
+				tArea.ease = v.ease
 			else
 				tArea.ease = listEase[v.ease] .. listTypeEase[v.easeType]
 			end
@@ -419,6 +510,9 @@ function EasyLD:draw()
 	for i,v in ipairs(box) do
 		font:print(v.text, fontSize, v, "left", "center", EasyLD.color:new(0,0,0))
 	end
+	inputText:draw()
+	boxOpen:draw()
+	font:print("Open", fontSize, boxOpen, "center", "center", EasyLD.color:new(0,0,0))
 	font:print(currentEase, fontSize, boxDisplayEase, "center", nil, EasyLD.color:new(255,255,255))
 	font:print("Time: " .. string.sub(tostring(timeFrame),0,5) .. " Incr: " .. string.sub(tostring(incrTime), 0, 5), fontSize, boxDisplayTime)
 	font:print("Frame: " .. idFrame .. "/" .. #frame, fontSize, EasyLD.box:new(0, WINDOW_HEIGHT-50, 50, 50))
