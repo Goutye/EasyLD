@@ -51,8 +51,6 @@ function EasyLD:load()
 
 	point = EasyLD.point:new(25,50)
 	pointChest = EasyLD.point:new(25,35)
-	--point2 = EasyLD.point:new(0,100)
-	--point3 = EasyLD.point:new(50,100)
 	feet = EasyLD.point:new(20,60)
 	feet2 = EasyLD.point:new(30,60)
 	feet:attachImg(EasyLD.image:new("assets/feet.png"), "center")
