@@ -131,7 +131,8 @@ end
 
 function tween:after(...)
 	local t
-	if select("#", ...) == 2 then
+	local params = {...}
+	if type(params[1]) == "number" then
 		t = tween.new(self.obj, ...)
 	else
 		t = tween.new(...)
@@ -264,6 +265,7 @@ function flux:remove(x)
 	if type(x) == "number" then
 		-- Remove from object table, destroy table if it is empty
 		local obj = self[x].obj
+		if self[obj] == nil then return end
 		self[obj][self[x]] = nil
 		if not next(self[obj]) then self[obj] = nil end
 		-- Remove from array

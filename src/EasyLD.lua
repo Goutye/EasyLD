@@ -101,6 +101,10 @@ function EasyLD:updateComponents(dt)
 	EasyLD.camera:update(dt)
 end
 
+function EasyLD:preCalcul(dt)
+	return dt
+end
+
 if love ~= nil then
 	loadAPI("Löve2D")
 else

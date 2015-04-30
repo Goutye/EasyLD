@@ -100,9 +100,15 @@ function Area:rotateTo(angle, ox, oy)
 	self:rotate(angle-self.angle, ox, oy)
 end
 
-function Area:draw()
-	for _,o in ipairs(self.forms) do
-		o:draw()
+function Area:draw(reverse)
+	if reverse then
+		for i = #self.forms, 1, -1 do
+			self.forms[i]:draw()
+		end
+	else
+		for _,o in ipairs(self.forms) do
+			o:draw()
+		end
 	end
 end
 
