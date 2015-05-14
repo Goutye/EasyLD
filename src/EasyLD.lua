@@ -34,6 +34,9 @@ EasyLD.inputText = require 'InputText'
 EasyLD.timer = require 'cron'
 EasyLD.flux = require 'flux'
 
+EasyLD.screen = require 'Screen'
+EasyLD.nextScreen = EasyLD.screen.nextScreen
+
 local function loadAdapterImage(base)
 	EasyLD.image = base
 end
@@ -109,6 +112,14 @@ end
 
 function EasyLD:preCalcul(dt)
 	return dt
+end
+
+function EasyLD:preCalculScreen(dt)
+	if EasyLD.screen.current then
+		return EasyLD.screen:preCalcul(dt)
+	else
+		return dt
+	end
 end
 
 if love ~= nil then
