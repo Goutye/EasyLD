@@ -18,11 +18,16 @@ function Point.static:projDot(p1, axis, pos)
 	return axis:dot(v2) / (norm * norm)
 end
 
-function Point:initialize(x, y, color)
+function Point:initialize(x, y, collide, color)
 	self.x = x
 	self.y = y
 	self.c = color or EasyLD.color:new(255,255,255)
 	self.angle = 0
+	if collide ~= nil then
+		self.collide = collide
+	else
+		self.collide = false
+	end
 end
 
 function Point.__add(v1, v2)
@@ -78,21 +83,23 @@ function Point:dot(v)
 end
 
 function Point:draw()
-	if self.img == nil then
-		EasyLD.graphics:point(self, self.c)
-	else
-		if self.imgType == "center" then
-			local zW = EasyLD.vector:new(1, 0)
-			local zH = EasyLD.vector:new(0, 1)
-			zW:rotate(self.angle)
-			zH:rotate(self.angle)
-			zW = zW * self.img.w/2
-			zH = zH * self.img.h/2
-			local x = self.x  - zW.x - zH.x
-			local y = self.y - zH.y - zW.y
-			self.img:draw(x, y, self.angle)
+	if self.collide then
+		if self.img == nil then
+			EasyLD.graphics:point(self, self.c)
 		else
-			self.img:draw(self.x, self.y, self.angle)
+			if self.imgType == "center" then
+				local zW = EasyLD.vector:new(1, 0)
+				local zH = EasyLD.vector:new(0, 1)
+				zW:rotate(self.angle)
+				zH:rotate(self.angle)
+				zW = zW * self.img.w/2
+				zH = zH * self.img.h/2
+				local x = self.x  - zW.x - zH.x
+				local y = self.y - zH.y - zW.y
+				self.img:draw(x, y, self.angle)
+			else
+				self.img:draw(self.x, self.y, self.angle)
+			end
 		end
 	end
 end
@@ -124,35 +131,35 @@ end
 
 --EasyLD.collide functions
 function Point:collide(area)
-	return area:collidePoint(self)
+	return area:collidePoint(self) and self.collide
 end
 
 function Point:collideArea(area)
-	return area:collidePoint(self)
+	return area:collidePoint(self) and self.collide
 end
 
 function Point:collidePolygon(poly)
-	return EasyLD.collide:Polygon_point(poly, self)
+	return EasyLD.collide:Polygon_point(poly, self) and self.collide
 end
 
 function Point:collideBox(b)
 	if b.angle == 0 then
-		return EasyLD.collide:AABB_point(b, self)
+		return EasyLD.collide:AABB_point(b, self) and self.collide
 	else
-		return EasyLD.collide:OBB_point(b, self)
+		return EasyLD.collide:OBB_point(b, self) and self.collide
 	end
 end
 
 function Point:collideCircle(c)
-	return EasyLD.collide:Circle_point(c, self)
+	return EasyLD.collide:Circle_point(c, self) and self.collide
 end
 
 function Point:collideSegment(s)
-	return EasyLD.collide:Segment_point(s, self)
+	return EasyLD.collide:Segment_point(s, self) and self.collide
 end
 
 function Point:collidePoint(p)
-	return p.x == self.x and p.y == self.y
+	return p.x == self.x and p.y == self.y and self.collide
 end
 
 return Point
