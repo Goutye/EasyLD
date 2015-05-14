@@ -19,8 +19,10 @@ Current features :
 * Timer (callback)
 * Flux (Tweening)
 * Music
+* SFX
 * Window
 * Camera
+* Screen
 
 In the side of LÖVE2D :
 ----------------------
@@ -47,6 +49,17 @@ How to program with EasyLD
 	* EasyLD:update(dt)
 	* EasyLD:draw()
 3. Free cookies
+
+How to use the Screen feature
+----------------------
+
+1. Create a class which inherits from EasyLD/IScreen.lua
+2. Modify/Add methods to it
+3. Use it : EasyLD:nextScreen(MyScreen:new(xxx))
+
+The preCalcul method is done _after_ the EasyLD:preCalcul function.  
+The update/draw method is done _before_ the EasyLD:update/draw function.  
+This allows you to do something before or after the update and draw something over the screen.  
 
 Version :
 ---------

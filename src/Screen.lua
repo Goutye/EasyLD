@@ -1,7 +1,11 @@
 local Screen = {}
 
 function Screen:nextScreen(screen)
-	EasyLD.screen.next = screen
+	if EasyLD.screen.current == nil then
+		EasyLD.screen.current = screen
+	else
+		EasyLD.screen.next = screen
+	end
 end
 
 function Screen:preCalcul(dt)
