@@ -68,6 +68,10 @@ local function loadAdapterMusic(base)
 	EasyLD.music = base
 end
 
+local function loadAdapterSFX(base)
+	EasyLD.sfx = base
+end
+
 local function loadAPI(name)
 	if name == "Drystal" then
 		drystal = require 'drystal'
@@ -88,6 +92,7 @@ local function loadAPI(name)
 		loadAdapterImage(require 'love.LoveImage')
 		loadAdapterFont(require 'love.LoveFont')
 		loadAdapterMusic(require 'love.LoveMusic')
+		loadAdapterSFX(require 'love.LoveSFX')
 		loadAdapterWindow(require 'love.LoveWindow')
 		loadAdapterCamera(require 'love.LoveCamera')
 	end
