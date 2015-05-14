@@ -4,7 +4,7 @@ local Shape = require 'Shape'
 local Vector = require 'Vector'
 local Area = class('Area', Shape)
 
-function Area:initialize(obj, ox, oy)
+function Area:initialize(obj, ox, oy, display)
 	self.forms = {}
 	if not obj:isInstanceOf(Shape) then
 		print("Bad using of Area : Obj is not a shape")
@@ -17,6 +17,7 @@ function Area:initialize(obj, ox, oy)
 	self.oy = oy or obj.y
 	self.angle = 0
 
+	self.display = display or true
 	self.follower = obj
 end
 
@@ -101,13 +102,15 @@ function Area:rotateTo(angle, ox, oy)
 end
 
 function Area:draw(reverse)
-	if reverse then
-		for i = #self.forms, 1, -1 do
-			self.forms[i]:draw()
-		end
-	else
-		for _,o in ipairs(self.forms) do
-			o:draw()
+	if self.display then
+		if reverse then
+			for i = #self.forms, 1, -1 do
+				self.forms[i]:draw()
+			end
+		else
+			for _,o in ipairs(self.forms) do
+				o:draw()
+			end
 		end
 	end
 end
