@@ -11,8 +11,9 @@ function Music:initialize(name)
 end
 
 function Music:play(callback)
-	self.m:play(self.looping, callback)
+	self.m:play(self.looping, function() self:onEnd() end)
 	--TODO => Callback BUT callback to put isPlaying to false (Easy => self:onEnd(callback))
+	--ie encapsulate the callback function in self:onEnd()
 	self.isPlaying = true
 	self.isPaused = false
 	self.isStopped = false
@@ -22,6 +23,16 @@ function Music:stop()
 	self.m:stop()
 	self.isPlaying = false
 	self.isPaused = false
+	self.isStopped = true
+end
+
+function Music:onEnd()
+	if self.callback then
+		self.callback()
+	end
+	self.isPlaying = false
+	self.isPaused = false
+	self.isStopped = true
 end
 
 function Music:pause()

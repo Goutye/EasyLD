@@ -82,6 +82,7 @@ local function loadAPI(name)
 		loadAdapterImage(require 'drystal.DrystalImage')
 		loadAdapterFont(require 'drystal.DrystalFont')
 		loadAdapterMusic(require 'drystal.DrystalMusic')
+		loadAdapterSFX(require 'drystal.DrystalSFX')
 		loadAdapterWindow(require 'drystal.DrystalWindow')
 		loadAdapterCamera(require 'drystal.DrystalCamera')
 	elseif name == "Löve2D" then

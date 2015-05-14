@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 local SFX = class('SFX')
 
-function SFX:initialize(name, volume, callback)
+function SFX:initialize(name, volume, position, callback)
 	self.mData = love.sound.newSoundData(name)
 	self.m = love.audio.newSource(self.mData)
 	self.timer = nil
