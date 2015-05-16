@@ -20,6 +20,34 @@ flux.__index = flux
 flux.tweens = {}
 flux.easing = { linear = function(p) return p end }
 
+flux.easing.bounceout = function(p) 
+	if p < 1/2.75 then
+		return 7.5625*p*p
+	elseif p < 2/2.75 then
+		p = p - 1.5/2.75
+		return 7.5625 * p * p + 0.75
+	elseif p < 2.5/2.75 then
+		p = p - 2.25/2.75
+		return 7.5625 * p * p + 0.9375
+	else
+		p = p - 2.625/2.75
+		return 7.5625 * p * p + 0.984375
+	end
+	return p
+end
+
+flux.easing.bouncein = function(p)
+	return 1 - flux.easing.bounceout(1-p)
+end
+
+flux.easing.bounceinout = function(p)
+	if p < 0.5 then
+		return flux.easing.bouncein(p*2)*0.5
+	else
+		return flux.easing.bounceout(p*2-1)*0.5+0.5
+	end
+end
+
 local easing = {
 	quad		= "p * p",
 	cubic	 = "p * p * p",
