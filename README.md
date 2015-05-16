@@ -59,7 +59,7 @@ How to use the Screen feature
 
 The preCalcul method is done _after_ the EasyLD:preCalcul function.  
 The update/draw method is done _before_ the EasyLD:update/draw function.  
-This allows you to do something before or after the update and draw something over the screen.  
+This allows you to do something before or after the update and to draw something over the screen.  
 
 Version :
 ---------
