@@ -4,7 +4,9 @@ function Camera:scale(scale, scaleY)
 	EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
 
 	if scaleY ~= nil then
-		EasyLD.camera.scaleValueY = (Camera.scaleValueY or 1) + scaleY
+		EasyLD.camera.scaleValueY = (EasyLD.camera.scaleValueY or 1) + scaleY
+	else
+		EasyLD.camera.scaleValueY = nil
 	end
 end
 
