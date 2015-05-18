@@ -2,11 +2,10 @@ local class = require 'middleclass'
 
 local DepthManager = class('DepthManager')
 
-function DepthManager:initialize(fct, before, after)
-	self.x = EasyLD.window.w/2
-	self.y = EasyLD.window.h/2
+function DepthManager:initialize(fct, ratio, before, after)
 	self.depth = {}
-	self.depth[0] = {draw = fct, ratio = 1, pos = EasyLD.point:new(self.x, self.y)}
+	local surface = EasyLD.surface:new()
+	self.depth[0] = {s = surface, draw = fct, ratio = ratio or 1, offset = EasyLD.point:new(0,0)}
 	self.nbBefore = before
 	self.nbAfter = after
 	self.follower = nil
@@ -17,32 +16,34 @@ function DepthManager:follow(obj)
 end
 
 function DepthManager:centerOn(x, y)
-	for i = self.nbAfter, -self.nbBefore, -1 do
-		self.depth[i].pos.x = x
-		self.depth[i].pos.y = y
-	end
-	self.x = x
-	self.y = y
+	self.center = EasyLD.point:new(x, y)
 end
 
 function DepthManager:addDepth(id, fct, ratio)
-	self.depth[id] = {draw = fct, ratio = ratio, pos = EasyLD.point:new(self.x, self.y)}
+	local surface = EasyLD.surface:new()
+	self.depth[id] = {s = surface, draw = fct, ratio = ratio, offset = EasyLD.point:new(0,0)}
 end
 
 function DepthManager:update()
-	local dx, dy = self.follower.x - self.x, self.follower.y - self.y
+	local offset = EasyLD.point:new(self.follower.x, self.follower.y) - self.center
 
 	for i = self.nbAfter, -self.nbBefore, -1 do
-		self.depth[i].pos = self.depth[i].pos + EasyLD.point:new(dx * self.depth[i].ratio, dy * self.depth[i].ratio)
+		self.depth[i].offset = offset * self.depth[i].ratio
 	end
-
-	self.x = self.follower.x
-	self.y = self.follower.y
 end
 
 function DepthManager:draw()
-	for i = self.nbAfter, -self.nbBefore, -1 do
-		self.depth[i].draw(self.depth[i].pos, 1/self.depth[i].ratio)
+	for i = self.nbAfter, -self.nbBefore, -1 do --function Surface:draw(x, y, xs, ys, w, h, r)
+		local pos = self.depth[i].offset + self.center - EasyLD.point:new(EasyLD.window.w/2, EasyLD.window.h/2)
+
+		print(self.depth[i].offset:get())
+		self.depth[i].s:drawOn(true)
+		EasyLD.camera:moveTo(pos.x, pos.y)
+		self.depth[i].draw()
+
+		EasyLD.camera:moveTo(0,0)
+		EasyLD.surface.drawOnScreen()
+		self.depth[i].s:draw(0, 0, 0, 0, self.depth[i].s.w, self.depth[i].s.h, 0)
 	end
 end
 

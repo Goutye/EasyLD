@@ -76,6 +76,10 @@ local function loadAdapterSFX(base)
 	EasyLD.sfx = base
 end
 
+local function loadAdapterSurface(base)
+	EasyLD.surface = base
+end
+
 local function loadAPI(name)
 	if name == "Drystal" then
 		drystal = require 'drystal'
@@ -89,6 +93,7 @@ local function loadAPI(name)
 		loadAdapterSFX(require 'drystal.DrystalSFX')
 		loadAdapterWindow(require 'drystal.DrystalWindow')
 		loadAdapterCamera(require 'drystal.DrystalCamera')
+		loadAdapterSurface(require 'drystal.DrystalSurface')
 	elseif name == "Löve2D" then
 		require 'love.LoveMain'
 		require 'love.LoveKeyboard'
@@ -100,6 +105,7 @@ local function loadAPI(name)
 		loadAdapterSFX(require 'love.LoveSFX')
 		loadAdapterWindow(require 'love.LoveWindow')
 		loadAdapterCamera(require 'love.LoveCamera')
+		loadAdapterSurface(require 'love.LoveSurface')
 	end
 end
 
