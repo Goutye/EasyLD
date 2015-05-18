@@ -33,9 +33,8 @@ function DepthManager:update()
 end
 
 function DepthManager:draw()
-	local pos
 	for i = self.nbAfter, -self.nbBefore, -1 do --function Surface:draw(x, y, xs, ys, w, h, r)
-		pos = self.depth[i].offset + self.center - EasyLD.point:new(EasyLD.window.w/2, EasyLD.window.h/2)
+		local pos = self.depth[i].offset + self.center - EasyLD.point:new(EasyLD.window.w/2, EasyLD.window.h/2)
 
 		self.depth[i].s:drawOn(true)
 		EasyLD.camera:moveTo(pos.x, pos.y)
@@ -48,7 +47,6 @@ function DepthManager:draw()
 		self.depth[i].s:draw(0, 0, 0, 0, self.depth[i].s.w, self.depth[i].s.h, 0)
 	end
 
-	pos = pos + self.depth[-self.nbBefore].offset
 	EasyLD.camera:moveTo(self.follower.x - EasyLD.window.w/2, self.follower.y - EasyLD.window.h/2)
 	EasyLD.camera:actualize()
 end
