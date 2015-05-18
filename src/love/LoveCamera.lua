@@ -38,4 +38,9 @@ function Camera:draw()
 	love.graphics.scale(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
 end
 
+function Camera:actualize()
+	love.graphics.origin()
+	Camera:draw()
+end
+
 return Camera

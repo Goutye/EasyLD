@@ -35,4 +35,9 @@ function Camera:draw()
 	drystal.camera.angle = -EasyLD.camera.angle
 end
 
+function Camera:actualize()
+	drystal.camera.reset()
+	Camera:draw()
+end
+
 return Camera
