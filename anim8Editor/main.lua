@@ -131,7 +131,7 @@ function EasyLD:load()
 	isPlay = false
 	oldMouse = EasyLD.mouse:getPosition()
 
-	listEase = {"linear", "quad", "cubic", "quart", "quint", "expo", "sine", "circ", "back", "elastic"}
+	listEase = {"linear", "quad", "cubic", "quart", "quint", "expo", "sine", "circ", "back", "elastic", "bounce"}
 	listTypeEase = {"in", "out", "inout"}
 	idEase = 1
 	idTypeEase = 1

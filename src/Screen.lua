@@ -29,7 +29,6 @@ function Screen:update(dt)
 	if not EasyLD.screen.nextPause then
 		EasyLD.screen.current:update(dt)
 	end
-	print(EasyLD.screen.alpha)
 end
 
 function Screen:changeScreen()

@@ -34,6 +34,7 @@ EasyLD.inputText = require 'InputText'
 EasyLD.timer = require 'cron'
 EasyLD.flux = require 'flux'
 
+EasyLD.depthManager = require 'DepthManager'
 EasyLD.screen = require 'Screen'
 EasyLD.nextScreen = EasyLD.screen.nextScreen
 
