@@ -4,10 +4,16 @@ Camera.scaleValue = 1
 Camera.scaleValueY = nil
 Camera.x = 0
 Camera.y = 0
+Camera.currentX = 0
+Camera.currentY = 0
+Camera.currentAngle = 0
 Camera.dx = 0
 Camera.dy = 0
 Camera.ox = 0
 Camera.oy = 0
+Camera.shakeX = 0
+Camera.shakeY = 0
+Camera.shakeAngle = 0
 Camera.follower = nil
 Camera.angle = 0
 Camera.mode = "normal"
@@ -26,7 +32,7 @@ function Camera:scale(scale, scaleY)
 end
 
 function Camera:moveTo(x, y)
-	EasyLD.camera:move(x - EasyLD.camera.x, y - EasyLD.camera.y)
+	EasyLD.camera:move(x - EasyLD.camera.currentX, y - EasyLD.camera.currentY)
 end
 
 function Camera:move(x, y)
@@ -34,7 +40,7 @@ function Camera:move(x, y)
 end
 
 function Camera:rotateTo(angle, ox, oy)
-	EasyLD.camera:rotate(angle - EasyLD.camera.angle, ox, oy)
+	EasyLD.camera:rotate(angle - EasyLD.camera.currentAngle, ox, oy)
 end
 
 function Camera:rotate(angle, ox, oy)
@@ -54,16 +60,19 @@ function Camera:update(dt)
 	if EasyLD.camera.shakeDuration > 0 then
 		EasyLD.camera.shakeDuration = EasyLD.camera.shakeDuration - dt
 		EasyLD.camera:makeShake(EasyLD.camera.shakeVars)
+		EasyLD.camera.currentX = EasyLD.camera.shakeOld.x
+		EasyLD.camera.currentY = EasyLD.camera.shakeOld.y
+		EasyLD.camera.currentAngle = EasyLD.camera.shakeOld.angle
 	elseif EasyLD.camera.shakeOld ~= nil then
 		local old = EasyLD.camera.shakeOld
 		if old.x ~= nil then
-			EasyLD.camera.x = old.x
+			EasyLD.camera.shakeX = 0
 		end
 		if old.y ~= nil then
-			EasyLD.camera.y = old.y
+			EasyLD.camera.shakeY = 0
 		end
 		if old.angle ~= nil then
-			EasyLD.camera.angle = old.angle
+			EasyLD.camera.shakeAngle = 0
 		end
 
 		EasyLD.camera.shakeOld = nil
@@ -75,21 +84,25 @@ function Camera:getPosition()
 	return p
 end
 
-function Camera:shake(vars, duration)
+function Camera:shake(vars, duration, typeEase)
 	EasyLD.camera.shakeVars = vars
 	EasyLD.camera.shakeDuration = duration
 	EasyLD.camera.shakeOld = {x = EasyLD.camera.x, y = EasyLD.camera.y, angle = EasyLD.camera.angle}
+	if vars.x == nil then vars.x = 0.01 end
+	if vars.y == nil then vars.y = 0.01 end
+	if vars.angle == nil then vars.angle = 0.001 end
+	EasyLD.camera.shakeTimer = EasyLD.flux.to(EasyLD.camera.shakeVars, duration, {x = 0, y = 0, angle = 0}):ease(typeEase or "quadin")
 end
 
 function Camera:makeShake(vars)
 	if vars.x ~= nil then
-		EasyLD.camera.x = EasyLD.camera.shakeOld.x + math.random(-vars.x, vars.x)
+		EasyLD.camera.shakeX = math.random(-vars.x, vars.x)
 	end
 	if vars.y ~= nil then
-		EasyLD.camera.y = EasyLD.camera.shakeOld.y + math.random(-vars.y, vars.y)
+		EasyLD.camera.shakeY = math.random(-vars.y, vars.y)
 	end
 	if vars.angle ~= nil then
-		EasyLD.camera.angle = EasyLD.camera.shakeOld.angle + (math.random() - 0.5) * vars.angle
+		EasyLD.camera.shakeAngle = (math.random() - 0.5) * vars.angle
 	end
 end
 
