@@ -2,10 +2,27 @@ local class = require 'middleclass'
 
 local Map = class('Map')
 
-function Map:initialize(src, tileset)
+function Map.static:generate(w, h, tileset)
+	local m = Map:new("", tileset, true)
+	m.w = w
+	m.h = h
+	m.tiles = {}
+	
+	for x = 0, m.w - 1 do
+		m.tiles[x] = {}
+		for y = 0, m.h - 1 do
+			m:putTile(0, x, y)
+		end
+	end
+	return m
+end
+
+function Map:initialize(src, tileset, noLoad)
 	self.src = src
 	self.tileset = tileset
-	self:load()
+	if not noLoad then
+		self:load()
+	end
 end
 
 function Map:load()
@@ -39,19 +56,6 @@ function Map:save()
 	end
 
 	io.output():close()
-end
-
-function Map:generate(w, h)
-	self.w = w
-	self.h = h
-	self.tiles = {}
-	
-	for x = 0, self.w - 1 do
-		self.tiles[x] = {}
-		for y = 0, self.h - 1 do
-			self:putTile(0, x, y)
-		end
-	end
 end
 
 function Map:resize(x, y)

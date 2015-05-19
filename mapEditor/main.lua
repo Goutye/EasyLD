@@ -84,12 +84,10 @@ function EasyLD:load()
  	tilesetBox.x, tilesetBox.y = 0, 0
  	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
 
-	map = EasyLD.map:new(srcMap, tl)
-
 	if file_exists(srcMap) then
-		map:load()
+		map = EasyLD.map:new(srcMap, tl)
 	else
-		map:generate(10,10)
+		map = EasyLD.map:generate(10,10, tl)
 	end
 
 	mapBox.x, mapBox.y = 0, tilesetNbTilesY * tl.tileSizeY

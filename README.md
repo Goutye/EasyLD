@@ -22,6 +22,8 @@ Current features :
 * SFX
 * Window
 * Camera
+* DepthManager
+* Surface
 * Screen
 
 In the side of LÖVE2D :
@@ -60,6 +62,24 @@ How to use the Screen feature
 The preCalcul method is done _after_ the EasyLD:preCalcul function.  
 The update/draw method is done _before_ the EasyLD:update/draw function.  
 This allows you to do something before or after the update and to draw something over the screen.  
+
+How to use the DepthManager feature
+----------------------
+
+1. Create one with the following parameters:
+	* An object that the camera will follow (Need to have x and y attributes (Like Every shapes/areas in EasyLD))  
+	* A draw function where you draw your world (Without any offset due to the camera position, the camera will take care of this)  
+	* A ratio: 1 = 1/1, 0.5 will create a world behind the worlds with a higher ratio. 2 will create a world before the worlds with a lower ratio.  
+	* The number of worlds before this one  
+	* The number of worlds after this one  
+2. Add your other worlds using the method `addDepth`  with these parameters  
+	* id: Position of the worlds (before/after). The first world is at the 0-position.  
+	* ratio: Same as above  
+	* A draw function: Same as above
+3. Choose a center of parallax with the `centerOn` method  
+4. Don't forget to use the `update` method.  
+5. Draw! With or without zoom.  
+
 
 Version :
 ---------

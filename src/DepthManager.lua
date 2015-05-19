@@ -37,7 +37,7 @@ function DepthManager:centerOn(x, y, mode, time, typeEase)
 	end
 end
 
-function DepthManager:addDepth(id, fct, ratio)
+function DepthManager:addDepth(id, ratio, fct)
 	local surface = EasyLD.surface:new()
 	self.depth[id] = {s = surface, draw = fct, ratio = ratio, offset = EasyLD.point:new(0,0)}
 end
