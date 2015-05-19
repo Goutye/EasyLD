@@ -2,6 +2,11 @@ local Camera = {}
 
 function Camera:scale(scale)
 	EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
+
+	if EasyLD.camera.auto then
+		EasyLD.camera:compute()
+		drystal.camera.zoom = EasyLD.camera.scaleValue
+	end
 end
 
 function Camera:move(dx, dy, time, ...)
@@ -10,6 +15,12 @@ function Camera:move(dx, dy, time, ...)
 	else
 		EasyLD.camera.currentX = EasyLD.camera.currentX + dx
 		EasyLD.camera.currentY = EasyLD.camera.currentY + dy
+		
+		if EasyLD.camera.auto then
+			EasyLD.camera:compute()
+			drystal.camera.x = -(EasyLD.camera.ox + EasyLD.camera.x)
+			drystal.camera.y = -(EasyLD.camera.oy + EasyLD.camera.y)
+		end
 	end
 end
 
@@ -25,13 +36,16 @@ function Camera:rotate(angle, ox, oy, time, ...)
 		local tween = EasyLD.flux.to(EasyLD.camera, time, {angle = EasyLD.camera.angle + angle}, ...):ease(EasyLD.camera.mode)
 	else
 		EasyLD.camera.currentAngle = EasyLD.camera.currentAngle + angle
+
+		if EasyLD.camera.auto then
+			EasyLD.camera:compute()
+			drystal.camera.angle = -EasyLD.camera.angle
+		end
 	end
 end
 
 function Camera:draw()
-	EasyLD.camera.x = EasyLD.camera.currentX + EasyLD.camera.shakeX
-	EasyLD.camera.y = EasyLD.camera.currentY + EasyLD.camera.shakeY
-	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
+	EasyLD.camera:compute()
 	drystal.camera.zoom = EasyLD.camera.scaleValue
 	drystal.camera.x = -(EasyLD.camera.ox + EasyLD.camera.x)
 	drystal.camera.y = -(EasyLD.camera.oy + EasyLD.camera.y)
@@ -41,6 +55,19 @@ end
 function Camera:actualize()
 	drystal.camera.reset()
 	Camera:draw()
+end
+
+
+function Camera:push()
+	drystal.camera.push()
+end
+
+function Camera:pop()
+	drystal.camera.pop()
+end
+
+function Camera:reset()
+	drystal.camera.reset()
 end
 
 return Camera

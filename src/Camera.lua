@@ -17,10 +17,15 @@ Camera.shakeAngle = 0
 Camera.follower = nil
 Camera.angle = 0
 Camera.mode = "normal"
+Camera.auto = false
 Camera.shakeDuration = 0
 
 function Camera:setMode(mode)
 	EasyLD.camera.mode = mode
+end
+
+function Camera:setAuto(bool)
+	EasyLD.camera.auto = bool
 end
 
 function Camera:scaleTo(scale, scaleY)
@@ -77,6 +82,12 @@ function Camera:update(dt)
 
 		EasyLD.camera.shakeOld = nil
 	end
+end
+
+function Camera:compute()
+	EasyLD.camera.x = EasyLD.camera.currentX + EasyLD.camera.shakeX
+	EasyLD.camera.y = EasyLD.camera.currentY + EasyLD.camera.shakeY
+	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
 end
 
 function Camera:getPosition()

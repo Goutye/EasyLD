@@ -8,6 +8,11 @@ function Camera:scale(scale, scaleY)
 	else
 		EasyLD.camera.scaleValueY = nil
 	end
+
+	if EasyLD.camera.auto then
+		EasyLD.camera:compute()
+		love.graphics.scale(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
+	end
 end
 
 function Camera:move(dx, dy, time, ...)
@@ -16,6 +21,11 @@ function Camera:move(dx, dy, time, ...)
 	else
 		EasyLD.camera.currentX = EasyLD.camera.currentX + dx
 		EasyLD.camera.currentY = EasyLD.camera.currentY + dy
+
+		if EasyLD.camera.auto then
+			EasyLD.camera:compute()
+			love.graphics.translate(-EasyLD.camera.ox - EasyLD.camera.x, -EasyLD.camera.oy - EasyLD.camera.y)
+		end
 	end
 end
 
@@ -29,6 +39,13 @@ function Camera:rotate(angle, ox, oy, time, ...)
 		local tween = EasyLD.flux.to(EasyLD.camera, time, {angle = EasyLD.camera.angle + angle}, ...):ease(EasyLD.camera.mode)
 	else
 		EasyLD.camera.currentAngle = EasyLD.camera.currentAngle + angle
+
+		if EasyLD.camera.auto then
+			EasyLD.camera:compute()
+			love.graphics.translate(EasyLD.window.w/2, EasyLD.window.h/2)
+			love.graphics.rotate(-EasyLD.camera.angle)
+			love.graphics.translate(-EasyLD.window.w/2, -EasyLD.window.h/2)
+		end
 	end
 end
 
@@ -46,6 +63,18 @@ end
 function Camera:actualize()
 	love.graphics.origin()
 	Camera:draw()
+end
+
+function Camera:push()
+	love.graphics.push()
+end
+
+function Camera:pop()
+	love.graphics.pop()
+end
+
+function Camera:reset()
+	love.graphics.origin()
 end
 
 return Camera
