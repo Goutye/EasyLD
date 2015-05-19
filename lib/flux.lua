@@ -132,7 +132,7 @@ function tween.new(obj, time, vars, modeTween, modeArea)
 	self.mode = modeTween or "absolute"
 	self.modeArea = modeArea or "absolute"
 	for k, v in pairs(vars) do
-		if type(v) ~= "number" then
+		if type(v) ~= "number" and not (self.mode == "follower" and type(v[k]) == "number") then
 			error("bad value for key '" .. k .. "'; expected number")
 		end
 		self.vars[k] = v
@@ -149,6 +149,8 @@ function tween:init()
 		end
 		if self.mode == "relative" then
 			self.vars[k] = { start = 0, diff = v }
+		elseif self.mode == "follower" then
+			self.vars[k] = { start = x, diff = v[k] - x, follower = v}
 		else
 			self.vars[k] = { start = x, diff = v - x }
 		end
@@ -156,6 +158,17 @@ function tween:init()
 	self.inited = true
 end
 
+function tween:updateDiff()
+	for k, v in pairs(self.vars) do
+		local x = self.obj[k]
+		if type(x) ~= "number" then
+			error("bad value on object key '" .. k .. "'; expected number")
+		end
+		
+		--print(self.vars[k].diff, v.follower[k], x)
+		self.vars[k].diff = v.follower[k] - v.start
+	end
+end
 
 function tween:after(...)
 	local t
@@ -205,12 +218,24 @@ function flux:update(deltatime)
 				t._onstart()
 				t._onstart = nil
 			end
+
+			if t.mode == "follower" then
+				t:updateDiff()
+			end
+
 			t.progress = t.progress + t.rate * deltatime 
 			local p = t.progress
 			local x = p >= 1 and 1 or flux.easing[t._ease](p)
 			if t.obj.isInstanceOf ~= nil and t.obj:isInstanceOf(Shape) then
 				for k, v in pairs(t.vars) do
-					if k == "x" then
+					if t.mode == "follower" then
+						if k == "x" then
+							t.obj:moveTo(v.start + x * v.diff, t.obj.y)
+						elseif k == "y" then
+							t.obj:moveTo(t.obj.x, v.start + x * v.diff)
+						end
+						print(v.start, x, v.diff)
+					elseif k == "x" then
 						if t.varPrev[k] == nil then
 							t.varPrev[k] = 0
 						end

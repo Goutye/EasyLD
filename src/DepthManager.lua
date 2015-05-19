@@ -20,7 +20,10 @@ function DepthManager:follow(obj, mode, time, typeEase)
 	else
 		self.pos = EasyLD.point:new(self.follower.x, self.follower.y)
 		self.follower = obj
-		self.timer2 = EasyLD.flux.to(self.pos, time or 0.8, {x = obj.x, y = obj.y}):ease(typeEase or "quadout"):oncomplete(function()  
+		if self.timer2 ~= nil then
+			self.timer2:stop()
+		end
+		self.timer2 = EasyLD.flux.to(self.pos, time or 0.8, {x = self.follower, y = self.follower}, "follower"):ease(typeEase or "quadout"):oncomplete(function()  
 																					self.timer2 = nil
 																				end)
 	end
@@ -57,7 +60,6 @@ function DepthManager:draw(noScale)
 		local pos = self.depth[i].offset + self.center - EasyLD.point:new(EasyLD.window.w/2, EasyLD.window.h/2)
 		pos.x, pos.y = math.floor(pos.x+0.5), math.floor(pos.y+0.5)
 
-		if i ~= 4 then print(pos.x, pos.y) end
 		self.depth[i].s:drawOn(true)
 		EasyLD.camera:moveTo(pos.x, pos.y)
 		if noScale == nil then EasyLD.camera:scaleTo(self.depth[i].ratio) end
