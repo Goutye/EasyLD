@@ -14,6 +14,7 @@ Camera.oy = 0
 Camera.shakeX = 0
 Camera.shakeY = 0
 Camera.shakeAngle = 0
+Camera.tiltOffset = {x = 0, y = 0}
 Camera.follower = nil
 Camera.angle = 0
 Camera.mode = "normal"
@@ -103,6 +104,20 @@ function Camera:shake(vars, duration, typeEase)
 	if vars.y == nil then vars.y = 0.01 end
 	if vars.angle == nil then vars.angle = 0.001 end
 	EasyLD.camera.shakeTimer = EasyLD.flux.to(EasyLD.camera.shakeVars, duration, {x = 0, y = 0, angle = 0}):ease(typeEase or "quadin")
+end
+
+function Camera:tilt(dir, power, duration, ratioTilt)
+	dir:normalize()
+	if EasyLD.camera.tiltTimer ~= nil then
+		EasyLD.camera.tiltTimer:stop()
+	end
+	local offset = dir * power
+	EasyLD.camera.tiltTimer = EasyLD.flux.to(EasyLD.camera.tiltOffset, duration*(ratioTilt or 1/8), {x = offset.x, y = offset.y}):ease("quadinout"):oncomplete(function()
+			EasyLD.camera.tiltTimer = EasyLD.flux.to(EasyLD.camera.tiltOffset, duration*(ratioTilt or 1/8)*(1/(ratioTilt or 1/8)-1), {x = 0, y = 0}):ease("elasticout"):oncomplete(function()
+					EasyLD.camera.tiltTimer = nil
+					EasyLD.camera.tiltOffset = {x = 0, y = 0}
+				end)
+		end)
 end
 
 function Camera:makeShake(vars)

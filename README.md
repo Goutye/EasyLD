@@ -29,7 +29,7 @@ Current features :
 In the side of LÖVE2D :
 ----------------------
 
-* Music (Some stuffs available only in LÖVE2D)
+* Music (Some stuffs only available in LÖVE2D)
 
 In the side of Drystal :
 ----------------------
@@ -79,6 +79,12 @@ How to use the DepthManager feature
 3. Choose a center of parallax with the `centerOn` method  
 4. Don't forget to use the `update` method.  
 5. Draw! With or without zoom.  
+
+Examples :
+---------
+
+In the folder `examples`, you can find some implementations of EasyLD features.  
+Other examples can be found in my [LD32](https://github.com/Goutye/LD32) game (Github).  
 
 
 Version :

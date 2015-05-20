@@ -165,7 +165,6 @@ function tween:updateDiff()
 			error("bad value on object key '" .. k .. "'; expected number")
 		end
 		
-		--print(self.vars[k].diff, v.follower[k], x)
 		self.vars[k].diff = v.follower[k] - v.start
 	end
 end
@@ -234,7 +233,6 @@ function flux:update(deltatime)
 						elseif k == "y" then
 							t.obj:moveTo(t.obj.x, v.start + x * v.diff)
 						end
-						print(v.start, x, v.diff)
 					elseif k == "x" then
 						if t.varPrev[k] == nil then
 							t.varPrev[k] = 0

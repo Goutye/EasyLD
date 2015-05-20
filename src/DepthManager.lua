@@ -33,7 +33,12 @@ function DepthManager:centerOn(x, y, mode, time, typeEase)
 	if mode == nil then
 		self.center = EasyLD.point:new(x, y)
 	else
-		self.timer = EasyLD.flux.to(self.center, time or 0.8, {x = x, y = y}):ease(typeEase or "quadout")
+		if self.timer ~= nil then
+			self.timer:stop()
+		end
+		self.timer = EasyLD.flux.to(self.center, time or 0.8, {x = x, y = y}):ease(typeEase or "quadout"):oncomplete(function ()
+																					self.timer = nil
+																				end)
 	end
 end
 
@@ -62,7 +67,7 @@ function DepthManager:draw(noScale)
 
 		self.depth[i].s:drawOn(true)
 		EasyLD.camera:moveTo(pos.x, pos.y)
-		if noScale == nil then EasyLD.camera:scaleTo(self.depth[i].ratio) end
+		if not noScale then EasyLD.camera:scaleTo(self.depth[i].ratio) end
 		EasyLD.camera:actualize()
 		self.depth[i].draw()
 
@@ -72,13 +77,6 @@ function DepthManager:draw(noScale)
 		EasyLD.surface.drawOnScreen()
 		self.depth[i].s:draw(0, 0, 0, 0, self.depth[i].s.w, self.depth[i].s.h, 0)
 	end
-
-	if self.timer2 ~= nil then
-		EasyLD.camera:moveTo(self.pos.x - EasyLD.window.w/2, self.pos.y - EasyLD.window.h/2)
-	else
-		EasyLD.camera:moveTo(self.follower.x - EasyLD.window.w/2, self.follower.y - EasyLD.window.h/2)
-	end
-	EasyLD.camera:actualize()
 end
 
 return DepthManager

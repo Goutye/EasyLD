@@ -1,7 +1,7 @@
 local class = require 'middleclass'
 
-require 'lib.utf8'
-require "table_io"
+require 'utf8'
+require 'table_io'
 
 EasyLD = {}
 EasyLD.tileset = require 'Tileset'
