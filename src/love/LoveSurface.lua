@@ -11,7 +11,7 @@ end
 function Surface:initialize(w, h)
 	self.w = w or EasyLD.window.w
 	self.h = h or EasyLD.window.h
-	self.s = love.graphics.newCanvas(w, h)
+	self.s = love.graphics.newCanvas(self.w, self.h)
 	EasyLD.surface.table[self.s] = self
 end
 

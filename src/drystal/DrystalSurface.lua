@@ -11,7 +11,7 @@ end
 function Surface:initialize(w, h)
 	self.w = w or EasyLD.window.w
 	self.h = h or EasyLD.window.h
-	self.s = drystal.new_surface(w,h)
+	self.s = drystal.new_surface(self.w,self.h)
 	EasyLD.surface.table[self.s] = self
 end
 
@@ -30,7 +30,7 @@ end
 
 function Surface:draw(x, y, xs, ys, w, h, r)
 	self.s:draw_from()
-	drystal.draw_sprite_rotated({x=xs, y=ys, w=w or self.s.w, h=h or self.s.h}, x, y, r or 0, 0, 0)
+	drystal.draw_sprite_rotated({x=xs, y=ys, w=w or self.s.w, h=h or self.s.h}, x, y, r or 0)
 end
 
 function Surface:setFilter(type)
@@ -45,6 +45,8 @@ function Surface:clear()
 	local old = self.s:draw_on()
 	drystal.set_alpha(0)
 	drystal.draw_background()
+	drystal.set_color(255, 255, 255)
+	drystal.set_alpha(255)
 	old:draw_on()
 end
 
