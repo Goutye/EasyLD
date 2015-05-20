@@ -120,8 +120,8 @@ function Camera:tilt(dir, power, duration, ratioTilt)
 	while EasyLD.camera.tiltOffset[id] ~= nil do id = id + 1 end
 	EasyLD.camera.tiltOffset[id] = {x = 0, y = 0}
 
-	EasyLD.camera.tiltTimer[id] = EasyLD.flux.to(EasyLD.camera.tiltOffset[id], duration*(ratioTilt or 1/8), {x = offset.x, y = offset.y}):ease("quadinout"):oncomplete(function()
-			EasyLD.camera.tiltTimer[id] = EasyLD.flux.to(EasyLD.camera.tiltOffset[id], duration*(ratioTilt or 1/8)*(1/(ratioTilt or 1/8)-1), {x = 0, y = 0}):ease("elasticout"):oncomplete(function()
+	EasyLD.camera.tiltTimer[id] = EasyLD.flux.to(EasyLD.camera.tiltOffset[id], (duration or 0.8)*(ratioTilt or 1/8), {x = offset.x, y = offset.y}):ease("quadinout"):oncomplete(function()
+			EasyLD.camera.tiltTimer[id] = EasyLD.flux.to(EasyLD.camera.tiltOffset[id], (duration or 0.8)*(ratioTilt or 1/8)*(1/(ratioTilt or 1/8)-1), {x = 0, y = 0}):ease("elasticout"):oncomplete(function()
 					EasyLD.camera.tiltTimer[id] = nil
 					EasyLD.camera.tiltOffset[id] = nil
 				end)
