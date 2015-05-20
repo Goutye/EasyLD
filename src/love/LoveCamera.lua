@@ -50,8 +50,7 @@ function Camera:rotate(angle, ox, oy, time, ...)
 end
 
 function Camera:draw()
-	EasyLD.camera.x = EasyLD.camera.currentX + EasyLD.camera.shakeX + EasyLD.camera.tiltOffset.x
-	EasyLD.camera.y = EasyLD.camera.currentY + EasyLD.camera.shakeY + EasyLD.camera.tiltOffset.y
+	EasyLD.camera:compute()
 	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
 	love.graphics.translate(EasyLD.window.w/2, EasyLD.window.h/2)
 	love.graphics.rotate(-EasyLD.camera.angle)

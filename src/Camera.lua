@@ -14,7 +14,10 @@ Camera.oy = 0
 Camera.shakeX = 0
 Camera.shakeY = 0
 Camera.shakeAngle = 0
-Camera.tiltOffset = {x = 0, y = 0}
+
+Camera.tiltOffset = {}
+Camera.tiltTimer = {}
+
 Camera.follower = nil
 Camera.angle = 0
 Camera.mode = "normal"
@@ -88,6 +91,10 @@ end
 function Camera:compute()
 	EasyLD.camera.x = EasyLD.camera.currentX + EasyLD.camera.shakeX
 	EasyLD.camera.y = EasyLD.camera.currentY + EasyLD.camera.shakeY
+	for i,v in pairs(EasyLD.camera.tiltOffset) do
+		EasyLD.camera.x = EasyLD.camera.x + v.x
+		EasyLD.camera.y = EasyLD.camera.y + v.y
+	end
 	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
 end
 
@@ -108,14 +115,15 @@ end
 
 function Camera:tilt(dir, power, duration, ratioTilt)
 	dir:normalize()
-	if EasyLD.camera.tiltTimer ~= nil then
-		EasyLD.camera.tiltTimer:stop()
-	end
 	local offset = dir * power
-	EasyLD.camera.tiltTimer = EasyLD.flux.to(EasyLD.camera.tiltOffset, duration*(ratioTilt or 1/8), {x = offset.x, y = offset.y}):ease("quadinout"):oncomplete(function()
-			EasyLD.camera.tiltTimer = EasyLD.flux.to(EasyLD.camera.tiltOffset, duration*(ratioTilt or 1/8)*(1/(ratioTilt or 1/8)-1), {x = 0, y = 0}):ease("elasticout"):oncomplete(function()
-					EasyLD.camera.tiltTimer = nil
-					EasyLD.camera.tiltOffset = {x = 0, y = 0}
+	local id = 1
+	while EasyLD.camera.tiltOffset[id] ~= nil do id = id + 1 end
+	EasyLD.camera.tiltOffset[id] = {x = 0, y = 0}
+
+	EasyLD.camera.tiltTimer[id] = EasyLD.flux.to(EasyLD.camera.tiltOffset[id], duration*(ratioTilt or 1/8), {x = offset.x, y = offset.y}):ease("quadinout"):oncomplete(function()
+			EasyLD.camera.tiltTimer[id] = EasyLD.flux.to(EasyLD.camera.tiltOffset[id], duration*(ratioTilt or 1/8)*(1/(ratioTilt or 1/8)-1), {x = 0, y = 0}):ease("elasticout"):oncomplete(function()
+					EasyLD.camera.tiltTimer[id] = nil
+					EasyLD.camera.tiltOffset[id] = nil
 				end)
 		end)
 end
