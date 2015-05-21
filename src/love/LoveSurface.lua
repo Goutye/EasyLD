@@ -5,7 +5,7 @@ local Surface = class('Surface')
 Surface.table = {}
 
 function Surface.drawOnScreen()
-	love.graphics.setCanvas()
+	love.graphics.setCanvas(love.screen)
 end
 
 function Surface:initialize(w, h)

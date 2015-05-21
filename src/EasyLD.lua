@@ -81,6 +81,14 @@ local function loadAdapterSurface(base)
 	EasyLD.surface = base
 end
 
+local function loadAdapterPostfx(base)
+	EasyLD.postfx = base
+end
+
+local function loadAdapterShader(base)
+	EasyLD.shader = base
+end
+
 local function loadAPI(name)
 	if name == "Drystal" then
 		drystal = require 'drystal'
@@ -95,6 +103,8 @@ local function loadAPI(name)
 		loadAdapterWindow(require 'drystal.DrystalWindow')
 		loadAdapterCamera(require 'drystal.DrystalCamera')
 		loadAdapterSurface(require 'drystal.DrystalSurface')
+		loadAdapterPostfx(require 'drystal.DrystalPostfx')
+		loadAdapterShader(require 'drystal.DrystalShader')
 	elseif name == "Löve2D" then
 		require 'love.LoveMain'
 		require 'love.LoveKeyboard'
@@ -107,6 +117,8 @@ local function loadAPI(name)
 		loadAdapterWindow(require 'love.LoveWindow')
 		loadAdapterCamera(require 'love.LoveCamera')
 		loadAdapterSurface(require 'love.LoveSurface')
+		loadAdapterPostfx(require 'love.LovePostfx')
+		loadAdapterShader(require 'love.LoveShader')
 	end
 end
 

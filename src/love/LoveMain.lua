@@ -1,5 +1,6 @@
 function love.load()
 	EasyLD:load()
+	love.screen = love.graphics.newCanvas()
 end
 
 function love.update(dt)
@@ -13,9 +14,14 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.screen:clear()
+	love.graphics.setCanvas(love.screen)
 	EasyLD.camera:draw()
 	if EasyLD.screen.current then
 		EasyLD.screen:draw()
 	end
 	EasyLD:draw()
+
+	love.graphics.setCanvas()
+	love.graphics.draw(love.screen, 0, 0)
 end
