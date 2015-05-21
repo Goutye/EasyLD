@@ -67,6 +67,9 @@ local function loadAdapterCamera(base)
 	EasyLD.camera.rotate = base.rotate
 	EasyLD.camera.draw = base.draw
 	EasyLD.camera.actualize = base.actualize
+	EasyLD.camera.reset = base.reset
+	EasyLD.camera.push = base.push
+	EasyLD.camera.pop = base.pop
 end
 
 local function loadAdapterMusic(base)

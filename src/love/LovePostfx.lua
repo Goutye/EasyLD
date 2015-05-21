@@ -23,7 +23,7 @@ uniform float ]] .. name .. [[;
 	local code = code .. [[
 
 vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ) {
-	return vec4(effectVec3(texture, texture_coords), texture2D(texture, texture_coords).a);
+	return vec4(effectVec3(texture, texture_coords), 1.0);
 }
 ]]
 	print(uniformsCode..code)
@@ -43,6 +43,8 @@ function Postfx:use(name, ...)
 	
 	love.graphics.setCanvas(s[3])
 	love.graphics.setShader(s[1])
+	EasyLD.camera:push()
+	EasyLD.camera:reset()
 	
 	local uniforms = {...}
 	for i,v in ipairs(uniforms) do
@@ -54,6 +56,9 @@ function Postfx:use(name, ...)
 	love.graphics.draw(love.screen, 0, 0)
 	love.graphics.setBlendMode(b)
 	love.graphics.setShader(sOld)
+
+	EasyLD.camera:pop()
+	EasyLD.camera:actualize()
 
 	local tmp = love.screen
 	love.screen = s[3]

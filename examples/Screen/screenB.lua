@@ -4,7 +4,6 @@ local IScreen = require 'IScreen'
 local screenB = class('screenB', IScreen)
 
 function screenB:initialize()
-	sfx = EasyLD.sfx:new("assets/bloop.wav", 0.5)
 	self.area = EasyLD.area:new(EasyLD.box:new(0,0,80,100))
 	point = EasyLD.point:new(50,50)
 	self.area:moveTo(300,300)

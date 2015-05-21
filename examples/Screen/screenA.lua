@@ -11,7 +11,7 @@ function screenA:initialize()
 	self.area3:moveTo(400,300)
 	self.area2 = EasyLD.area:new(EasyLD.box:new(1,1,100,100, EasyLD.color:new(255,0,0)))
 	self.area2:attach(self.area)
-	self.sfx = EasyLD.sfx:new("assets/bloop.wav")
+	self.sfx = EasyLD.sfx:new("assets/bloop.wav", 0.5)
 end
 
 function screenA:preCalcul(dt)
@@ -23,7 +23,7 @@ function screenA:update(dt)
 
 	if EasyLD.mouse:isPressed("l") then
 		self.area.display = not self.area.display
-		sfx:play()
+		self.sfx:play()
 	end
 
 	if self.area3:collide(self.area) then

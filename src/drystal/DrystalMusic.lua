@@ -11,6 +11,7 @@ function Music:initialize(name)
 end
 
 function Music:play(callback)
+	self.callback = callback
 	self.m:play(self.looping, function() self:onEnd() end)
 	--TODO => Callback BUT callback to put isPlaying to false (Easy => self:onEnd(callback))
 	--ie encapsulate the callback function in self:onEnd()
