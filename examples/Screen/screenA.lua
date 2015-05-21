@@ -4,7 +4,7 @@ local IScreen = require 'IScreen'
 local screenA = class('screenA', IScreen)
 
 function screenA:initialize()
-	self.area = EasyLD.area:new(EasyLD.box:new(1,1,100,100))
+	self.area = EasyLD.area:new(EasyLD.box:new(-99999,-99999,100,100))
 	self.area.display = true
 	self.area3 = self.area:copy()
 	self.area3:attach(EasyLD.point:new(150,150, false))
@@ -34,6 +34,7 @@ function screenA:update(dt)
 end
 
 function screenA:draw()
+	EasyLD.box:new(0,0,EasyLD.window.w, EasyLD.window.h, EasyLD.color:new(0,200,200)):draw()
 	self.area2:draw()
 	font:print("A:draw", 16, self.area2.forms[1], "center", "center", EasyLD.color:new(255,255,255))
 	font:print("A:draw", 16, self.area.forms[1], "center", "center", EasyLD.color:new(0,0,0))

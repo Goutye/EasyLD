@@ -25,6 +25,7 @@ Current features :
 * DepthManager
 * Surface
 * Screen
+* Postfx
 
 In the side of LÖVE2D :
 ----------------------

@@ -99,7 +99,7 @@ function Camera:compute()
 end
 
 function Camera:getPosition()
-	local p = EasyLD.point:new(-EasyLD.camera.ox - EasyLD.camera.x, -EasyLD.camera.oy - EasyLD.camera.y)
+	local p = EasyLD.point:new(-EasyLD.camera.ox - EasyLD.camera.currentX, -EasyLD.camera.oy - EasyLD.camera.currentY)
 	return p
 end
 
@@ -115,7 +115,7 @@ end
 
 function Camera:tilt(dir, power, duration, ratioTilt)
 	dir:normalize()
-	local offset = dir * power
+	local offset = dir * (-power)
 	local id = 1
 	while EasyLD.camera.tiltOffset[id] ~= nil do id = id + 1 end
 	EasyLD.camera.tiltOffset[id] = {x = 0, y = 0}

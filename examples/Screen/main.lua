@@ -24,7 +24,7 @@ end
 
 function EasyLD:update(dt)
 	if EasyLD.mouse:isPressed("r") then
-		EasyLD:nextScreen(screen[i]:new(), 1, "quad", true)
+		EasyLD:nextScreen(screen[i]:new(),"slide",  2, "linear", true, {0,1})
 		i = i % 2 + 1
 	end
 end
