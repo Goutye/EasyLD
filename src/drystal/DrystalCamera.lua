@@ -44,17 +44,17 @@ function Camera:rotate(angle, ox, oy, time, ...)
 	end
 end
 
-function Camera:draw()
-	EasyLD.camera:compute()
+function Camera:draw(withoutShake)
+	EasyLD.camera:compute(withoutShake)
 	drystal.camera.zoom = EasyLD.camera.scaleValue
 	drystal.camera.x = -(EasyLD.camera.ox + EasyLD.camera.x)
 	drystal.camera.y = -(EasyLD.camera.oy + EasyLD.camera.y)
 	drystal.camera.angle = -EasyLD.camera.angle
 end
 
-function Camera:actualize()
+function Camera:actualize(withoutShake)
 	drystal.camera.reset()
-	Camera:draw()
+	Camera:draw(withoutShake)
 end
 
 

@@ -26,7 +26,6 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
 	return vec4(effectVec3(texture, texture_coords), 1.0);
 }
 ]]
-	print(uniformsCode..code)
 	self.list[name] = {love.graphics.newShader(uniformsCode .. code), uniforms, love.graphics.newCanvas()}
 end
 

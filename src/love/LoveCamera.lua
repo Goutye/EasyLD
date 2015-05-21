@@ -49,8 +49,8 @@ function Camera:rotate(angle, ox, oy, time, ...)
 	end
 end
 
-function Camera:draw()
-	EasyLD.camera:compute()
+function Camera:draw(withoutShake)
+	EasyLD.camera:compute(withoutShake)
 	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
 	love.graphics.translate(EasyLD.window.w/2, EasyLD.window.h/2)
 	love.graphics.rotate(-EasyLD.camera.angle)
@@ -59,9 +59,9 @@ function Camera:draw()
 	love.graphics.scale(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
 end
 
-function Camera:actualize()
+function Camera:actualize(withoutShake)
 	love.graphics.origin()
-	Camera:draw()
+	Camera:draw(withoutShake)
 end
 
 function Camera:push()

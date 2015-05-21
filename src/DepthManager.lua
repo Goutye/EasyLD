@@ -73,7 +73,7 @@ function DepthManager:draw(noScale)
 
 		EasyLD.camera:scaleTo(1)
 		EasyLD.camera:moveTo(0,0)
-		EasyLD.camera:actualize()
+		EasyLD.camera:actualize(true)
 		EasyLD.surface.drawOnScreen()
 		self.depth[i].s:draw(0, 0, 0, 0, self.depth[i].s.w, self.depth[i].s.h, 0)
 	end

@@ -88,12 +88,16 @@ function Camera:update(dt)
 	end
 end
 
-function Camera:compute()
-	EasyLD.camera.x = EasyLD.camera.currentX + EasyLD.camera.shakeX
-	EasyLD.camera.y = EasyLD.camera.currentY + EasyLD.camera.shakeY
-	for i,v in pairs(EasyLD.camera.tiltOffset) do
-		EasyLD.camera.x = EasyLD.camera.x + v.x
-		EasyLD.camera.y = EasyLD.camera.y + v.y
+function Camera:compute(withoutShake)
+	EasyLD.camera.x = EasyLD.camera.currentX
+	EasyLD.camera.y = EasyLD.camera.currentY
+	if not withoutShake then
+		EasyLD.camera.x = EasyLD.camera.x + EasyLD.camera.shakeX
+		EasyLD.camera.y = EasyLD.camera.y + EasyLD.camera.shakeY
+		for i,v in pairs(EasyLD.camera.tiltOffset) do
+			EasyLD.camera.x = EasyLD.camera.x + v.x
+			EasyLD.camera.y = EasyLD.camera.y + v.y
+		end
 	end
 	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
 end
