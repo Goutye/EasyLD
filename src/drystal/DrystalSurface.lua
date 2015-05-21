@@ -4,6 +4,11 @@ local Surface = class('Surface')
 
 Surface.table = {}
 
+local function powerOfTwo(x)
+	return x == 1 or x == 2 or x == 4 or x == 8 or x == 16 or x == 32 or x == 64
+		or x == 128 or x == 256 or x == 512 or x == 1024 or x == 2048 or x == 4096 --MaxSize = 2048
+end
+
 function Surface.drawOnScreen()
 	drystal.screen:draw_on()
 end
@@ -11,7 +16,11 @@ end
 function Surface:initialize(w, h)
 	self.w = w or EasyLD.window.w
 	self.h = h or EasyLD.window.h
-	self.s = drystal.new_surface(self.w,self.h)
+	if w == h and powerOfTwo(w) then
+		self.s = drystal.new_surface(self.w, self.h)
+	else
+		self.s = drystal.new_surface(self.w, self.h, true)
+	end
 	EasyLD.surface.table[self.s] = self
 end
 
