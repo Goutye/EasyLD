@@ -30,7 +30,9 @@ function EasyLD:load()
 					[0.7] = 32,
 					[1] = 16})
 	s2 = system:clone()
-	s2:setDirection(math.pi/4, math.pi/2)
+	s2:setDirection(math.pi/4, math.pi/8)
+	s2:setSpinEmitter(math.pi/4)
+	s2:setRotation(0,math.pi/2, 8)
 	s2:start()
 	self.isStopped = true
 	font = EasyLD.font:new("assets/visitor.ttf")

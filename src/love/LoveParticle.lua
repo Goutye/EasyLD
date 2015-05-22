@@ -15,6 +15,10 @@ function Particle:initialize(obj, img, x, y, size)
 	self.sizeP = 64
 	self.rate = 1
 	self.pause = true
+
+	self.angleSpeed = 0
+	self.angle = 0
+	self.spread = 0
 end
 
 function Particle:start()
@@ -47,6 +51,9 @@ function Particle:clone()
 	local newSystem = Particle:new(self.follower:copy())
 	newSystem.p = p
 	newSystem.rate = self.rate
+	newSystem.angle = self.angle
+	newSystem.angleSpeed = self.angleSpeed
+	newSystem.spread = self.spread
 	return newSystem
 end
 
@@ -61,12 +68,13 @@ end
 function Particle:update(dt)
 	self:moveTo(self.follower.x, self.follower.y)
 	self.p:update(dt)
-
+	self:setDirection(self.angle + self.angleSpeed * dt, self.spread)
+	print(self.angle)
 	local nb = self.p:getCount()
 	if nb > self.size * 0.95 then
 		self.size = self.size *2
 		self.p:setBufferSize(self.size)
-	elseif nb < 0.475 * self.size and self.size > 256 then
+	elseif nb < 0.475 * self.size and self.size > 512 then
 		self.size = self.size / 2
 		self.p:setBufferSize(self.size)
 	end
@@ -81,6 +89,8 @@ function Particle:getPosition()
 end
 
 function Particle:setDirection(angle, spread)
+	self.angle = angle
+	self.spread = spread
 	self.p:setSpread(spread)
 	self.p:setDirection(-angle)
 end
@@ -251,5 +261,12 @@ function Particle:setInitialAcceleration(nb)
 	self.p:setRadialAcceleration(nb)
 end
 
+function Particle:setRotation(min, max)
+	self.p:setRotation(min, max)
+end
+
+function Particle:setSpinEmitter(angleSpeed)
+	self.angleSpeed = angleSpeed
+end
 
 return Particle
