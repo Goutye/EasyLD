@@ -11,11 +11,11 @@ WINDOW_HEIGHT = 600
 function EasyLD:load()
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 	
-	surf = EasyLD.surface:new(32,32)
+	surf = EasyLD.surface:new(64,64)
 	surf:drawOn()
-	EasyLD.box:new(0,0,32,32):draw()
+	EasyLD.box:new(0,0,64,64):draw()
 	EasyLD.surface:drawOnScreen()
-	system = EasyLD.particles:new(EasyLD.point:new(400,300), surf.s)
+	system = EasyLD.particles:new(EasyLD.point:new(600,100), surf)
 	system:setEmissionRate(20)
 	system:setLifeTime(2)
 	system:setInitialVelocity(200)
@@ -25,22 +25,24 @@ function EasyLD:load()
 					[0.3] = EasyLD.color:new(255,0,255,200), 
 					[0.7] = EasyLD.color:new(0,0,255,150), 
 					[1] = EasyLD.color:new(0,0,255,00)})
-	system:setSizes({[0] = 1,
-					[0.3] = 2,
-					[0.7] = 1,
-					[1] = 0.4})
+	system:setSizes({[0] = 32,
+					[0.3] = 64,
+					[0.7] = 32,
+					[1] = 16})
 	s2 = system:clone()
-	
+	s2:setDirection(math.pi/4, math.pi/2)
+	s2:start()
+	self.isStopped = true
 	font = EasyLD.font:new("assets/visitor.ttf")
 end
 
 function EasyLD:preCalcul(dt)
 	if EasyLD.mouse:isPressed("l") then
 		if self.isStopped then
-			system:setEmissionRate(20)
+			system:start()
 			self.isStopped = false
 		else
-			system:setEmissionRate(0)
+			system:stop()
 			self.isStopped = true
 		end
 	end
@@ -60,9 +62,6 @@ end
 function EasyLD:draw()
 	system:draw()
 	s2:draw()
-	font:print([[Q-E: Lower-Upper ground
-WASD: Move the circle
-Left click: Change of follower
-Right click: Draw with or without zoom
-Middle click: Change of perspective point]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
+	font:print([[Left click: Play/Stop Particles
+Right click: Emit 20 particles]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
 end

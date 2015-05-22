@@ -4,17 +4,23 @@ local Particle = class('Particle')
 
 function Particle:initialize(obj, img, x, y, size)
 	self.follower = obj
-	self.size = size or 256
+	self.size = size or 512
 	if img then
-		self.p = love.graphics.newParticleSystem(img, size)
-		self:setTexture(img, x, y)
+		if x == nil then
+			self.p = love.graphics.newParticleSystem(img.s, size)
+		else
+			self.p = love.graphics.newParticleSystem(img, size)
+		end
 	end
-	self.isStopped = false
+	self.sizeP = 64
+	self.rate = 1
+	self.pause = true
 end
 
 function Particle:start()
-	self.p:start()
-	self.isStopped = false
+	--self.p:start()
+	self.pause = false
+	self:setEmissionRate(self.rate)
 end
 
 function Particle:emit(nb)
@@ -27,8 +33,9 @@ function Particle:emit(nb)
 end
 
 function Particle:stop()
-	self.p:stop()
-	self.isStopped = true
+	--self.p:stop()
+	self:setEmissionRate(0)
+	self.pause = true
 end
 
 function Particle:reset()
@@ -39,6 +46,7 @@ function Particle:clone()
 	local p = self.p:clone()
 	local newSystem = Particle:new(self.follower:copy())
 	newSystem.p = p
+	newSystem.rate = self.rate
 	return newSystem
 end
 
@@ -74,7 +82,7 @@ end
 
 function Particle:setDirection(angle, spread)
 	self.p:setSpread(spread)
-	self.p:setDirection(angle)
+	self.p:setDirection(-angle)
 end
 
 function Particle:setOffset(x, y)
@@ -90,27 +98,27 @@ function Particle:setSizes(tab)
 	local dist = {1,1,1,1,1,1,1}
 	for i,v in pairs(tab) do
 		if i == 0 then
-			t[1] = v
+			t[1] = v / self.sizeP
 		elseif i < 3/14 and math.abs(i-1/7) < dist[1] then
-			t[2] = v
+			t[2] = v / self.sizeP
 			dist[1] = math.abs(i-1/7)
 		elseif i < 5/14 and math.abs(i-2/7) < dist[2] then
-			t[3] = v
+			t[3] = v / self.sizeP
 			dist[2] = math.abs(i-2/7)
 		elseif i < 7/14 and math.abs(i-3/7) < dist[3] then
-			t[4] = v
+			t[4] = v / self.sizeP
 			dist[3] = math.abs(i-3/7)
 		elseif i < 9/14 and math.abs(i-4/7) < dist[4] then
-			t[5] = v
+			t[5] = v / self.sizeP
 			dist[4] = math.abs(i-4/7)
 		elseif i < 11/14 and math.abs(i-5/7) < dist[5] then
-			t[6] = v
+			t[6] = v / self.sizeP
 			dist[5] = math.abs(i-5/7)
 		elseif i < 13/14 and math.abs(i-6/7) < dist[6] then
-			t[7] = v
+			t[7] = v / self.sizeP
 			dist[6] = math.abs(i-6/7)
 		elseif math.abs(i - 1) < dist[7] then
-			t[8] = v
+			t[8] = v / self.sizeP
 			dist[7] = math.abs(i-1)
 		end
 	end
@@ -198,7 +206,7 @@ end
 
 function Particle:setTexture(img, x, y)
 	if x == nil then
-		self.p:setTexture(img)
+		self.p:setTexture(img.s)
 	else
 		local s = EasyLD.surface:new(64, 64)
 		local old = s:drawOn()
@@ -215,7 +223,12 @@ function Particle:setTexture(img, x, y)
 end
 
 function Particle:setEmissionRate(nb)
-	self.p:setEmissionRate(nb)
+	if not self.pause then
+		self.p:setEmissionRate(nb)
+	end
+	if nb > 0 then
+		self.rate = nb
+	end
 end
 
 function Particle:getEmissionRate()

@@ -204,14 +204,15 @@ end
 local function fusion(self, state)
 	local typeEase = EasyLD.screen.nextType
 	if state == "start" then
-		self.postfx = {percent = 0}
+		self.postfx = {percent = 0, s = EasyLD.surface:new()}
 		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime, {percent = 1}):ease(typeEase):oncomplete(function () EasyLD.screen:changeScreen() end)
 	elseif state == "change" then
 		EasyLD.screen.transition = false
 		EasyLD.screen.timer = nil
 		EasyLD.screen.transitionStart = false
 	elseif state == "postfx" then
-		local s = EasyLD.surface:new()
+		local s = self.postfx.s
+		s:clear()
 		s:drawOn(true)
 		self.next:draw()
 		EasyLD.surface:drawOnScreen()

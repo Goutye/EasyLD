@@ -39,7 +39,7 @@ end
 
 function Surface:draw(x, y, xs, ys, w, h, r)
 	self.s:draw_from()
-	drystal.draw_sprite_rotated({x=xs, y=ys, w=w or self.s.w, h=h or self.s.h}, x, y, r or 0)
+	drystal.draw_sprite_rotated({x=xs or 0, y=ys or 0, w=w or self.s.w, h=h or self.s.h}, x, y, r or 0)
 end
 
 function Surface:setFilter(type)
