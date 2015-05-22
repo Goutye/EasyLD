@@ -7,7 +7,7 @@ function Screen:nextScreen(screen, transition, transitionArgs, time, pause, type
 	if EasyLD.screen.current == nil then
 		EasyLD.screen.current = screen
 		EasyLD.screen.box = EasyLD.box:new(0, 0, EasyLD.window.w, EasyLD.window.h, EasyLD.color:new(0,0,0,255))
-	else
+	elseif not EasyLD.screen.transition then
 		EasyLD.screen.transition = EasyLD.screen.listTransition[transition or "fade"]
 		EasyLD.screen.transitionArgs = transitionArgs or {}
 		EasyLD.screen.transitionStart = false
@@ -24,7 +24,7 @@ function Screen:preCalcul(dt)
 end
 
 function Screen:update(dt)
-	if EasyLD.screen.next ~= nil and EasyLD.screen.timer == nil then
+	if EasyLD.screen.next ~= nil and not EasyLD.screen.transitionStart then
 		local typeEase = EasyLD.screen.nextType
 		if self.transition then
 			self:transition("start")
@@ -65,6 +65,25 @@ function Screen:draw()
 	end
 end
 
+function Screen:addTransition(name, startFct, changeFct, postfxFct, ratio)
+	local fct = function(self, state)
+			if state == "start" then
+				startFct(self)
+				self.timer = EasyLD.timer.after(self.nextTime * ratio, function () EasyLD.screen:changeScreen() end)
+			elseif state == "change" then
+				changeFct(self)
+				self.timer = EasyLD.timer.after(self.nextTime * (1-ratio), function () 
+						EasyLD.screen.transition = false
+						EasyLD.screen.timer = nil
+						EasyLD.screen.transitionStart = false
+					end)
+			elseif state == "postfx" then
+				postfxFct(self)
+			end
+		end
+	Screen.listTransition[name] = fct
+end
+
 local function fade(self, state)
 	local typeEase = EasyLD.screen.nextType
 	if state == "start" then
@@ -103,18 +122,6 @@ local function circleFade(self, state)
 															end)
 	elseif state == "postfx" then
 		EasyLD.postfx:use("vignette", self.postfx.percent, math.max(1-(self.transitionArgs[1] or 0.2)-(1-(self.postfx.percent or 1)),-0.01))
-	end
-end
-
-local function cirsFade(self, state)
-	if state == "start" then
-
-	elseif state == "end" then
-
-	elseif state == "postfxUpdate" then
-
-	elseif state == "postfxDraw" then
-
 	end
 end
 
@@ -171,9 +178,56 @@ local function slide(self, state)
 	end
 end
 
+local function cover(self, state)
+	local typeEase = EasyLD.screen.nextType
+	if state == "start" then
+		self.postfx = {percent = 1.0}
+		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime, {percent = 0}):ease(typeEase):oncomplete(function () EasyLD.screen:changeScreen() end)
+	elseif state == "change" then
+		EasyLD.screen.transition = false
+		EasyLD.screen.timer = nil
+		EasyLD.screen.transitionStart = false
+	elseif state == "postfx" then
+		local offset = (EasyLD.vector:new(self.transitionArgs[1] or -1, self.transitionArgs[2] or 0) * EasyLD.vector:new(EasyLD.window.w, EasyLD.window.h))
+		local old = EasyLD.camera:getPosition()
+		local offsetNextScreen = offset * self.postfx.percent + old
+		EasyLD.camera:moveTo(offsetNextScreen.x, offsetNextScreen.y)
+		EasyLD.camera:actualize()
+
+		self.next:draw()
+
+		EasyLD.camera:moveTo(old:get())
+		EasyLD.camera:actualize()
+	end
+end
+
+local function fusion(self, state)
+	local typeEase = EasyLD.screen.nextType
+	if state == "start" then
+		self.postfx = {percent = 0}
+		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime, {percent = 1}):ease(typeEase):oncomplete(function () EasyLD.screen:changeScreen() end)
+	elseif state == "change" then
+		EasyLD.screen.transition = false
+		EasyLD.screen.timer = nil
+		EasyLD.screen.transitionStart = false
+	elseif state == "postfx" then
+		local s = EasyLD.surface:new()
+		s:drawOn(true)
+		self.next:draw()
+		EasyLD.surface:drawOnScreen()
+		EasyLD.camera:moveTo(0,0)
+		EasyLD.camera:actualize(true)
+		EasyLD.graphics:setColor(EasyLD.color:new(255, 255, 255, self.postfx.percent * 255))
+		s:draw(0,0)
+		EasyLD.camera:actualize()
+	end
+end
+
 Screen.listTransition["fade"] = fade
+Screen.listTransition["fusion"] = fusion
 Screen.listTransition["circleFade"] = circleFade
 Screen.listTransition["tilt"] = tilt
 Screen.listTransition["slide"] = slide
+Screen.listTransition["cover"] = cover
 
 return Screen

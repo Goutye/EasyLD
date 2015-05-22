@@ -34,7 +34,7 @@ function screenA:update(dt)
 end
 
 function screenA:draw()
-	EasyLD.box:new(0,0,EasyLD.window.w, EasyLD.window.h, EasyLD.color:new(0,200,200)):draw()
+	EasyLD.box:new(0,0,EasyLD.window.w, EasyLD.window.h, EasyLD.color:new(0,100,100)):draw()
 	self.area2:draw()
 	font:print("A:draw", 16, self.area2.forms[1], "center", "center", EasyLD.color:new(255,255,255))
 	font:print("A:draw", 16, self.area.forms[1], "center", "center", EasyLD.color:new(0,0,0))

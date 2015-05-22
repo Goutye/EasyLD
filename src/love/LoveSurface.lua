@@ -24,7 +24,7 @@ function Surface:drawOn(clear)
 end
 
 function Surface:draw(x, y, xs, ys, w, h, r)
-	self.quad = love.graphics.newQuad(xs, ys, w, h, self.s:getWidth(), self.s:getHeight())
+	self.quad = love.graphics.newQuad(xs or 0, ys or 0, w or self.w, h or self.h, self.s:getWidth(), self.s:getHeight())
 	love.graphics.draw(self.s, self.quad, x, y)
 end
 
