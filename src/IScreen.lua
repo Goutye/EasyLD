@@ -15,6 +15,9 @@ end
 function IScreen:draw()
 end
 
+function IScreen:onPause()
+end
+
 function IScreen:onEnd()
 end
 

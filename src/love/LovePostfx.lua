@@ -57,7 +57,6 @@ function Postfx:use(name, ...)
 	love.graphics.setShader(sOld)
 
 	EasyLD.camera:pop()
-	EasyLD.camera:actualize()
 
 	local tmp = love.screen
 	love.screen = s[3]

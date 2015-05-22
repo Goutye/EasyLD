@@ -3,13 +3,14 @@ Screen.alpha = 0
 Screen.box = nil
 Screen.listTransition = {}
 
-function Screen:nextScreen(screen, transition, time, type, pause, transitionArgs)
+function Screen:nextScreen(screen, transition, transitionArgs, time, pause, type)
 	if EasyLD.screen.current == nil then
 		EasyLD.screen.current = screen
 		EasyLD.screen.box = EasyLD.box:new(0, 0, EasyLD.window.w, EasyLD.window.h, EasyLD.color:new(0,0,0,255))
 	else
 		EasyLD.screen.transition = EasyLD.screen.listTransition[transition or "fade"]
 		EasyLD.screen.transitionArgs = transitionArgs or {}
+		EasyLD.screen.transitionStart = false
 		EasyLD.screen.next = screen
 		EasyLD.screen.nextType = type or "quad"
 		EasyLD.screen.nextTime = time or 0.01
@@ -27,12 +28,19 @@ function Screen:update(dt)
 		local typeEase = EasyLD.screen.nextType
 		if self.transition then
 			self:transition("start")
+			self.transitionStart = true
 		else
 			self:changeScreen()
+		end
+		if self.nextPause then
+			self.current:onPause()
 		end
 	end
 	if not EasyLD.screen.nextPause then
 		EasyLD.screen.current:update(dt)
+		if self.transitionStart and EasyLD.screen.next then
+			EasyLD.screen.next:update(dt)
+		end
 	end
 end
 
@@ -52,7 +60,7 @@ function Screen:draw()
 	EasyLD.screen.current:draw()
 	EasyLD.screen.box.c.a = EasyLD.screen.alpha
 	EasyLD.screen.box:draw()
-	if EasyLD.screen.transition then
+	if EasyLD.screen.transitionStart then
 		EasyLD.screen:transition("postfx")
 	end
 end
@@ -71,6 +79,7 @@ local function fade(self, state)
 		EasyLD.screen.timer = EasyLD.flux.to(EasyLD.screen, EasyLD.screen.nextTime/2, {alpha = 0}):ease(typeEase):oncomplete(function () 
 																EasyLD.screen.timer = nil
 																EasyLD.screen.transition = false
+																EasyLD.screen.transitionStart = false
 															end)
 	end
 end
@@ -90,6 +99,7 @@ local function circleFade(self, state)
 		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime/2, {percent = 1}):ease(typeEase):oncomplete(function () 
 																EasyLD.screen.timer = nil
 																EasyLD.screen.transition = false
+																EasyLD.screen.transitionStart = false
 															end)
 	elseif state == "postfx" then
 		EasyLD.postfx:use("vignette", self.postfx.percent, math.max(1-(self.transitionArgs[1] or 0.2)-(1-(self.postfx.percent or 1)),-0.01))
@@ -109,56 +119,41 @@ local function cirsFade(self, state)
 end
 
 local function tilt(self, state)
-	local typeEase = EasyLD.screen.nextType
 	if state == "start" then
-		if EasyLD.screen.nextType ~= "linear" then
-			typeEase = typeEase .. "out"
-		end
 		self.postfx = {percent = 1}
 		EasyLD.camera:tilt(EasyLD.vector:new(self.transitionArgs[1] or -1, self.transitionArgs[2] or 0), EasyLD.window.w, EasyLD.screen.nextTime, 1/8)
-		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime/8, {percent = 0}):ease(typeEase):oncomplete(function () EasyLD.screen:changeScreen() end)
+		self.timer = EasyLD.timer.after(EasyLD.screen.nextTime/8, function () EasyLD.screen:changeScreen() end)
 	elseif state == "change" then
-		if EasyLD.screen.nextType ~= "linear" then
-			typeEase = typeEase .. "in"
-		end
-		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime/8*7, {percent = 1}):ease(typeEase):oncomplete(function () 
+		self.timer = EasyLD.timer.after(EasyLD.screen.nextTime/8*7, function () 
 																EasyLD.screen.timer = nil
 																EasyLD.screen.transition = false
+																EasyLD.screen.transitionStart = false
 															end)
-	elseif state == "postfxUpdate" then
-
-	elseif state == "postfxDraw" then
-
 	end
 end
 
 local function slide(self, state)
 	local typeEase = EasyLD.screen.nextType
 	if state == "start" then
-		if EasyLD.screen.nextType ~= "linear" then
-			typeEase = typeEase .. "out"
-		end
 		self.postfx = {percent = 1.0, oldCamera = EasyLD.camera:getPosition()}
+		
 		local power = EasyLD.window.w
 		if self.transitionArgs[1] == 0 then power = EasyLD.window.h end
-		EasyLD.camera:tilt(EasyLD.vector:new(self.transitionArgs[1] or -1, self.transitionArgs[2] or 0), power, EasyLD.screen.nextTime, 1)
-		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime*1, {percent = 0}):ease("quadinout"):oncomplete(function () EasyLD.screen:changeScreen() end)
+
+		EasyLD.camera:tilt(EasyLD.vector:new(self.transitionArgs[1] or -1, self.transitionArgs[2] or 0), power, EasyLD.screen.nextTime, 0.999, typeEase)
+		self.timer = EasyLD.flux.to(EasyLD.screen.postfx, EasyLD.screen.nextTime*0.999, {percent = 0}):ease(typeEase):oncomplete(function () EasyLD.screen:changeScreen() end)
 	elseif state == "change" then
-		if EasyLD.screen.nextType ~= "linear" then
-			typeEase = typeEase .. "in"
-		end
 		EasyLD.screen.timer = nil
-		self.timer = EasyLD.timer.after(0.01, function() 
+		self.timer = EasyLD.timer.after(EasyLD.screen.nextTime*0.001, function() 
 					EasyLD.screen.transition = false
 					EasyLD.screen.timer = nil
+					EasyLD.screen.transitionStart = false
 				end)
-	elseif state == "postfxUpdate" then
-
 	elseif state == "postfx" then
 		local offset = (EasyLD.vector:new(self.transitionArgs[1] or -1, self.transitionArgs[2] or 0) * EasyLD.vector:new(EasyLD.window.w, EasyLD.window.h))
-		local offsetSurf = offset + (self.postfx.oldCamera or EasyLD.camera:getPosition())
+		local offsetNextScreen = offset + self.postfx.oldCamera
 		local old = EasyLD.camera:getPosition()
-		EasyLD.camera:moveTo(offsetSurf.x, offsetSurf.y)
+		EasyLD.camera:moveTo(offsetNextScreen.x, offsetNextScreen.y)
 		EasyLD.camera:actualize()
 
 		if self.next ~= nil then
@@ -167,7 +162,7 @@ local function slide(self, state)
 			self.current:draw()
 		end
 
-		local v = offsetSurf - old
+		local v = offsetNextScreen - old
 		v = old + v * (1-(self.postfx.percent or 1))
 		EasyLD.camera:moveTo(v.x, v.y)
 		EasyLD.camera:actualize()

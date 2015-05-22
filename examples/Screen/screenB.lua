@@ -24,6 +24,13 @@ function screenB:update(dt)
 	end
 end
 
+function screenB:onPause()
+	if self.timer then
+		self.timer:stop()
+		self.timer = nil
+	end
+end
+
 function screenB:draw()
 	EasyLD.box:new(0,0,EasyLD.window.w, EasyLD.window.h, EasyLD.color:new(255,100,0)):draw()
 	self.area:draw()
