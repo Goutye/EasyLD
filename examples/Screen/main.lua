@@ -16,6 +16,14 @@ function EasyLD:load()
 	EasyLD:nextScreen(screen[2]:new())
 	box = EasyLD.box:new(450, 350, 100, 100, EasyLD.color:new(255, 0, 0))
 	font = EasyLD.font:new("assets/visitor.ttf")
+
+	self.typeEase = {}
+	current = 1
+	for i,v in pairs(EasyLD.screen.listTransition) do
+		self.typeEase[current] = i
+		current = current + 1
+	end
+	current = 1
 end
 
 function EasyLD:preCalcul(dt)
@@ -23,8 +31,11 @@ function EasyLD:preCalcul(dt)
 end
 
 function EasyLD:update(dt)
+	if EasyLD.mouse:isPressed("m") then
+		current = current % #self.typeEase + 1
+	end
 	if EasyLD.mouse:isPressed("r") then
-		EasyLD:nextScreen(screen[i]:new(),"slide",  {1, 0}, 2, false, "bounceout")
+		EasyLD:nextScreen(screen[i]:new(),self.typeEase[current],  nil, 2, false, "linear")
 		i = i % 2 + 1
 	end
 end
@@ -33,7 +44,8 @@ function EasyLD:draw()
 	box:draw()
 	font:print("EasyLD:draw", 16, box, "center", "center", EasyLD.color:new(255,255,255))
 	font:print([[Left click: Action
-Right click: Change of screen]], 20, EasyLD.box:new(0, EasyLD.window.h-100, 0, 80), nil, "bottom", EasyLD.color:new(255,255,255))
+Middle click: Change of Transition (]]..self.typeEase[current]..[[)
+Right click: Change of screen]], 20, EasyLD.box:new(0, EasyLD.window.h-100, 0, 60), nil, "bottom", EasyLD.color:new(255,255,255))
 end
 
 --[[
