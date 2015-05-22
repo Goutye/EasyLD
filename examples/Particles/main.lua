@@ -52,6 +52,35 @@ function EasyLD:preCalcul(dt)
 	if EasyLD.mouse:isPressed("r") then
 		system:emit(40)
 	end
+	if EasyLD.keyboard:isPressed("x") then
+		EasyLD.camera:tilt(EasyLD.vector:new(1,1), 50, 3)
+	end
+	if EasyLD.keyboard:isPressed("c") then
+		if not cPressed then
+			EasyLD.camera:setMode("elasticout")
+			EasyLD.camera:moveTo(200,-200, 3)
+			EasyLD.camera:setMode("normal")
+			cPressed = true
+		else
+			EasyLD.camera:setMode("elasticout")
+			EasyLD.camera:moveTo(0,0, 3)
+			EasyLD.camera:setMode("normal")
+			cPressed = false
+		end
+	end
+	if EasyLD.keyboard:isPressed("v") then
+		if not vPressed then
+			EasyLD.camera:setMode("elasticout")
+			EasyLD.camera:rotateTo(math.pi/2,nil,nil, 3)
+			EasyLD.camera:setMode("normal")
+			vPressed = true
+		else
+			EasyLD.camera:setMode("elasticout")
+			EasyLD.camera:rotateTo(0,nil,nil, 3)
+			EasyLD.camera:setMode("normal")
+			vPressed = false
+		end
+	end
 	return dt
 end
 
@@ -66,5 +95,8 @@ function EasyLD:draw()
 	system:draw()
 	s2:draw()
 	font:print([[Left click: Play/Stop Particles
-Right click: Emit 20 particles]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
+Right click: Emit 20 particles
+X: tilt
+C: Move camera
+V: Rotate camera]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
 end

@@ -40,16 +40,16 @@ function Camera:scale(scale, scaleY)
 	
 end
 
-function Camera:moveTo(x, y)
-	EasyLD.camera:move(x - EasyLD.camera.currentX, y - EasyLD.camera.currentY)
+function Camera:moveTo(x, y, time, ...)
+	EasyLD.camera:move(x - EasyLD.camera.currentX, y - EasyLD.camera.currentY, time, ...)
 end
 
 function Camera:move(x, y)
 
 end
 
-function Camera:rotateTo(angle, ox, oy)
-	EasyLD.camera:rotate(angle - EasyLD.camera.currentAngle, ox, oy)
+function Camera:rotateTo(angle, ox, oy, time, ...)
+	EasyLD.camera:rotate(angle - EasyLD.camera.currentAngle, ox, oy, time, ...)
 end
 
 function Camera:rotate(angle, ox, oy)

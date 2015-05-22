@@ -17,7 +17,7 @@ end
 
 function Camera:move(dx, dy, time, ...)
 	if EasyLD.camera.mode ~= "normal" then
-		local tween = EasyLD.flux.to(EasyLD.camera, time, {x = EasyLD.camera.x + dx, y = EasyLD.camera.y + dy}, ...):ease(EasyLD.camera.mode)
+		local tween = EasyLD.flux.to(EasyLD.camera, time or 0.8, {currentX = EasyLD.camera.currentX + dx, currentY = EasyLD.camera.currentY + dy}, ...):ease(EasyLD.camera.mode)
 	else
 		EasyLD.camera.currentX = EasyLD.camera.currentX + dx
 		EasyLD.camera.currentY = EasyLD.camera.currentY + dy
@@ -36,7 +36,7 @@ function Camera:rotate(angle, ox, oy, time, ...)
 	end
 
 	if EasyLD.camera.mode ~= "normal" then
-		local tween = EasyLD.flux.to(EasyLD.camera, time, {angle = EasyLD.camera.angle + angle}, ...):ease(EasyLD.camera.mode)
+		local tween = EasyLD.flux.to(EasyLD.camera, time or 0.8, {currentAngle = EasyLD.camera.currentAngle + angle}, ...):ease(EasyLD.camera.mode)
 	else
 		EasyLD.camera.currentAngle = EasyLD.camera.currentAngle + angle
 
