@@ -6,16 +6,18 @@ function Particle:initialize(obj, img, x, y, size)
 	self.p = drystal.new_system(obj.x, obj.y, size)
 	self.follower = obj
 	self.size = size or 256
-	self.img = {img, x, y}
+	self.img = img
 	self.rotation = {min = 0, max = 0}
 	self.surfaceRotated = EasyLD.surface:new(64,64)
-	self.surfaceRotated:setFilter("linear")
+	self.surfaceRotated:setFilter("nearest")
 	if img then
 		self:setTexture(img, x, y)
 	end
 	self.angleSpeed = 0
 	self.angle = 0
 	self.spread = 0
+	self.mode = 64
+	self.sizes = {}
 
 	self.system = {}
 end
@@ -44,9 +46,10 @@ function Particle:clone()
 	newSystem.angle = self.angle
 	newSystem.angleSpeed = self.angleSpeed
 	newSystem.spread = self.spread
-	newSystem.img = {unpack(self.img)}
+	newSystem.img = self.img
 	newSystem.sizes = self.sizes
 	newSystem.rotation = {min = self.rotation.min, max = self.rotation.max}
+	newSystem.mode = self.mode
 	return newSystem
 end
 
@@ -96,9 +99,12 @@ function Particle:getOffset()
 end
 
 function Particle:setSizes(table)
-	for i,v in pairs(table) do
-		table[i] = v * 2
+	if self.mode == 32 then
+		for i,v in pairs(table) do
+			table[i] = v * 2
+		end
 	end
+	self.sizes = table
 	self.p:set_sizes(table)
 end
 
@@ -118,17 +124,34 @@ function Particle:setColors(table)
 end
 
 function Particle:setTexture(img, x, y)
-	if x == nil then
-		self.surfaceRotated:clear()
-		self.surfaceRotated:drawOn()
-		img.s:draw_from()
-		local angle = math.random() * (self.rotation.max - self.rotation.min) + self.rotation.min
-		drystal.draw_sprite({x=0,y=0,w=64,h=64},16,16,{angle = angle, wfactor = 0.5, hfactor = 0.5})
-		self.p:set_texture(self.surfaceRotated.s, 0, 0)
-		EasyLD.surface:drawOnScreen()
+	if type(img) ~= "string" then
+		self.img = img
+		if self.mode == 32 then
+			self.surfaceRotated:clear()
+			self.surfaceRotated:drawOn()
+			img.s:draw_from()
+			EasyLD.camera:push()
+			EasyLD.camera:reset()
+			local angle = math.random() * (self.rotation.max - self.rotation.min) + self.rotation.min
+			drystal.draw_sprite({x=0,y=0,w=64,h=64},16,16,{angle = angle, wfactor = 0.5, hfactor = 0.5})
+			self.p:set_texture(self.surfaceRotated.s, 0, 0)
+			EasyLD.camera:pop()
+			EasyLD.surface:drawOnScreen()
+		else
+			self.p:set_texture(img.s, 0, 0)
+		end
 	else
-		self.surface = drystal.load_surface(img)
-		self.p:set_texture(self.surface, x or 0, y or 0)
+		local surface = drystal.load_surface(img)
+		local surface2 = EasyLD.surface:new(64,64)
+		surface2:drawOn()
+		surface:draw_from()
+		EasyLD.camera:push()
+		EasyLD.camera:reset()
+		drystal.draw_sprite_simple({x=x or 0, y=y or 0, w=64, h=64}, 0, 0)
+		EasyLD.camera:pop()
+		EasyLD.surface:drawOnScreen()
+		self.img = surface2
+		self:setTexture(surface2)
 	end
 end
 
@@ -157,16 +180,18 @@ function Particle:setInitialAcceleration(nb)
 end
 
 function Particle:setRotation(min, max, approx)
+	self.mode = 32
+	self:setSizes(self.sizes)
 	approx = approx or 4
 	self.rotation = {min = min, max = max}
-	self:setTexture(unpack(self.img))
+	self:setTexture(self.img)
 	local time = 1/self:getEmissionRate()
 	self:setEmissionRate(self:getEmissionRate()/approx)
 	self.timer = {}
 	for i = 1, approx-1 do
 		table.insert(self.system, self:clone())
 		self.system[i]:follow(self.follower)
-		self.system[i]:setTexture(unpack(self.img))
+		self.system[i]:setTexture(self.img)
 
 		self.timer[i] = EasyLD.timer.after(time*i, function () self.system[i]:start() end)
 	end

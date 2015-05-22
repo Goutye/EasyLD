@@ -6,10 +6,10 @@ function Particle:initialize(obj, img, x, y, size)
 	self.follower = obj
 	self.size = size or 512
 	if img then
-		if x == nil then
+		if type(img) ~= "string" then
 			self.p = love.graphics.newParticleSystem(img.s, size)
 		else
-			self.p = love.graphics.newParticleSystem(img, size)
+			self.p = love.graphics.newParticleSystem(love.graphics.newImage(img), size)
 		end
 	end
 	self.sizeP = 64
@@ -69,7 +69,6 @@ function Particle:update(dt)
 	self:moveTo(self.follower.x, self.follower.y)
 	self.p:update(dt)
 	self:setDirection(self.angle + self.angleSpeed * dt, self.spread)
-	print(self.angle)
 	local nb = self.p:getCount()
 	if nb > self.size * 0.95 then
 		self.size = self.size *2
@@ -134,7 +133,6 @@ function Particle:setSizes(tab)
 	end
 	local prev, next = 0, 0
 	for i=1,8 do
-		print(t[i])
 		if t[i] == nil then
 			for j = i+1, 8 do
 				if t[j] ~= nil then
@@ -205,7 +203,6 @@ function Particle:setColors(tab)
 	end
 	tab = {}
 	for i,v in ipairs(t) do
-		print(v)
 		table.insert(tab, v.r)
 		table.insert(tab, v.g)
 		table.insert(tab, v.b)
