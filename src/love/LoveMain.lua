@@ -23,5 +23,8 @@ function love.draw()
 	EasyLD:draw()
 
 	love.graphics.setCanvas()
+	EasyLD.camera:push()
+	EasyLD.camera:reset()
 	love.graphics.draw(love.screen, 0, 0)
+	EasyLD.camera:pop()
 end

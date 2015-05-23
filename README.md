@@ -26,16 +26,16 @@ Current features :
 * Surface
 * Screen
 * Postfx
+* Particles
 
 In the side of LÖVE2D :
 ----------------------
 
 * Music (Some stuffs only available in LÖVE2D)
+* Particles timing effects (Colors,Sizes) are approximated by steps of 1/7 of the particle lifetime  
 
 In the side of Drystal :
 ----------------------
-
-* Mouse position (screen to scene) works with scaling
 
 Upcoming stuffs : (Priority order)
 ----------------------
@@ -85,6 +85,11 @@ Examples :
 ---------
 
 In the folder `examples`, you can find some implementations of EasyLD features.  
+
+ * DepthManager  
+ * Screen (with Screen transition)  
+ * Particles (with Camera effects)  
+
 Other examples can be found in my [LD32](https://github.com/Goutye/LD32) game (Github).  
 
 

@@ -56,7 +56,9 @@ function Camera:draw(withoutShake)
 	love.graphics.rotate(-EasyLD.camera.angle)
 	love.graphics.translate(-EasyLD.window.w/2, -EasyLD.window.h/2)
 	love.graphics.translate(-EasyLD.camera.ox - EasyLD.camera.x, -EasyLD.camera.oy - EasyLD.camera.y)
+	love.graphics.translate(EasyLD.window.w/2, EasyLD.window.h/2)
 	love.graphics.scale(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
+	love.graphics.translate(-EasyLD.window.w/2, -EasyLD.window.h/2)
 end
 
 function Camera:actualize(withoutShake)

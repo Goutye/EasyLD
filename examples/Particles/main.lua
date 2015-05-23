@@ -40,6 +40,10 @@ function EasyLD:load()
 end
 
 function EasyLD:preCalcul(dt)
+	return dt
+end
+
+function EasyLD:update(dt)
 	if EasyLD.mouse:isPressed("l") then
 		if self.isStopped then
 			system:start()
@@ -81,11 +85,20 @@ function EasyLD:preCalcul(dt)
 			vPressed = false
 		end
 	end
-	return dt
-end
-
-function EasyLD:update(dt)
-	system.follower:moveTo(EasyLD.mouse:getPosition():get())
+	if EasyLD.keyboard:isPressed("b") then
+		if not bPressed then
+			EasyLD.camera:setMode("elasticout")
+			EasyLD.camera:scaleTo(0.5)
+			EasyLD.camera:setMode("normal")
+			bPressed = true
+		else
+			EasyLD.camera:setMode("elasticout")
+			EasyLD.camera:scaleTo(1)
+			EasyLD.camera:setMode("normal")
+			bPressed = false
+		end
+	end
+	s2.follower:moveTo(EasyLD.mouse:getPosition():get())
 	system:update(dt)
 	s2:update(dt)
 	

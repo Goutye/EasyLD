@@ -102,9 +102,12 @@ function Camera:compute(withoutShake)
 	EasyLD.camera.angle = EasyLD.camera.currentAngle + EasyLD.camera.shakeAngle
 end
 
-function Camera:getPosition()
-	local p = EasyLD.point:new(-EasyLD.camera.ox - EasyLD.camera.currentX, -EasyLD.camera.oy - EasyLD.camera.currentY)
-	return p
+function Camera:getPosition(withShake)
+	if withShake then
+		return EasyLD.point:new(-EasyLD.camera.x, -EasyLD.camera.y)
+	else
+		return EasyLD.point:new(-EasyLD.camera.ox - EasyLD.camera.currentX, -EasyLD.camera.oy - EasyLD.camera.currentY)
+	end
 end
 
 function Camera:shake(vars, duration, typeEase)
