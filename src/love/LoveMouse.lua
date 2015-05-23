@@ -3,10 +3,13 @@ local Mouse = {}
 function Mouse.getPosition()
 	local m = EasyLD.point:new(love.mouse.getPosition())
 	local offset = EasyLD.point:new(EasyLD.window.w/2, EasyLD.window.h/2)
+	local zoom = EasyLD.point:new(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
 	m = m - offset
 	m:rotate(EasyLD.camera.angle, 0, 0)
-	m = m - EasyLD.camera:getPosition(true)
-	m = m / (EasyLD.point:new(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue))
+	local posZoomed = EasyLD.camera:getPosition(true)
+	posZoomed.x, posZoomed.y = posZoomed.x * zoom.x, posZoomed.y * zoom.y
+	m = m - posZoomed
+	m = m / zoom
 	return m + offset
 end
 
