@@ -264,6 +264,20 @@ end
 
 function Particle:setSpinEmitter(angleSpeed)
 	self.angleSpeed = angleSpeed
+	self.spin = angleSpeed ~= 0
+
+	if self.relative and self.spin then
+		self.p:setSpin(-self.angleSpeed)
+	end
+end
+
+function Particle:setRelativeRotation()
+	self.p:setRelativeRotation(true)
+	self.relative = true
+
+	if self.relative and self.spin then
+		self.p:setSpin(-self.angleSpeed)
+	end
 end
 
 return Particle

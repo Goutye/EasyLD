@@ -20,6 +20,7 @@ function Particle:initialize(obj, img, x, y, size)
 	self.sizes = {}
 
 	self.system = {}
+	self.timer = {}
 end
 
 function Particle:start()
@@ -47,7 +48,12 @@ function Particle:clone()
 	newSystem.angleSpeed = self.angleSpeed
 	newSystem.spread = self.spread
 	newSystem.img = self.img
-	newSystem.sizes = self.sizes
+	newSystem.relative = self.relative
+	newSystem.spin = self.spin
+	newSystem.sizes = {}
+	for i,v in pairs(self.sizes) do
+		newSystem.sizes[i] = v
+	end
 	newSystem.rotation = {min = self.rotation.min, max = self.rotation.max}
 	newSystem.mode = self.mode
 	return newSystem
@@ -69,6 +75,9 @@ function Particle:update(dt)
 	self:moveTo(self.follower.x, self.follower.y)
 	self.p:update(dt)
 	self:setDirection(self.angle + self.angleSpeed * dt, self.spread)
+	if self.relative and self.spin then
+		self:setRotation(-self.angle, nil, 1)
+	end
 	for i,v in ipairs(self.system) do
 		v:update(dt)
 	end
@@ -99,7 +108,8 @@ function Particle:getOffset()
 end
 
 function Particle:setSizes(table)
-	if self.mode == 32 then
+	if self.mode == 32 and not self.resizeOk then
+		self.resizeOk = true
 		for i,v in pairs(table) do
 			table[i] = v * 2
 		end
@@ -183,11 +193,11 @@ function Particle:setRotation(min, max, approx)
 	self.mode = 32
 	self:setSizes(self.sizes)
 	approx = approx or 4
-	self.rotation = {min = min, max = max}
+	self.rotation = {min = min, max = max or min}
 	self:setTexture(self.img)
 	local time = 1/self:getEmissionRate()
 	self:setEmissionRate(self:getEmissionRate()/approx)
-	self.timer = {}
+
 	for i = 1, approx-1 do
 		table.insert(self.system, self:clone())
 		self.system[i]:follow(self.follower)
@@ -199,6 +209,42 @@ end
 
 function Particle:setSpinEmitter(angleSpeed)
 	self.angleSpeed = angleSpeed
+	self.spin = angleSpeed ~= 0
+end
+
+function Particle:setRelativeRotation(approx)
+	if #self.system == 0 then
+		self.relative = true
+		approx = approx or math.ceil(self.spread/(math.pi/8))
+		local stepSpread = self.spread/approx
+		local start = self.angle - self.spread/2 + stepSpread/2
+		local time = 1/self:getEmissionRate()
+		self:setEmissionRate(self:getEmissionRate()/approx)
+		
+		local alea = {}
+
+		for i = 1, approx-1 do
+			table.insert(self.system, self:clone())
+			self.system[i]:follow(self.follower)
+			self.system[i]:setDirection(start, stepSpread)
+
+			if i == 1 then
+				self.system[i]:setRotation(-start + stepSpread/2, nil, 1)
+			else
+				self.system[i]:setRotation(-start, nil, 1)
+			end
+
+			start = start + stepSpread
+			local rand = math.random(1, approx-1)
+			while alea[rand] do
+				rand = math.random(1, approx-1)
+			end
+			self.timer[i] = EasyLD.timer.after(time*rand, function () self.system[i]:start() end)
+		end
+
+		self:setDirection(start, stepSpread)
+		self:setRotation(-start - stepSpread/2, nil, 1)
+	end
 end
 
 return Particle
