@@ -1,6 +1,7 @@
 local class = require 'middleclass'
 
-local Particle = class('Particle')
+local MainParticle = require 'Particle'
+local Particle = class('Particle', MainParticle)
 
 function Particle:initialize(obj, img, x, y, size)
 	self.p = drystal.new_system(obj.x, obj.y, size)
@@ -18,6 +19,7 @@ function Particle:initialize(obj, img, x, y, size)
 	self.spread = 0
 	self.mode = 64
 	self.sizes = {}
+	self.duration = 0
 
 	self.system = {}
 	self.timer = {}
@@ -25,6 +27,7 @@ end
 
 function Particle:start()
 	self.p:start()
+	self:startEmissionEasing()
 end
 
 function Particle:emit(nb)
@@ -65,10 +68,6 @@ function Particle:draw()
 	for i,v in ipairs(self.system) do
 		v:draw()
 	end
-end
-
-function Particle:follow(obj)
-	self.follower = obj
 end
 
 function Particle:update(dt)
@@ -165,8 +164,13 @@ function Particle:setTexture(img, x, y)
 	end
 end
 
-function Particle:setEmissionRate(nb)
-	self.p:set_emission_rate(nb)
+function Particle:setEmissionRate(nb, easing)
+	if type(nb) == "number" then
+		self.p:set_emission_rate(math.floor(nb))
+		self.rate = math.floor(nb)
+	else
+		self:setEmissionRateEasing(nb, easing)
+	end
 end
 
 function Particle:getEmissionRate()

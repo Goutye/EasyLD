@@ -1,6 +1,7 @@
 local class = require 'middleclass'
 
-local Particle = class('Particle')
+local MainParticle = require 'Particle'
+local Particle = class('Particle', MainParticle)
 
 function Particle:initialize(obj, img, x, y, size)
 	self.follower = obj
@@ -19,12 +20,14 @@ function Particle:initialize(obj, img, x, y, size)
 	self.angleSpeed = 0
 	self.angle = 0
 	self.spread = 0
+	self.duration = 0
 end
 
 function Particle:start()
 	--self.p:start()
 	self.pause = false
 	self:setEmissionRate(self.rate)
+	self:startEmissionEasing()
 end
 
 function Particle:emit(nb)
@@ -59,10 +62,6 @@ end
 
 function Particle:draw()
 	love.graphics.draw(self.p)
-end
-
-function Particle:follow(obj)
-	self.follower = obj
 end
 
 function Particle:update(dt)
@@ -230,12 +229,19 @@ function Particle:setTexture(img, x, y)
 	end
 end
 
-function Particle:setEmissionRate(nb)
+function Particle:setEmissionRate(nb, ease)
 	if not self.pause then
-		self.p:setEmissionRate(nb)
+		if type(nb) == "number" then
+			self.p:setEmissionRate(math.floor(nb))
+		else
+			self:setEmissionRateEasing(nb, ease)
+		end
 	end
-	if nb > 0 then
-		self.rate = nb
+	if type(nb) == "number" and nb > 0 then
+		self.rate = math.floor(nb)
+	elseif type(nb) == "table" then
+		self:setEmissionRateEasing(nb, ease)
+		self.p:setEmissionRate(0)
 	end
 end
 
