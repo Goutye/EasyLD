@@ -31,6 +31,7 @@ function EasyLD:load()
 					[1] = 16})
 	s2 = system:clone()
 	s2:setTexture(surf)
+	s2:setEmissionRate(200)
 	s2:setDirection(0, math.pi)
 	s2:setSpinEmitter(math.pi/4)
 	--s2:setRotation(0,math.pi/2, 8)
@@ -55,7 +56,14 @@ function EasyLD:update(dt)
 		end
 	end
 	if EasyLD.mouse:isPressed("r") then
-		system:emit(40)
+		system:emit(70)
+	end
+	if EasyLD.mouse:isPressed("m") then
+		if s2:getOffset().x == 300 then
+			s2:setOffset(0,0)
+		else
+			s2:setOffset(300,0)
+		end
 	end
 	if EasyLD.keyboard:isPressed("x") then
 		EasyLD.camera:tilt(EasyLD.vector:new(1,1), 50, 3)

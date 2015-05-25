@@ -95,11 +95,12 @@ function Particle:setDirection(angle, spread)
 end
 
 function Particle:setOffset(x, y)
-	self.p:setOffset(x, y)
+	self.p:setAreaSpread('uniform' , x, y)
 end
 
 function Particle:getOffset()
-	return EasyLD.point:new(self.p:getOffset())
+	local _,x,y = self.p:getAreaSpread()
+	return EasyLD.point:new(x,y)
 end
 
 function Particle:setSizes(tab)
