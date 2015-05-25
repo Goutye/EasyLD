@@ -28,6 +28,9 @@ function Particle:start()
 	self.pause = false
 	self:setEmissionRate(self.rate)
 	self:startEmissionEasing()
+	if self.tableEmit ~= nil then
+		self:startTimedEmit()
+	end
 end
 
 function Particle:emit(nb)
