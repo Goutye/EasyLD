@@ -27,6 +27,7 @@ function Particle:startEmissionEasing()
 	local prev = 0
 	local nbTransition = 1
 	local keyTable = {}
+	print(self.emissionTable)
 	for i,v in pairs(self.emissionTable) do
 		j = 1
 		while j <= #keyTable and i >= keyTable[j] do j = j + 1 end
@@ -77,6 +78,19 @@ function Particle:startTimedEmit()
 		end
 	end
 	self.timerEmit = timer
+end
+
+function Particle:stopTimer()
+	for i,v in ipairs(self.timerEmit or {}) do
+		EasyLD.timer.cancel(v)
+	end
+	self.timerEdit = nil
+
+	if self.timerEmission then
+		self.timerEmission:stop()
+		self.timerEmission = nil
+		EasyLD.flux.clear(self, {rate = "rate"})
+	end
 end
 
 return Particle

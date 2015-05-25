@@ -27,18 +27,31 @@ end
 
 function Particle:start()
 	self.p:start()
-	self:startEmissionEasing()
-	if self.tableEmit ~= nil then
+	if self.emissionTable then
+		self:startEmissionEasing()
+	end
+	if self.tableEmit then
 		self:startTimedEmit()
+	end
+	for i,v in ipairs(self.system) do
+		v:start()
 	end
 end
 
 function Particle:emit(nb)
-	self.p:emit(nb or 1)
+	local emitPerSystem = math.floor(nb / (1 + #self.system))
+	self.p:emit(emitPerSystem)
+	for i,v in ipairs(self.system) do
+		v.p:emit(emitPerSystem)
+	end
 end
 
 function Particle:stop()
+	self:stopTimer()
 	self.p:stop()
+	for i, v in ipairs(self.system) do
+		v.p:stop()
+	end
 end
 
 function Particle:reset()
@@ -169,7 +182,11 @@ end
 
 function Particle:setEmissionRate(nb, easing)
 	if type(nb) == "number" then
-		self.p:set_emission_rate(math.floor(nb))
+		local emissionPerSystem = nb / (1 + #self.system)
+		self.p:set_emission_rate(math.floor(emissionPerSystem))
+		for i,v in ipairs(self.system) do
+			v:setEmissionRate(math.floor(emissionPerSystem))
+		end
 		self.rate = math.floor(nb)
 	else
 		self:setEmissionRateEasing(nb, easing)

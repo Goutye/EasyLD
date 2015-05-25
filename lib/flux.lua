@@ -292,9 +292,12 @@ end
 
 
 function flux:clear(obj, vars)
-	for t in pairs(self[obj]) do
+	for t in pairs(self[obj] or {}) do
 		if t.inited then
-			for k in pairs(vars) do t.vars[k] = nil end
+			for k in pairs(vars) do 
+				t.vars[k] = nil
+				t._oncomplete = nil
+			end
 		end
 	end
 end

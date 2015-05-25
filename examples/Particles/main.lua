@@ -33,13 +33,13 @@ function EasyLD:load()
 	s2:setTexture(surf)
 	s2:setDuration(10)
 	s2:setEmissionRate({[0] = 10, [0.5] = 200, [0.7] = 200, [1] = 10}, {"quadinout", "linear", "bounceout"})
-	s2:setTimedEmit({[0] = 51, [0.5] = 50, [1] = 100})
+	s2:setTimedEmit({[0] = 51, [0.5] = 50, [1] = 50})
 	s2:setDirection(0, math.pi)
 	s2:setSpinEmitter(math.pi/4)
 	--s2:setRotation(0,math.pi/2, 8)
 	s2:setRelativeRotation(9)
 	s2:start()
-	self.isStopped = true
+	self.isStopped = false
 	font = EasyLD.font:new("assets/visitor.ttf")
 end
 
@@ -50,10 +50,10 @@ end
 function EasyLD:update(dt)
 	if EasyLD.mouse:isPressed("l") then
 		if self.isStopped then
-			system:start()
+			s2:start()
 			self.isStopped = false
 		else
-			system:stop()
+			s2:stop()
 			self.isStopped = true
 		end
 	end
