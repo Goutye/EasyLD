@@ -21,15 +21,17 @@ local function _getX_Y(x, y, text, font, box, modeW, modeH)
 		x,y = x + box.wP.x - dir.x, y + box.wP.y - dir.y
 	end
 
+	local nbLines = 1
+	for l in string.gmatch(text, "\n") do nbLines = nbLines + 1 end
 	if modeH == "center" then
-		local w = font:getHeight(text)/2
+		local w = font:getHeight(text)*nbLines/2
 		local dir = box.hP:copy()
 		dir:normalize()
 		dir = dir * w
 
 		x,y = x + box.hP.x/2-dir.x, y + box.hP.y/2 -dir.y
 	elseif modeH == "bottom" then
-		local w = font:getHeight(text)
+		local w = font:getHeight(text)*nbLines
 		local dir = box.hP:copy()
 		dir:normalize()
 		dir = dir * w

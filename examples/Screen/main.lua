@@ -45,7 +45,7 @@ function EasyLD:draw()
 	font:print("EasyLD:draw", 16, box, "center", "center", EasyLD.color:new(255,255,255))
 	font:print([[Left click: Action
 Middle click: Change of Transition (]]..self.typeEase[current]..[[)
-Right click: Change of screen]], 20, EasyLD.box:new(0, EasyLD.window.h-100, 0, 60), nil, "bottom", EasyLD.color:new(255,255,255))
+Right click: Change of screen]], 20, EasyLD.box:new(0, EasyLD.window.h-60, 0, 60), nil, "bottom", EasyLD.color:new(255,255,255))
 end
 
 --[[

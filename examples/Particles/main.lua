@@ -112,5 +112,6 @@ function EasyLD:draw()
 Right click: Emit 20 particles
 X: tilt
 C: Move camera
-V: Rotate camera]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
+V: Rotate camera
+B: Zoom]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
 end
