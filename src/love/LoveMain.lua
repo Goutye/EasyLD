@@ -21,6 +21,7 @@ function love.draw()
 		EasyLD.screen:draw()
 	end
 	EasyLD:draw()
+	EasyLD.graphics:setColor()
 
 	love.graphics.setCanvas()
 	EasyLD.camera:push()

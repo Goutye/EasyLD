@@ -27,7 +27,6 @@ function Particle:startEmissionEasing()
 	local prev = 0
 	local nbTransition = 1
 	local keyTable = {}
-	print(self.emissionTable)
 	for i,v in pairs(self.emissionTable) do
 		j = 1
 		while j <= #keyTable and i >= keyTable[j] do j = j + 1 end

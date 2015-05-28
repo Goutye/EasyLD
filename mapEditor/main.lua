@@ -5,11 +5,14 @@ EasyLD = require 'EasyLD'
 
 local utf8 = require 'utf8'
 
+local Collide = require 'CollideEfficiency'
+
 mouse = nil
 keyboard = nil
 
 --HERE THE USER CAN EDIT THE FOLLWING VAR
 srcTileset = nil
+srcTilesetCollide = "assets/tilesets/collide.png"
 srcMap = nil
 --END OF THE EDITION POSSIBLE BY THE USER
 
@@ -35,6 +38,11 @@ mapNbTilesY = 20
 mapBeginX = 0
 mapBeginY = 0
 mapBox = {}
+
+modeType = {"map", "collide"}
+mode = "map"
+
+mapCollide = {}
 
 buttonBox = {x = WINDOW_WIDTH-20, y = 0, w = 20, h = 80}
 widthPlusBox = {x = WINDOW_WIDTH-20, y = 0, w = 20, h = 20}
@@ -77,7 +85,7 @@ function EasyLD:load()
 		srcTileset = "assets/tilesets/tileset.png"
 	end
 	if srcMap == nil then
-		srcMap = "assets/maps/0.map"
+		srcMap = "assets/maps/w1.map"
 	end
 	tl = EasyLD.tileset:new(srcTileset, 32)
  	tilesetWidth = tilesetNbTilesX * tl.tileSize
@@ -88,6 +96,13 @@ function EasyLD:load()
 		map = EasyLD.map:new(srcMap, tl)
 	else
 		map = EasyLD.map:generate(10,10, tl)
+	end
+
+	for i = 0, map.w-1 do
+		mapCollide[i] = {}
+		for j = 0, map.h-1 do
+			mapCollide[i][j] = 0
+		end
 	end
 
 	mapBox.x, mapBox.y = 0, tilesetNbTilesY * tl.tileSizeY
@@ -168,12 +183,16 @@ function EasyLD:update(dt)
 		if EasyLD.collide:AABB_point(buttonBox, pos) then
 			if EasyLD.collide:AABB_point(widthPlusBox, pos) then
 				map:resize(1,0)
+				resize(mapCollide, 1, 0)
 			elseif EasyLD.collide:AABB_point(widthMinusBox, pos) then
 				map:resize(-1,0)
+				resize(mapCollide, -1, 0)
 			elseif EasyLD.collide:AABB_point(heightPlusBox, pos) then
 				map:resize(0,1)
+				resize(mapCollide, 0, 1)
 			elseif EasyLD.collide:AABB_point(heightMinusBox, pos) then
 				map:resize(0,-1)
+				resize(mapCollide, 0, -1)
 			end
 			currentTimeBeforeIncr = 0
 		end
@@ -275,6 +294,27 @@ function EasyLD:update(dt)
 		end
 	end
 
+	if keyboard:isPressed("m") then
+		if mode == modeType[1] then
+			mode = modeType[2]
+			tl = EasyLD.tileset:new(srcTilesetCollide, 32)
+			tilesetWidth = tilesetNbTilesX * tl.tileSize
+		 	tilesetBox.x, tilesetBox.y = 0, 0
+		 	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
+		 	print("mode2")
+		else
+			mode = modeType[1]
+			tl = EasyLD.tileset:new(srcTileset, 32)
+			tilesetWidth = tilesetNbTilesX * tl.tileSize
+		 	tilesetBox.x, tilesetBox.y = 0, 0
+		 	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
+		end
+	end
+
+	if keyboard:isPressed("c") then
+		Collide:cutInBox(mapCollide, map)
+	end
+
 	mouse:reset()
 	keyboard:reset()
 end
@@ -282,11 +322,18 @@ end
 function EasyLD:draw()
 	EasyLD.graphics:setColor()
 	map:draw(mapBox.x, mapBox.y, mapNbTilesX, mapNbTilesY, mapBeginX, mapBeginY)
+	if mode == modeType[2] then
+		for i = mapBeginX, math.min(mapNbTilesX+mapBeginX, map.w-1) - mapBeginX do
+			for j = mapBeginY, math.min(mapNbTilesY+mapBeginY, map.h-1) - mapBeginY do
+				tl:drawTile(mapCollide[i][j], mapBox.x + i * tl.tileSize, mapBox.y + j * tl.tileSizeY)
+			end
+		end
+	end
 	tl:draw(tilesetBox.x, tilesetBox.y, tilesetNbTilesX, tilesetNbTilesY, tilesetBeginX, tilesetBeginY)
 
 	drawTileSelected()
 	inputText:draw()
-	--love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
+	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
 end
 
 function drawTileSelected()
@@ -296,7 +343,7 @@ function drawTileSelected()
 		and y < tilesetNbTilesY * tl.tileSizeY + tilesetBox.y then
 		EasyLD.graphics:rectangle("line", EasyLD.box:new(x, y, tl.tileSize, tl.tileSizeY), EasyLD.color:new(200,0,0))
 	end
-
+	
 	font:load(16, EasyLD.color:new(255,255,255))
 	EasyLD.font.print("W:"..map.w, 1, 16, EasyLD.box:new(WINDOW_WIDTH-100, 10, 70, 30), "right")
 	EasyLD.font.print("H:"..map.h, 1, 16, EasyLD.box:new(WINDOW_WIDTH-100, 50, 70, 30), "right")
@@ -336,7 +383,11 @@ function putTile(pos)
 	local x, y = math.floor((pos.x - mapBox.x) / tl.tileSize) + mapBeginX, math.floor((pos.y - mapBox.y) / tl.tileSize) + mapBeginY
 
 	if x < map.w and y < map.h and x >= 0 and y >= 0 then
-		map:putTile(tileSelected, x, y)
+		if mode == modeType[2] then
+			mapCollide[x][y] = tileSelected
+		else
+			map:putTile(tileSelected, x, y)
+		end
 	end
 end
 
@@ -361,5 +412,19 @@ function changeTilesetNB(x, y)
 		mapBox.h = mapBox.h - y * tl.tileSize
 		mapNbTilesY = mapNbTilesY - y
 		tilesetBox.h = tilesetBox.h + y * tl.tileSize
+	end
+end
+
+function resize(tab, x, y)
+	if x > 0 then
+		tab[map.w - 1] = {}
+		for i = 0, map.h - 1 do
+			tab[map.w - 1][i] = 0
+		end
+	end
+	if y > 0 then
+		for i = 0, map.w - 1 do
+			tab[i][map.h-1] = 0 
+		end
 	end
 end
