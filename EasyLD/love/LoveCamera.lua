@@ -1,17 +1,25 @@
 local Camera = {}
 
-function Camera:scale(scale, scaleY)
-	EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
-
-	if scaleY ~= nil then
-		EasyLD.camera.scaleValueY = (EasyLD.camera.scaleValueY or 1) + scaleY
+function Camera:scale(scale, scaleY, time, ...)
+	if EasyLD.camera.mode ~= "normal" then
+		local value = {scaleValue = EasyLD.camera.scaleValue + scale}
+		if scaleY then value.scaleValueY = (EasyLD.camera.scaleValue or 1) + scaleY
+			if EasyLD.camera.scaleValueY == nil then EasyLD.camera.scaleValueY = EasyLD.camera.scaleValue end
+		end
+		local tween = EasyLD.flux.to(EasyLD.camera, time or 0.8, value, ...):ease(EasyLD.camera.mode)
 	else
-		EasyLD.camera.scaleValueY = nil
-	end
+		EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
 
-	if EasyLD.camera.auto then
-		EasyLD.camera:compute()
-		love.graphics.scale(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
+		if scaleY ~= nil then
+			EasyLD.camera.scaleValueY = (EasyLD.camera.scaleValueY or 1) + scaleY
+		else
+			EasyLD.camera.scaleValueY = nil
+		end
+
+		if EasyLD.camera.auto then
+			EasyLD.camera:compute()
+			love.graphics.scale(EasyLD.camera.scaleValue, EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
+		end
 	end
 end
 

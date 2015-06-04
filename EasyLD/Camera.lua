@@ -32,8 +32,8 @@ function Camera:setAuto(bool)
 	EasyLD.camera.auto = bool
 end
 
-function Camera:scaleTo(scale, scaleY)
-	EasyLD.camera:scale(scale - EasyLD.camera.scaleValue, (scaleY or scale) - (Camera.scaleValueY or Camera.scaleValue))
+function Camera:scaleTo(scale, scaleY, time, ...)
+	EasyLD.camera:scale(scale - EasyLD.camera.scaleValue, (scaleY or scale) - (Camera.scaleValueY or Camera.scaleValue), time, ...)
 end
 
 function Camera:scale(scale, scaleY)

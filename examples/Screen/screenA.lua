@@ -1,4 +1,4 @@
-local class = require 'middleclass'
+local class = require 'EasyLD.lib.middleclass'
 
 local IScreen = require 'EasyLD.IScreen'
 local screenA = class('screenA', IScreen)

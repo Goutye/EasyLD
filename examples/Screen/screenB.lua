@@ -1,4 +1,4 @@
-local class = require 'middleclass'
+local class = require 'EasyLD.lib.middleclass'
 
 local IScreen = require 'EasyLD.IScreen'
 local screenB = class('screenB', IScreen)
@@ -9,6 +9,7 @@ function screenB:initialize()
 	self.area:moveTo(300,300)
 	self.area:attach(point)
 	sign = -1
+	self.scale = 1
 end
 
 function screenB:preCalcul(dt)
@@ -21,6 +22,7 @@ function screenB:update(dt)
 																							sign = - sign 
 																							self.timer = nil
 																						end)
+
 	end
 end
 
