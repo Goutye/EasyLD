@@ -1,12 +1,11 @@
-package.path = package.path .. ';../src/?.lua'
-package.path = package.path .. ';../lib/?.lua'
+package.path = package.path .. ';../?.lua'
 
 ezld = require 'EasyLD'
-Area = require 'Area'
-Point = require 'Point'
-Vector = require 'Vector'
+Area = require 'EasyLD.Area'
+Point = require 'EasyLD.Point'
+Vector = require 'EasyLD.Vector'
 
-require 'table_io'
+require 'EasyLD.lib.table_io'
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -53,8 +52,8 @@ function EasyLD:load()
 	pointChest = EasyLD.point:new(25,35)
 	feet = EasyLD.point:new(20,60)
 	feet2 = EasyLD.point:new(30,60)
-	feet:attachImg(EasyLD.image:new("assets/feet.png"), "center")
-	feet2:attachImg(EasyLD.image:new("assets/feet.png"), "center")
+	--feet:attachImg(EasyLD.image:new("assets/feet.png"), "center")
+	--feet2:attachImg(EasyLD.image:new("assets/feet.png"), "center")
 	line = EasyLD.segment:new(EasyLD.point:new(25,50), feet:copy())
 	line2 = EasyLD.segment:new(EasyLD.point:new(25,50), feet2:copy())
 	areaJambe1 = EasyLD.area:new(line)
@@ -65,9 +64,9 @@ function EasyLD:load()
 	areaJambe2:follow(point)
 
 	hand = EasyLD.point:new(5, 35)
-	hand:attachImg(EasyLD.image:new("assets/handfront.png"), "center")
+	--hand:attachImg(EasyLD.image:new("assets/handfront.png"), "center")
 	hand2 = EasyLD.point:new(45, 35)
-	hand2:attachImg(EasyLD.image:new("assets/hand.png"), "center")
+	--hand2:attachImg(EasyLD.image:new("assets/hand.png"), "center")
 	pointWrist = EasyLD.point:new(10, 35)
 	pointWrist2 = EasyLD.point:new(40, 35)
 	areaWrist = EasyLD.area:new(hand)
@@ -83,9 +82,9 @@ function EasyLD:load()
 	
 	pointGlobal = EasyLD.point:new(0,0)
 	box = EasyLD.box:new(10,20, 30, 30)
-	box:attachImg(EasyLD.image:new("assets/chest.png"), "center")
+	--box:attachImg(EasyLD.image:new("assets/chest.png"), "center")
 	tete = EasyLD.point:new(25,10)
-	tete:attachImg(EasyLD.image:new("assets/head.png"), "center")
+	--tete:attachImg(EasyLD.image:new("assets/head.png"), "center")
 	areaGlobal = EasyLD.area:new(pointGlobal)
 	areaGlobal:attach(tete)
 	areaGlobal:attach(box)

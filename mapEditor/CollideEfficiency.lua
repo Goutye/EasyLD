@@ -1,8 +1,16 @@
 local Collide = {}
 
-function Collide:cutInBox(tab, map)
+function Collide:cutInBox(mapCollide, map)
 	local boxes = {}
 	local isCollide = true
+	local tab = {}
+
+	for i = 0, #mapCollide do
+		tab[i] = {}
+		for j = 0, #mapCollide[i] do
+			tab[i][j] = mapCollide[i][j]
+		end
+	end
 
 	for startJ = 0, map.h-1 do
 		for startI = 0, map.w-1 do

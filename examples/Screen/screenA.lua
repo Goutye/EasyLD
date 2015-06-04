@@ -1,6 +1,6 @@
 local class = require 'middleclass'
 
-local IScreen = require 'IScreen'
+local IScreen = require 'EasyLD.IScreen'
 local screenA = class('screenA', IScreen)
 
 function screenA:initialize()

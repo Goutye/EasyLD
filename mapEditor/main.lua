@@ -1,9 +1,8 @@
-package.path = package.path .. ';../src/?.lua'
-package.path = package.path .. ';../lib/?.lua'
+package.path = package.path .. ';../?.lua'
 
 EasyLD = require 'EasyLD'
 
-local utf8 = require 'utf8'
+local utf8 = require 'EasyLD.lib.utf8'
 
 local Collide = require 'CollideEfficiency'
 
