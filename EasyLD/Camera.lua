@@ -32,6 +32,21 @@ function Camera:setAuto(bool)
 	EasyLD.camera.auto = bool
 end
 
+function Camera:clean()
+	EasyLD.camera.scaleValue = 1
+	EasyLD.camera.scaleValueY = nil
+	EasyLD.camera.currentX = 0
+	EasyLD.camera.currentY = 0
+	EasyLD.camera.currentAngle = 0
+	EasyLD.camera.dx = 0
+	EasyLD.camera.dy = 0
+	EasyLD.camera.ox = 0
+	EasyLD.camera.oy = 0
+	EasyLD.camera.shakeX = 0
+	EasyLD.camera.shakeY = 0
+	EasyLD.camera.shakeAngle = 0
+end
+
 function Camera:scaleTo(scale, scaleY, time, ...)
 	EasyLD.camera:scale(scale - EasyLD.camera.scaleValue, (scaleY or scale) - (Camera.scaleValueY or Camera.scaleValue), time, ...)
 end
