@@ -7,6 +7,8 @@ function Camera:scale(scale, scaleY, time, ...)
 			if EasyLD.camera.scaleValueY == nil then EasyLD.camera.scaleValueY = EasyLD.camera.scaleValue end
 		end
 		local tween = EasyLD.flux.to(EasyLD.camera, time or 0.8, value, ...):ease(EasyLD.camera.mode)
+		table.insert(EasyLD.camera.timer, tween)
+		return tween
 	else
 		EasyLD.camera.scaleValue = EasyLD.camera.scaleValue + scale
 
@@ -26,6 +28,8 @@ end
 function Camera:move(dx, dy, time, ...)
 	if EasyLD.camera.mode ~= "normal" then
 		local tween = EasyLD.flux.to(EasyLD.camera, time or 0.8, {currentX = EasyLD.camera.currentX + dx, currentY = EasyLD.camera.currentY + dy}, ...):ease(EasyLD.camera.mode)
+		table.insert(EasyLD.camera.timer, tween)
+		return tween
 	else
 		EasyLD.camera.currentX = EasyLD.camera.currentX + dx
 		EasyLD.camera.currentY = EasyLD.camera.currentY + dy
@@ -45,6 +49,8 @@ function Camera:rotate(angle, ox, oy, time, ...)
 
 	if EasyLD.camera.mode ~= "normal" then
 		local tween = EasyLD.flux.to(EasyLD.camera, time or 0.8, {currentAngle = EasyLD.camera.currentAngle + angle}, ...):ease(EasyLD.camera.mode)
+		table.insert(EasyLD.camera.timer, tween)
+		return tween
 	else
 		EasyLD.camera.currentAngle = EasyLD.camera.currentAngle + angle
 

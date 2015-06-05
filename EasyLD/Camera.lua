@@ -24,6 +24,8 @@ Camera.mode = "normal"
 Camera.auto = false
 Camera.shakeDuration = 0
 
+Camera.timer = {}
+
 function Camera:setMode(mode)
 	EasyLD.camera.mode = mode
 end
@@ -45,10 +47,16 @@ function Camera:clean()
 	EasyLD.camera.shakeX = 0
 	EasyLD.camera.shakeY = 0
 	EasyLD.camera.shakeAngle = 0
+
+	for k,v in pairs(EasyLD.camera.timer) do
+		v:stop()
+	end
+
+	EasyLD.camera.timer = {}
 end
 
 function Camera:scaleTo(scale, scaleY, time, ...)
-	EasyLD.camera:scale(scale - EasyLD.camera.scaleValue, (scaleY or scale) - (Camera.scaleValueY or Camera.scaleValue), time, ...)
+	return EasyLD.camera:scale(scale - EasyLD.camera.scaleValue, (scaleY or scale) - (Camera.scaleValueY or Camera.scaleValue), time, ...)
 end
 
 function Camera:scale(scale, scaleY)
@@ -56,7 +64,7 @@ function Camera:scale(scale, scaleY)
 end
 
 function Camera:moveTo(x, y, time, ...)
-	EasyLD.camera:move(x - EasyLD.camera.currentX, y - EasyLD.camera.currentY, time, ...)
+	return EasyLD.camera:move(x - EasyLD.camera.currentX, y - EasyLD.camera.currentY, time, ...)
 end
 
 function Camera:move(x, y)
@@ -64,7 +72,7 @@ function Camera:move(x, y)
 end
 
 function Camera:rotateTo(angle, ox, oy, time, ...)
-	EasyLD.camera:rotate(angle - EasyLD.camera.currentAngle, ox, oy, time, ...)
+	return EasyLD.camera:rotate(angle - EasyLD.camera.currentAngle, ox, oy, time, ...)
 end
 
 function Camera:rotate(angle, ox, oy)
