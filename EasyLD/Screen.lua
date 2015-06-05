@@ -58,8 +58,10 @@ end
 
 function Screen:draw()
 	EasyLD.screen.current:draw()
+	EasyLD.camera:pushAndReset()
 	EasyLD.screen.box.c.a = EasyLD.screen.alpha
 	EasyLD.screen.box:draw()
+	EasyLD.camera:pop()
 	if EasyLD.screen.transitionStart then
 		EasyLD.screen:transition("postfx")
 	end

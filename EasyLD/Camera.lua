@@ -172,4 +172,9 @@ function Camera:makeShake(vars)
 	end
 end
 
+function Camera:pushAndReset()
+	EasyLD.camera:push()
+	EasyLD.camera:reset()
+end
+
 return Camera
