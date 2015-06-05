@@ -37,7 +37,8 @@ local function newEntry(time, callback, update, ...)
 		callback = callback,
 		args = {...},
 		running = 0,
-		update = update
+		update = update,
+		pause = false
 	}
 	entries[entry] = entry
 	return entry
@@ -80,6 +81,14 @@ function cron.reset()
 	entries = {}
 end
 
+function cron.pause(id)
+	entries[id].pause = true
+end
+
+function cron.resume(id)
+	entries[id].pause = false
+end
+
 function cron.cancel(id)
 	if id ~= nil then
 		entries[id] = nil
@@ -102,7 +111,9 @@ function cron.update(dt)
 	local expired = {}
 
 	for _, entry in pairs(entries) do
-		if entry:update(dt, runningTime) then table.insert(expired,entry) end
+		if not entry.pause then
+			if entry:update(dt, runningTime) then table.insert(expired,entry) end
+		end
 	end
 
 	for i=1, #expired do entries[expired[i]] = nil end
