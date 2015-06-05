@@ -55,6 +55,10 @@ function Area:moveTo(x, y)
 	self:translate(dx, dy)
 end
 
+function Area:move(dx, dy, mode)
+	self:translate(dx, dy, mode)
+end
+
 function Area:translate(dx, dy, mode)
 	local vx, vy
 
