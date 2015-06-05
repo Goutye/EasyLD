@@ -47,6 +47,8 @@ function Camera:clean()
 	EasyLD.camera.shakeX = 0
 	EasyLD.camera.shakeY = 0
 	EasyLD.camera.shakeAngle = 0
+	EasyLD.camera.mode = "normal"
+	EasyLD.camera.auto = false
 
 	for k,v in pairs(EasyLD.camera.timer) do
 		v:stop()
