@@ -88,8 +88,10 @@ end
 function Camera:update(dt)
 	if EasyLD.camera.follower ~= nil then
 		local f = EasyLD.camera.follower
-		EasyLD.camera.ox = - f.x - EasyLD.window.w/2/EasyLD.camera.scaleValue
-		EasyLD.camera.oy = - f.y - EasyLD.window.h/2/(EasyLD.camera.scaleValueY or EasyLD.camera.scaleValue)
+		local mode = self.mode
+		self.mode = "normal"
+		self:moveTo(f.x - EasyLD.window.w/2, f.y - EasyLD.window.h/2)
+		self.mode = mode
 	end
 	if EasyLD.camera.shakeDuration > 0 then
 		EasyLD.camera.shakeDuration = EasyLD.camera.shakeDuration - dt
