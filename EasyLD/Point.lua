@@ -24,9 +24,9 @@ function Point:initialize(x, y, collide, color)
 	self.c = color or EasyLD.color:new(255,255,255)
 	self.angle = 0
 	if collide ~= nil then
-		self.collide = collide
+		self.checkCollide = collide
 	else
-		self.collide = false
+		self.checkCollide = false
 	end
 end
 
@@ -83,7 +83,7 @@ function Point:dot(v)
 end
 
 function Point:draw()
-	if self.collide then
+	if self.checkCollide then
 		if self.img == nil then
 			EasyLD.graphics:point(self, self.c)
 		else
@@ -131,35 +131,35 @@ end
 
 --EasyLD.collide functions
 function Point:collide(area)
-	return area:collidePoint(self) and self.collide
+	return area:collidePoint(self) and self.checkCollide
 end
 
 function Point:collideArea(area)
-	return area:collidePoint(self) and self.collide
+	return area:collidePoint(self) and self.checkCollide
 end
 
 function Point:collidePolygon(poly)
-	return EasyLD.collide:Polygon_point(poly, self) and self.collide
+	return EasyLD.collide:Polygon_point(poly, self) and self.checkCollide
 end
 
 function Point:collideBox(b)
 	if b.angle == 0 then
-		return EasyLD.collide:AABB_point(b, self) and self.collide
+		return EasyLD.collide:AABB_point(b, self) and self.checkCollide
 	else
-		return EasyLD.collide:OBB_point(b, self) and self.collide
+		return EasyLD.collide:OBB_point(b, self) and self.checkCollide
 	end
 end
 
 function Point:collideCircle(c)
-	return EasyLD.collide:Circle_point(c, self) and self.collide
+	return EasyLD.collide:Circle_point(c, self) and self.checkCollide
 end
 
 function Point:collideSegment(s)
-	return EasyLD.collide:Segment_point(s, self) and self.collide
+	return EasyLD.collide:Segment_point(s, self) and self.checkCollide
 end
 
 function Point:collidePoint(p)
-	return p.x == self.x and p.y == self.y and self.collide
+	return p.x == self.x and p.y == self.y and self.checkCollide
 end
 
 return Point
