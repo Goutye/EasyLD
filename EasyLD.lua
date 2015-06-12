@@ -98,7 +98,7 @@ end
 
 local function loadAPI(name)
 	if name == "Drystal" then
-		drystal = require 'EasyLD.drystal'
+		drystal = require 'drystal'
 		require 'EasyLD.drystal.DrystalMain'
 		require 'EasyLD.drystal.DrystalKeyboard'
 		loadAdapterMouse(require 'EasyLD.drystal.DrystalMouse')
