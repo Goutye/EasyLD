@@ -20,7 +20,9 @@ end
 function Map:initialize(src, tileset, noLoad)
 	self.src = src
 	self.tileset = tileset
+	self.tileCollideBoxes = {}
 	self.collideBoxes = {}
+	self.offset = EasyLD.point:new(0,0)
 	if not noLoad then
 		self:load()
 	end
@@ -45,8 +47,9 @@ function Map:load()
 
 	local nbBoxes = io.read("*number") or 0
 	for i = 1, nbBoxes do
-		table.insert(self.collideBoxes, EasyLD.box:new(io.read("*number", "*number", "*number", "*number")))
+		table.insert(self.tileCollideBoxes, EasyLD.box:new(io.read("*number", "*number", "*number", "*number")))
 	end
+	self:loadCollideBoxes(self.tileCollideBoxes)
 
 	io.input():close()
 end
@@ -63,8 +66,8 @@ function Map:save()
 
 	--collideBoxes
 
-	io.write("\n" .. #self.collideBoxes .. "\n")
-	for _,box in ipairs(self.collideBoxes) do
+	io.write("\n" .. #self.tileCollideBoxes .. "\n")
+	for _,box in ipairs(self.tileCollideBoxes) do
 		io.write(box.x .. " " .. box.y .. " " .. box.w .. " " .. box.h .. "\n")
 	end
 
@@ -96,7 +99,31 @@ function Map:putTile(id, x, y)
 	self.tiles[x][y] = id
 end
 
+function Map:loadCollideBoxes(boxes)
+	local W,H = self.tileset.tileSize, self.tileset.tileSizeY
+	for _,box in ipairs(boxes) do
+		table.insert(self.collideBoxes, EasyLD.box:new(box.x * W, box.y * H, box.w * W, box.h * H))
+	end
+end
+
+function Map:collide(entityArea)
+	for _,box in ipairs(self.collideBoxes) do
+		if box:collide(entityArea) then
+			return true
+		end
+	end
+
+	return false
+end
+
 function Map:draw(x, y, nbTilesX, nbTilesY, beginX, beginY)
+	if x ~= self.offset.x or y ~= self.offset.y then
+		for _,box in ipairs(self.collideBoxes) do
+			box:translate(x - self.offset.x, y - self.offset.y)
+		end
+		self.offset.x = x
+		self.offset.y = y
+	end
 	for j = 0, nbTilesY-1 do	
 		for i = 0, nbTilesX-1 do
 			if i + beginX < self.w and j + beginY < self.h then

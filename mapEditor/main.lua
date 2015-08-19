@@ -81,7 +81,7 @@ function EasyLD:load()
 	keyboard = EasyLD.keyboard
 
 	if srcTileset == nil then
-		srcTileset = "assets/tilesets/tileset.png"
+		srcTileset = "assets/tilesets/depth.png"
 	end
 	if srcMap == nil then
 		srcMap = "assets/maps/ddd.map"
@@ -97,6 +97,8 @@ function EasyLD:load()
 		map = EasyLD.map:generate(10,10, tl)
 	end
 
+	mapCollide = {}
+
 	for i = 0, map.w-1 do
 		mapCollide[i] = {}
 		for j = 0, map.h-1 do
@@ -104,7 +106,7 @@ function EasyLD:load()
 		end
 	end
 
-	for _,box in ipairs(map.collideBoxes) do
+	for _,box in ipairs(map.tileCollideBoxes) do
 		for i = box.x, box.x + box.w - 1 do
 			for j = box.y, box.y + box.h - 1 do
 				mapCollide[i][j] = 1
@@ -221,17 +223,38 @@ function EasyLD:update(dt)
 			if inputText.text ~= "" then
 				map.src = "assets/maps/" .. inputText.text .. ".map"
 			end
+			
+			map.tileCollideBoxes = Collide:cutInBox(mapCollide, map)
 			map:save()
 			print("Map saved (" .. map.src..")")
 		end
 
 		if EasyLD.collide:AABB_point(buttonOpenBox, pos) then
 			if inputText.text ~= "" then
+				if mode == modeType[2] then changeMode() end
 				srcMap = "assets/maps/" .. inputText.text .. ".map"
 
 				if file_exists(srcMap) then
 					map = EasyLD.map:new(srcMap, tl)
 					map:load()
+
+					mapCollide = {}
+					
+					for i = 0, map.w-1 do
+						mapCollide[i] = {}
+						for j = 0, map.h-1 do
+							mapCollide[i][j] = 0
+						end
+					end
+
+					for _,box in ipairs(map.tileCollideBoxes) do
+						for i = box.x, box.x + box.w - 1 do
+							for j = box.y, box.y + box.h - 1 do
+								mapCollide[i][j] = 1
+							end
+						end
+					end
+
 					print("Map opened (" .. map.src..")")
 				end
 			end
@@ -302,24 +325,7 @@ function EasyLD:update(dt)
 	end
 
 	if keyboard:isPressed("m") then
-		if mode == modeType[1] then
-			mode = modeType[2]
-			tl = EasyLD.tileset:new(srcTilesetCollide, 32)
-			tilesetWidth = tilesetNbTilesX * tl.tileSize
-		 	tilesetBox.x, tilesetBox.y = 0, 0
-		 	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
-		 	print("mode2")
-		else
-			mode = modeType[1]
-			tl = EasyLD.tileset:new(srcTileset, 32)
-			tilesetWidth = tilesetNbTilesX * tl.tileSize
-		 	tilesetBox.x, tilesetBox.y = 0, 0
-		 	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
-		end
-	end
-
-	if keyboard:isPressed("c") then
-		map.collideBoxes = Collide:cutInBox(mapCollide, map)
+		changeMode()
 	end
 
 	mouse:reset()
@@ -330,9 +336,9 @@ function EasyLD:draw()
 	EasyLD.graphics:setColor()
 	map:draw(mapBox.x, mapBox.y, mapNbTilesX, mapNbTilesY, mapBeginX, mapBeginY)
 	if mode == modeType[2] then
-		for i = mapBeginX, math.min(mapNbTilesX+mapBeginX, map.w-1) - mapBeginX do
-			for j = mapBeginY, math.min(mapNbTilesY+mapBeginY, map.h-1) - mapBeginY do
-				tl:drawTile(mapCollide[i][j], mapBox.x + i * tl.tileSize, mapBox.y + j * tl.tileSizeY)
+		for i = mapBeginX, math.min(mapNbTilesX+mapBeginX, map.w-1) do
+			for j = mapBeginY, math.min(mapNbTilesY+mapBeginY, map.h-1) do
+				tl:drawTile(mapCollide[i][j], mapBox.x + (i - mapBeginX) * tl.tileSize, mapBox.y + (j - mapBeginY) * tl.tileSizeY)
 			end
 		end
 	end
@@ -341,6 +347,23 @@ function EasyLD:draw()
 	drawTileSelected()
 	inputText:draw()
 	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
+end
+
+function changeMode()
+	if mode == modeType[1] then
+		mode = modeType[2]
+		tl = EasyLD.tileset:new(srcTilesetCollide, 32)
+		tilesetWidth = tilesetNbTilesX * tl.tileSize
+	 	tilesetBox.x, tilesetBox.y = 0, 0
+	 	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
+	 	print("mode2")
+	else
+		mode = modeType[1]
+		tl = EasyLD.tileset:new(srcTileset, 32)
+		tilesetWidth = tilesetNbTilesX * tl.tileSize
+	 	tilesetBox.x, tilesetBox.y = 0, 0
+	 	tilesetBox.w, tilesetBox.h = tilesetNbTilesX * tl.tileSize, tilesetNbTilesY * tl.tileSizeY
+	end
 end
 
 function drawTileSelected()

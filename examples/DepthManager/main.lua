@@ -65,6 +65,7 @@ function EasyLD:update(dt)
 	end
 
 	local FORCE = 3
+	local old = {x = p.x, y = p.y}
 
 	if EasyLD.keyboard:isDown("a") then
 		p.x = p.x - FORCE
@@ -77,6 +78,13 @@ function EasyLD:update(dt)
 	end
 	if EasyLD.keyboard:isDown("s") then
 		p.y = p.y + FORCE
+	end
+
+	player:moveTo(p:get())
+	if maps[3 - level]:collide(player) then
+		p.x = old.x
+		p.y = old.y
+		player:moveTo(p:get())
 	end
 
 	if EasyLD.keyboard:isPressed("e") then
