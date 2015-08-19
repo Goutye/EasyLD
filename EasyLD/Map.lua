@@ -20,6 +20,7 @@ end
 function Map:initialize(src, tileset, noLoad)
 	self.src = src
 	self.tileset = tileset
+	self.collideBoxes = {}
 	if not noLoad then
 		self:load()
 	end
@@ -42,6 +43,11 @@ function Map:load()
 		print("bad format")
 	end
 
+	local nbBoxes = io.read("*number") or 0
+	for i = 1, nbBoxes do
+		table.insert(self.collideBoxes, EasyLD.box:new(io.read("*number", "*number", "*number", "*number")))
+	end
+
 	io.input():close()
 end
 
@@ -53,6 +59,13 @@ function Map:save()
 		for y = 0, self.h - 1 do
 			io.write(self:getTile(x, y) .. " ")
 		end
+	end
+
+	--collideBoxes
+
+	io.write("\n" .. #self.collideBoxes .. "\n")
+	for _,box in ipairs(self.collideBoxes) do
+		io.write(box.x .. " " .. box.y .. " " .. box.w .. " " .. box.h .. "\n")
 	end
 
 	io.output():close()

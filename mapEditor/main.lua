@@ -84,7 +84,7 @@ function EasyLD:load()
 		srcTileset = "assets/tilesets/tileset.png"
 	end
 	if srcMap == nil then
-		srcMap = "assets/maps/w1.map"
+		srcMap = "assets/maps/ddd.map"
 	end
 	tl = EasyLD.tileset:new(srcTileset, 32)
  	tilesetWidth = tilesetNbTilesX * tl.tileSize
@@ -101,6 +101,14 @@ function EasyLD:load()
 		mapCollide[i] = {}
 		for j = 0, map.h-1 do
 			mapCollide[i][j] = 0
+		end
+	end
+
+	for _,box in ipairs(map.collideBoxes) do
+		for i = box.x, box.x + box.w - 1 do
+			for j = box.y, box.y + box.h - 1 do
+				mapCollide[i][j] = 1
+			end
 		end
 	end
 
@@ -311,7 +319,7 @@ function EasyLD:update(dt)
 	end
 
 	if keyboard:isPressed("c") then
-		Collide:cutInBox(mapCollide, map)
+		map.collideBoxes = Collide:cutInBox(mapCollide, map)
 	end
 
 	mouse:reset()
