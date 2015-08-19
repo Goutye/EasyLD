@@ -18,33 +18,33 @@ function EasyLD:load()
 	maps[3] = EasyLD.map:new("assets/w3.map", tl)
 
 	p = EasyLD.point:new(0, 0)
+	p.depth = 0
 	player = EasyLD.area:new(EasyLD.circle:new(p.x, p.y, 10))
 	player:follow(p)
 
-	level = 0
-
 	DM = EasyLD.depthManager:new(p, function () 
 								maps[3]:draw(0, 000, 100, 7, 0, 0)
-								if level == 0 then
+								if math.floor(p.depth) == 0 then
 									player:draw()
 								end
 							end, 1, 0, 2)
 	DM:addDepth(1, 0.5, function ()
 				maps[2]:draw(0, 30, 100, 7, 0, 0)
-				if level == 1 then
+				if math.floor(p.depth) == 1 then
 					player:draw()
 				end
 			end)
 
 	DM:addDepth(2, 0.25, function ()
 				maps[1]:draw(0, -30, 100, 7, 0, 0)
-				if level == 2 then
+				if math.floor(p.depth) == 2 then
 					player:draw()
 				end	
 			end)
 	DM:centerOn(0, 0)
 
 	font = EasyLD.font:new("assets/visitor.ttf")
+	timer = nil
 end
 
 function EasyLD:preCalcul(dt)
@@ -81,17 +81,21 @@ function EasyLD:update(dt)
 	end
 
 	player:moveTo(p:get())
-	if maps[3 - level]:collide(player) then
+	if maps[3 - math.floor(p.depth)]:collide(player) then
 		p.x = old.x
 		p.y = old.y
 		player:moveTo(p:get())
 	end
 
 	if EasyLD.keyboard:isPressed("e") then
-		level = (level + 1) % 3
+		if timer == nil then
+			timer = EasyLD.flux.to(p, 0.8, {depth = (p.depth + 1) % 3}):oncomplete(function() timer = nil end)
+		end
 	end
 	if EasyLD.keyboard:isPressed("q") then
-		level = (level - 1) % 3
+		if timer == nil then
+			timer = EasyLD.flux.to(p, 0.8, {depth = (p.depth - 1) % 3}):oncomplete(function() timer = nil end)
+		end
 	end
 	DM:update()
 

@@ -52,7 +52,25 @@ function DepthManager:update()
 	if self.timer2 ~= nil then
 		offset = EasyLD.point:new(self.pos.x, self.pos.y) - self.center
 	else
-		offset = EasyLD.point:new(self.follower.x, self.follower.y) - self.center
+		if self.follower.depth ~= nil then
+			local difference = self.follower.depth - math.floor(self.follower.depth)
+			local depthZoom
+			if difference ~= 0 then
+				if self.follower.depth > self.nbAfter then
+					self.follower.depth = self.nbAfter
+				elseif self.follower.depth < self.nbBefore then
+					self.follower.depth = self.nbBefore
+				end
+				local lowScale, highScale = self.depth[math.floor(self.follower.depth)].ratio, self.depth[math.ceil(self.follower.depth)].ratio
+				local diffScale = highScale - lowScale
+				depthZoom = 1/ (lowScale + diffScale * difference)
+			else
+				depthZoom = 1/self.depth[math.floor(self.follower.depth)].ratio
+			end
+			offset = EasyLD.point:new(self.follower.x * depthZoom, self.follower.y * depthZoom) - self.center
+		else
+			offset = EasyLD.point:new(self.follower.x, self.follower.y) - self.center
+		end
 	end
 
 	for i = self.nbAfter, -self.nbBefore, -1 do
