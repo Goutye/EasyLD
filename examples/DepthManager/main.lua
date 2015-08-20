@@ -88,6 +88,8 @@ function EasyLD:update(dt)
 			timer = EasyLD.flux.to(player, 0.8, {depth = newDepth}):oncomplete(function() timer = nil end)
 			slices[3 - oldDepth]:removeEntity(player)
 			slices[3 - newDepth]:addEntity(player)
+			timer2 = EasyLD.flux.to(DM.depth[newDepth], 0.8, {alpha = 255}):oncomplete(function() timer2 = nil end)
+			timer3 = EasyLD.flux.to(DM.depth[oldDepth], 0.8, {alpha = 150}):oncomplete(function() timer3 = nil end)
 		end
 	end
 	if EasyLD.keyboard:isPressed("q") then
@@ -96,6 +98,8 @@ function EasyLD:update(dt)
 			timer = EasyLD.flux.to(player, 0.8, {depth = newDepth}):oncomplete(function() timer = nil end)
 			slices[3 - oldDepth]:removeEntity(player)
 			slices[3 - newDepth]:addEntity(player)
+			timer2 = EasyLD.flux.to(DM.depth[newDepth], 0.8, {alpha = 255}):oncomplete(function() timer2 = nil end)
+			timer3 = EasyLD.flux.to(DM.depth[oldDepth], 0.8, {alpha = 150}):oncomplete(function() timer3 = nil end)
 		end
 	end
 	DM:update(dt)

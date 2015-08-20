@@ -2,10 +2,10 @@ local class = require 'EasyLD.lib.middleclass'
 
 local DepthManager = class('DepthManager')
 
-function DepthManager:initialize(follower, slice, ratio, before, after)
+function DepthManager:initialize(follower, slice, ratio, before, after, alpha)
 	self.depth = {}
 	local surface = EasyLD.surface:new()
-	self.depth[0] = {s = surface, slice = slice, ratio = ratio or 1, offset = EasyLD.point:new(0,0)}
+	self.depth[0] = {s = surface, slice = slice, ratio = ratio or 1, offset = EasyLD.point:new(0,0), alpha = alpha or 255}
 	self.nbBefore = before
 	self.nbAfter = after
 	self.follower = follower -- ENTITY
@@ -42,9 +42,9 @@ function DepthManager:centerOn(x, y, mode, time, typeEase)
 	end
 end
 
-function DepthManager:addDepth(id, ratio, slice)
+function DepthManager:addDepth(id, ratio, slice, alpha)
 	local surface = EasyLD.surface:new()
-	self.depth[id] = {s = surface, slice = slice, ratio = ratio, offset = EasyLD.point:new(0,0)}
+	self.depth[id] = {s = surface, slice = slice, ratio = ratio, offset = EasyLD.point:new(0,0), alpha = alpha or 255}
 end
 
 function DepthManager:update(dt)
@@ -79,6 +79,10 @@ function DepthManager:update(dt)
 	end
 end
 
+function DepthManager:setAlpha(depth, alpha)
+	self.depth[depth].alpha = alpha
+end
+
 function DepthManager:draw(noScale)
 	for i = self.nbAfter, -self.nbBefore, -1 do
 		local pos = self.depth[i].offset + self.center - EasyLD.point:new(EasyLD.window.w/2, EasyLD.window.h/2)
@@ -88,6 +92,7 @@ function DepthManager:draw(noScale)
 		EasyLD.camera:moveTo(pos.x, pos.y)
 		if not noScale then EasyLD.camera:scaleTo(self.depth[i].ratio) end
 		EasyLD.camera:actualize()
+		EasyLD.graphics:setColor(EasyLD.color:new(255,255,255,self.depth[i].alpha))
 		self.depth[i].slice:draw()
 
 		EasyLD.camera:scaleTo(1)
