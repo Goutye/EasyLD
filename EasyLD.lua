@@ -35,7 +35,7 @@ EasyLD.timer = require 'EasyLD.lib.cron'
 EasyLD.flux = require 'EasyLD.lib.flux'
 
 EasyLD.depthManager = require 'EasyLD.DepthManager'
-EasyLD.worldSlice = require 'EasyLD.worldSlice'
+EasyLD.worldSlice = require 'EasyLD.WorldSlice'
 EasyLD.screen = require 'EasyLD.Screen'
 EasyLD.nextScreen = EasyLD.screen.nextScreen
 
