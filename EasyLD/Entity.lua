@@ -34,8 +34,6 @@ function Entity:collide(otherEntity)
 end
 
 function Entity:tryMove(dt, map, entities)
-	local nextPos = self.pos:copy()
-
 	if self.acceleration.x ~= 0 or self.acceleration.y ~= 0 then
 		self.speed = self.speed + (self.acceleration * dt)
 	end
@@ -48,6 +46,8 @@ function Entity:tryMove(dt, map, entities)
 	else
 		return
 	end
+
+	local nextPos = self.pos:copy()
 
 	if self.collideArea then --If it is not a passive entity
 		nextPos = self.pos + self.speed * dt
