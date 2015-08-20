@@ -2,13 +2,13 @@ local class = require 'EasyLD.lib.middleclass'
 
 local DepthManager = class('DepthManager')
 
-function DepthManager:initialize(follower, fct, ratio, before, after)
+function DepthManager:initialize(follower, slice, ratio, before, after)
 	self.depth = {}
 	local surface = EasyLD.surface:new()
-	self.depth[0] = {s = surface, draw = fct, ratio = ratio or 1, offset = EasyLD.point:new(0,0)}
+	self.depth[0] = {s = surface, slice = slice, ratio = ratio or 1, offset = EasyLD.point:new(0,0)}
 	self.nbBefore = before
 	self.nbAfter = after
-	self.follower = follower
+	self.follower = follower -- ENTITY
 	self.pos = EasyLD.point:new(follower.x, follower.y)
 	self.center = EasyLD.point:new(0,0)
 	self.timer2 = nil
@@ -18,12 +18,12 @@ function DepthManager:follow(obj, mode, time, typeEase)
 	if mode == nil then
 		self.follower = obj
 	else
-		self.pos = EasyLD.point:new(self.follower.x, self.follower.y)
+		self.pos = EasyLD.point:new(self.follower.pos.x, self.follower.pos.y)
 		self.follower = obj
 		if self.timer2 ~= nil then
 			self.timer2:stop()
 		end
-		self.timer2 = EasyLD.flux.to(self.pos, time or 0.8, {x = self.follower, y = self.follower}, "follower"):ease(typeEase or "quadout"):oncomplete(function()  
+		self.timer2 = EasyLD.flux.to(self.pos, time or 0.8, {x = self.follower.pos, y = self.follower.pos}, "follower"):ease(typeEase or "quadout"):oncomplete(function()  
 																					self.timer2 = nil
 																				end)
 	end
@@ -42,12 +42,12 @@ function DepthManager:centerOn(x, y, mode, time, typeEase)
 	end
 end
 
-function DepthManager:addDepth(id, ratio, fct)
+function DepthManager:addDepth(id, ratio, slice)
 	local surface = EasyLD.surface:new()
-	self.depth[id] = {s = surface, draw = fct, ratio = ratio, offset = EasyLD.point:new(0,0)}
+	self.depth[id] = {s = surface, slice = slice, ratio = ratio, offset = EasyLD.point:new(0,0)}
 end
 
-function DepthManager:update()
+function DepthManager:update(dt)
 	local offset
 	if self.timer2 ~= nil then
 		offset = EasyLD.point:new(self.pos.x, self.pos.y) - self.center
@@ -67,14 +67,15 @@ function DepthManager:update()
 			else
 				depthZoom = 1/self.depth[math.floor(self.follower.depth)].ratio
 			end
-			offset = EasyLD.point:new(self.follower.x * depthZoom, self.follower.y * depthZoom) - self.center
+			offset = EasyLD.point:new(self.follower.pos.x * depthZoom, self.follower.pos.y * depthZoom) - self.center
 		else
-			offset = EasyLD.point:new(self.follower.x, self.follower.y) - self.center
+			offset = EasyLD.point:new(self.follower.pos.x, self.follower.pos.y) - self.center
 		end
 	end
 
 	for i = self.nbAfter, -self.nbBefore, -1 do
 		self.depth[i].offset = offset * self.depth[i].ratio
+		self.depth[i].slice:update(dt)
 	end
 end
 
@@ -87,7 +88,7 @@ function DepthManager:draw(noScale)
 		EasyLD.camera:moveTo(pos.x, pos.y)
 		if not noScale then EasyLD.camera:scaleTo(self.depth[i].ratio) end
 		EasyLD.camera:actualize()
-		self.depth[i].draw()
+		self.depth[i].slice:draw()
 
 		EasyLD.camera:scaleTo(1)
 		EasyLD.camera:moveTo(0,0)

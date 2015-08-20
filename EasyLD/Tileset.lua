@@ -6,11 +6,7 @@ function Tileset:initialize(src, tileSize, tileSizeY)
 	self.img = EasyLD.image:new(src)
 
 	self.tileSize = tileSize
-	self.tileSizeY = tileSizeY
-
-	if tileSizeY == nil then
-		self.tileSizeY = tileSize
-	end
+	self.tileSizeY = tileSizeY or tileSize
 
 	self.nbTilesW = math.floor(self.img.w/self.tileSize)
 	self.nbTilesH = math.floor(self.img.h/self.tileSizeY)

@@ -1,6 +1,7 @@
 package.path = package.path .. ';../../?.lua'
 
 require 'EasyLD'
+local Player = require 'Player'
 
 local i = 1
 
@@ -19,28 +20,27 @@ function EasyLD:load()
 
 	p = EasyLD.point:new(0, 0)
 	p.depth = 0
-	player = EasyLD.area:new(EasyLD.circle:new(p.x, p.y, 10))
-	player:follow(p)
+	player = Player:new(p.x, p.y, EasyLD.area:new(EasyLD.circle:new(p.x, p.y, 10)))
+	player.depth = 0
 
-	DM = EasyLD.depthManager:new(p, function () 
-								maps[3]:draw(0, 000, 100, 7, 0, 0)
-								if math.floor(p.depth) == 0 then
-									player:draw()
-								end
-							end, 1, 0, 2)
-	DM:addDepth(1, 0.5, function ()
-				maps[2]:draw(0, 30, 100, 7, 0, 0)
-				if math.floor(p.depth) == 1 then
-					player:draw()
-				end
-			end)
+	player2 = player:copy()
+	player2.pos.x = 100
+	player2.collideArea.forms[1].c = EasyLD.color:new(255,255,0)
 
-	DM:addDepth(2, 0.25, function ()
-				maps[1]:draw(0, -30, 100, 7, 0, 0)
-				if math.floor(p.depth) == 2 then
-					player:draw()
-				end	
-			end)
+	nbEntities = 2
+
+	slices = {}
+	slices[1] = EasyLD.worldSlice:new(maps[1], EasyLD.point:new(0, -30))
+	slices[2] = EasyLD.worldSlice:new(maps[2], EasyLD.point:new(0, 30))
+	slices[3] = EasyLD.worldSlice:new(maps[3], EasyLD.point:new(0, 0))
+
+	slices[3]:addEntity(player)
+	slices[3]:addEntity(player2)
+
+	DM = EasyLD.depthManager:new(player, slices[3], 1, 0, 2)
+	DM:addDepth(1, 0.5, slices[2])
+
+	DM:addDepth(2, 0.25, slices[1])
 	DM:centerOn(0, 0)
 
 	font = EasyLD.font:new("assets/visitor.ttf")
@@ -52,9 +52,13 @@ function EasyLD:preCalcul(dt)
 end
 
 function EasyLD:update(dt)
+	p = player.pos
+
 	if EasyLD.mouse:isPressed("l") then
-		if DM.follower.y ~= -100 then DM:follow(EasyLD.point:new(-100, -100), true, 2, "elasticout")
-		else DM:follow(p, true, 2, "elasticout") end
+		local point = EasyLD.point:new(-100, -100)
+		point.pos = point
+		if DM.follower.y ~= -100 then DM:follow(point, true, 2, "elasticout")
+		else DM:follow(player, true, 2, "elasticout") end
 	end
 	if EasyLD.mouse:isPressed("r") then
 		drawWithoutZoom = not drawWithoutZoom
@@ -64,42 +68,37 @@ function EasyLD:update(dt)
 		else DM:centerOn(0, 0, true, 2) end
 	end
 
-	local FORCE = 3
-	local old = {x = p.x, y = p.y}
-
-	if EasyLD.keyboard:isDown("a") then
-		p.x = p.x - FORCE
-	end
-	if EasyLD.keyboard:isDown("w") then
-		p.y = p.y - FORCE
-	end
-	if EasyLD.keyboard:isDown("d") then
-		p.x = p.x + FORCE
-	end
-	if EasyLD.keyboard:isDown("s") then
-		p.y = p.y + FORCE
-	end
-
-	player:moveTo(p:get())
-	if maps[3 - math.floor(p.depth)]:collide(player) then
-		p.x = old.x
-		p.y = old.y
-		player:moveTo(p:get())
+	if EasyLD.keyboard:isDown("z") then
+		nbEntities = nbEntities + 1
+		local entity = player:copy()
+		entity.collideArea.forms[1].c = EasyLD.color:new(math.random(22,232),math.random(22,232),math.random(22,232))
+		entity.update = function(dt) end
+		entity.collide = function() return false end
+		entity.spriteAnimation = entity.collideArea
+		entity.spriteAnimation:moveTo(math.random(50, 800), math.random(0, 200))
+		entity.pos.x = entity.spriteAnimation.x
+		entity.pos.y = entity.spriteAnimation.y
+		--entity.collideArea = nil
+		slices[3]:addEntity(entity)
 	end
 
 	if EasyLD.keyboard:isPressed("e") then
 		if timer == nil then
-			timer = EasyLD.flux.to(p, 0.8, {depth = (p.depth + 1) % 3}):oncomplete(function() timer = nil end)
+			local oldDepth, newDepth = math.floor(player.depth), math.floor(player.depth + 1) % 3
+			timer = EasyLD.flux.to(player, 0.8, {depth = newDepth}):oncomplete(function() timer = nil end)
+			slices[3 - oldDepth]:removeEntity(player)
+			slices[3 - newDepth]:addEntity(player)
 		end
 	end
 	if EasyLD.keyboard:isPressed("q") then
 		if timer == nil then
-			timer = EasyLD.flux.to(p, 0.8, {depth = (p.depth - 1) % 3}):oncomplete(function() timer = nil end)
+			local oldDepth, newDepth = math.floor(player.depth), math.floor(player.depth - 1) % 3
+			timer = EasyLD.flux.to(player, 0.8, {depth = newDepth}):oncomplete(function() timer = nil end)
+			slices[3 - oldDepth]:removeEntity(player)
+			slices[3 - newDepth]:addEntity(player)
 		end
 	end
-	DM:update()
-
-	player:moveTo(p:get())
+	DM:update(dt)
 end
 
 function EasyLD:draw()
@@ -109,4 +108,5 @@ WASD: Move the circle
 Left click: Change of follower
 Right click: Draw with or without zoom
 Middle click: Change of perspective point]], 20, EasyLD.box:new(0, 0, 300, 150), nil, nil, EasyLD.color:new(255,255,255))
+	font:print("FPS: "..EasyLD:getFPS() .. " Entities: " .. nbEntities, 20, EasyLD.box:new(0, WINDOW_HEIGHT-50, 100, 50), nil, "bottom")
 end

@@ -35,6 +35,7 @@ EasyLD.timer = require 'EasyLD.lib.cron'
 EasyLD.flux = require 'EasyLD.lib.flux'
 
 EasyLD.depthManager = require 'EasyLD.DepthManager'
+EasyLD.worldSlice = require 'EasyLD.worldSlice'
 EasyLD.screen = require 'EasyLD.Screen'
 EasyLD.nextScreen = EasyLD.screen.nextScreen
 
@@ -131,14 +132,6 @@ local function loadAPI(name)
 	end
 end
 
-function EasyLD:updateComponents(dt)
-	EasyLD.keyboard:reset()
-	EasyLD.mouse:reset()
-	EasyLD.timer.update(dt)
-	EasyLD.flux.update(dt)
-	EasyLD.camera:update(dt)
-end
-
 function EasyLD:preCalcul(dt)
 	return dt
 end
@@ -157,6 +150,19 @@ else
 	loadAPI("Drystal")
 end
 
+local fpsCount = 0
+local fps = 0
+local fpsTimer = nil
+
+function EasyLD:updateComponents(dt)
+	fpsCount = fpsCount + 1
+	EasyLD.keyboard:reset()
+	EasyLD.mouse:reset()
+	EasyLD.timer.update(dt)
+	EasyLD.flux.update(dt)
+	EasyLD.camera:update(dt)
+end
+
 function string:split(delimiter)
 	local result = { }
 	local from = 1
@@ -168,6 +174,13 @@ function string:split(delimiter)
 	end
 	table.insert(result, string.sub( self, from ))
 	return result
+end
+
+function EasyLD:getFPS()
+	if fpsTimer == nil then
+		fpsTimer = EasyLD.timer.every(1, function() fps, fpsCount = fpsCount, 0 end)
+	end
+	return fps
 end
 
 return EasyLD
