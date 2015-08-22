@@ -24,7 +24,7 @@ EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 tl = nil
 map = nil
-tilesetNbTilesX = 12
+tilesetNbTilesX = 6
 tilesetNbTilesY = 3
 tilesetWidth = nil
 tilesetBeginX = 0
@@ -81,7 +81,7 @@ function EasyLD:load()
 	keyboard = EasyLD.keyboard
 
 	if srcTileset == nil then
-		srcTileset = "assets/tilesets/depth.png"
+		srcTileset = "assets/tilesets/dungeon.png"
 	end
 	if srcMap == nil then
 		srcMap = "assets/maps/ddd.map"
@@ -346,7 +346,7 @@ function EasyLD:draw()
 
 	drawTileSelected()
 	inputText:draw()
-	love.graphics.print("FPS : "..love.timer.getFPS(), WINDOW_WIDTH-60, WINDOW_HEIGHT-20)
+	--font:print("FPS"..EasyLD:getFPS())
 end
 
 function changeMode()

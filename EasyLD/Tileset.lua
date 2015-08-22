@@ -27,7 +27,7 @@ function Tileset:draw(x, y, nbTilesX, nbTilesY, beginX, beginY)
 	for i = 0, nbTilesX-1 do
 		for j = 0, nbTilesY-1 do
 			if i + beginX < self.nbTilesW and j + beginY < self.nbTilesH then
-				self:drawTile(i + beginX + (j + beginY) * self.nbTilesH, x + i * self.tileSize, y + j * self.tileSizeY)
+				self:drawTile(i + beginX + (j + beginY) * self.nbTilesW, x + i * self.tileSize, y + j * self.tileSizeY)
 			end
 		end
 	end
