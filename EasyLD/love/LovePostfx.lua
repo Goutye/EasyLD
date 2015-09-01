@@ -27,6 +27,7 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
 }
 ]]
 	self.list[name] = {love.graphics.newShader(uniformsCode .. code), uniforms, love.graphics.newCanvas()}
+	print(self.list[name][3]:getWidth())
 end
 
 function Postfx:use(name, ...)

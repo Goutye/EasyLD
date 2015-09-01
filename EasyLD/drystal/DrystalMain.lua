@@ -1,5 +1,6 @@
 function drystal.init()
 	EasyLD:load()
+	EasyLD:postLoad("Drystal")
 end
 
 function drystal.update(dt)

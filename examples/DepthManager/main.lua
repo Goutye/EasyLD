@@ -5,8 +5,8 @@ local Player = require 'Player'
 
 local i = 1
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 900
 
 function EasyLD:load()
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -107,6 +107,7 @@ end
 
 function EasyLD:draw()
 	DM:draw(drawWithoutZoom)
+	EasyLD.postfx:use('vignette', 0.5, 0.3)
 	font:print([[Q-E: Lower-Upper ground
 WASD: Move the circle
 Left click: Change of follower

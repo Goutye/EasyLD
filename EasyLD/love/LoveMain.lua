@@ -1,5 +1,6 @@
 function love.load()
 	EasyLD:load()
+	EasyLD:postLoad("Löve2D")
 	love.screen = love.graphics.newCanvas()
 end
 
