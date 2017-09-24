@@ -36,8 +36,18 @@ function Surface:getPixel(x, y)
 	return EasyLD.color:new()
 end
 
-function Surface:clear()
-	self.s:clear(0,0,0,0)
+function Surface:clear(bIsActive)
+	if bIsActive then
+		love.graphics.clear(0,0,0,0)
+	else
+		if bIsActive == nil then
+			print("Surface is cleared when it is not the active Canvas. Bad Performance. Please improve if possible by clearing when the canvas is actived. Otherwise call Surface:clear(false)")
+		end
+		local temp = love.graphics.getCanvas()
+		love.graphics.setCanvas(self.s)
+		love.graphics.clear(0,0,0,0)
+		love.graphics.setCanvas(temp)
+	end
 end
 
 return Surface
