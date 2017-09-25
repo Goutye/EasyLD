@@ -6,6 +6,7 @@ local DrystalImage = class('DrystalImage', Image)
 
 function DrystalImage:initialize(src, filter)
 	self.src = assert(drystal.load_surface(src))
+	self.s = self.src
 	self.w = self.src.w
 	self.h = self.src.h
 

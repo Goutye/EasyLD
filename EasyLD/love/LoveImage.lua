@@ -6,6 +6,7 @@ local LoveImage = class('LoveImage', Image)
 
 function LoveImage:initialize(src, filter1, filter2)
 	self.src = love.graphics.newImage(src)
+	self.s = self.src
 	self.w = self.src:getWidth()
 	self.h = self.src:getHeight()
 

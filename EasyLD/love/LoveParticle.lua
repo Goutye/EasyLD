@@ -256,7 +256,7 @@ function Particle:getEmissionRate()
 end
 
 function Particle:setLifeTime(min, max)
-	self.p:setParticleLifetime(min, max)
+	self.p:setParticleLifetime(min, max or min)
 end
 
 function Particle:getLifeTime()
