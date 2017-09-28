@@ -8,6 +8,7 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
 function EasyLD:load()
+	EasyLD.window:setTitle("Particles")
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 	
 	surf = EasyLD.surface:new(64,64)
@@ -47,7 +48,7 @@ function EasyLD:preCalcul(dt)
 end
 
 function EasyLD:update(dt)
-	if EasyLD.mouse:isPressed("l") then
+	if EasyLD.mouse:isPressed(1) then
 		if self.isStopped then
 			s2:start()
 			self.isStopped = false
@@ -56,10 +57,10 @@ function EasyLD:update(dt)
 			self.isStopped = true
 		end
 	end
-	if EasyLD.mouse:isPressed("r") then
+	if EasyLD.mouse:isPressed(2) then
 		system:emit(70)
 	end
-	if EasyLD.mouse:isPressed("m") then
+	if EasyLD.mouse:isPressed(3) then
 		if s2:getOffset().x == 300 then
 			s2:setOffset(0,0)
 		else
