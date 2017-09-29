@@ -16,9 +16,9 @@ function Surface:initialize(w, h)
 end
 
 function Surface:drawOn(clear)
-	if clear then self:clear() end
 	local s = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.s)
+	if clear then self:clear(true) end
 	if s == nil then return {drawOn = Surface.drawOnScreen} end
 	return EasyLD.surface.table[s]
 end
